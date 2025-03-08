@@ -18,16 +18,17 @@ model Receptionist {
 }
 
 model Dentist {
-  id           Int      @id @default(autoincrement())
-  name         String
-  email        String   @unique
-  phone        String   @unique
-  createdAt    DateTime @default(now())
-  cpf          String      @unique
-  birthDate    String
-  croNumber    String      @unique
-  specialty    String
-  appointments Appointment[]
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  phone         String   @unique
+  createdAt     DateTime @default(now())
+  cpf           String      @unique
+  birthDate     String
+  croNumber     String      @unique
+  specialty     String
+  appointments  Appointment[]
+  prescriptions Prescription[]
 }
 
 model Patient {
@@ -40,6 +41,7 @@ model Patient {
   birthDate      String
   medicalHistory Int[]
   appointments   Appointment[]
+  prescriptions  Prescription[]
 }
 
 model Appointment {
@@ -51,5 +53,16 @@ model Appointment {
   scheduledAt   DateTime
   procedure     String
   status        String
+  createdAt     DateTime  @default(now())
+}
+
+model Prescription {
+  id            Int       @id @default(autoincrement())
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  patientId     Int
+  dentist       Dentist   @relation(fields: [dentistId], references: [id])
+  dentistId     Int       
+  medications   Int[]
+  instructions  String?
   createdAt     DateTime  @default(now())
 }
