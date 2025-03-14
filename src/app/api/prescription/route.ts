@@ -6,8 +6,7 @@ import { z } from "zod"
 const prescriptionSchema = z.object({
     patientId: z.number().int().positive(),
     dentistId: z.number().int().positive(),
-    medications: z.array(z.number().int().positive()),
-    instructions: z.string().optional()
+    prescriptionDetails: z.string()
 })
 
 // POST /api/prescription

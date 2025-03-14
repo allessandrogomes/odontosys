@@ -57,12 +57,11 @@ model Appointment {
 }
 
 model Prescription {
-  id            Int       @id @default(autoincrement())
-  patient       Patient   @relation(fields: [patientId], references: [id])
-  patientId     Int
-  dentist       Dentist   @relation(fields: [dentistId], references: [id])
-  dentistId     Int       
-  medications   Int[]
-  instructions  String?
-  createdAt     DateTime  @default(now())
+  id                    Int       @id @default(autoincrement())
+  patient               Patient   @relation(fields: [patientId], references: [id])
+  patientId             Int
+  dentist               Dentist   @relation(fields: [dentistId], references: [id])
+  dentistId             Int       
+  prescriptionDetails   String
+  createdAt             DateTime  @default(now())
 }
