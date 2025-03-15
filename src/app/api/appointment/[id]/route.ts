@@ -8,7 +8,7 @@ const updateAppointmentSchema = z.object({
     dentistId: z.number().int().positive(),
     scheduledAt: z.string().datetime(),
     procedure: z.string().min(1, "O procedimento é obrigatório"),
-    status: z.enum(["Agendado", "Cancelado", "Concluído"])
+    status: z.enum(["AGENDADA", "CANCELADA", "CONCLUIDA"])
 })
 
 // Esquema de validação parcial com Zod
@@ -17,7 +17,7 @@ const partialUpdateAppointmentSchema = z.object({
     dentistId: z.number().int().positive().optional(),
     scheduledAt: z.string().datetime().optional(),
     procedure: z.string().optional(),
-    status: z.enum(["Agendado", "Cancelado", "Concluído"]).optional()
+    status: z.enum(["AGENDADA", "CANCELADA", "CONCLUIDA"]).optional()
 })
 
 // GET /api/appointment/id

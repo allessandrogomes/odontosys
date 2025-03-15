@@ -22,6 +22,7 @@ export async function POST(request: Request) {
         const newAppointment = await prisma.appointment.create({ data })
         return NextResponse.json(newAppointment, { status: 201 })
     } catch (error) {
+        console.error(error)
         return NextResponse.json({ error: "Não foi possível criar a Consulta.", details: error }, { status: 500 })
     }
 }
