@@ -31,6 +31,7 @@ model Dentist {
   prescriptions         Prescription[]
   completedAppointments CompletedAppointment[]
   cancelledAppointments CancelledAppointment[]
+  blockedTimes          BlockedTime[]
 }
 
 model Patient {
@@ -99,4 +100,12 @@ model Prescription {
   dentistId             Int       
   prescriptionDetails   String
   createdAt             DateTime  @default(now())
+}
+
+model BlockedTime {
+  id            Int       @id @default(autoincrement())
+  blockedTime   DateTime
+  dentist       Dentist   @relation(fields: [dentistId], references: [id])
+  dentistId     Int
+  createdAt     DateTime  @default(now())
 }
