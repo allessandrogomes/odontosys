@@ -87,7 +87,7 @@ model CancelledAppointment {
   dentistId     Int
   scheduledAt   DateTime
   procedure     String
-  status        AppointmentStatus  @default(CONCLUIDA)
+  status        AppointmentStatus  @default(CANCELADA)
   reason        String?
   createdAt     DateTime           @default(now())
 }
