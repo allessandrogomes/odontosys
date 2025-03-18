@@ -1,36 +1,45 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 // Esquema de validação com Zod
-const updateUserSchema = z.object({
+const patientSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     phone: z.string(),
     cpf: z.string(),
     birthDate: z.string(),
     medicalHistory: z.array(z.number().int())
-})
+}).strict()
 
-// PUT /api/patient/:id
-
+// PUT /api/patient/id
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = parseInt(params.id)
+        //Verifica se o ID é inválido
+        if (isNaN(id)) {
+            return NextResponse.json(
+                { error: "ID inválido" },
+                { status: 400 }
+            )
+        }
+
         const body = await request.json()
 
         // Validação dos dados de entrada
-        const validateData = updateUserSchema.parse(body)
+        const validatedData = patientSchema.parse(body)
 
         //Atualiza o usuário no banco de dados
-        const updateUser = await prisma.patient.update({
+        const updatedPatient = await prisma.patient.update({
             where: { id },
-            data: validateData
+            data: validatedData
         })
 
-        return NextResponse.json(updateUser)
+        // Retorna os dados do Paciente atualizados
+        return NextResponse.json(updatedPatient)
     } catch (error) {
-        // Tratamento de erros
+        // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 { error: "Dados inválidos", details: error.errors },
@@ -38,16 +47,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             )
         }
 
-        if (error instanceof Error && error.message.includes("RecordNotFound")) {
-            return NextResponse.json(
-                { error: "Usuário não encontrado" },
-                { status: 400 }
-            )
+        // Tratamento de erro caso não encontre o Paciente
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2025") {
+                return NextResponse.json(
+                    { error: "Paciente não encontrado" },
+                    { status: 404 }
+                )
+            }
         }
 
+        // Log de erros para debug
+        console.error("PUT /api/patient Error:", error)
+
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
-            { status: 500}
+            { error: "Erro interno no servidor" },
+            { status: 500 }
         )
     }
 }
