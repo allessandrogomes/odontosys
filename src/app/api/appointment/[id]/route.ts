@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 // Esquema de validação total com Zod
-const updateAppointmentSchema = z.object({
+const appointmentSchema = z.object({
     patientId: z.number().int().positive(),
     dentistId: z.number().int().positive(),
     scheduledAt: z.string().datetime(),
@@ -12,7 +13,7 @@ const updateAppointmentSchema = z.object({
 })
 
 // Esquema de validação parcial com Zod
-const partialUpdateAppointmentSchema = z.object({
+const partialAppointmentSchema = z.object({
     patientId: z.number().int().positive().optional(),
     dentistId: z.number().int().positive().optional(),
     scheduledAt: z.string().datetime().optional(),
@@ -42,7 +43,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         // Verifica se a Consulta foi encontrada
         if (!appointment) {
             return NextResponse.json(
-                { error: "Consulta não encontrada"},
+                { error: "Consulta não encontrada" },
                 { status: 404 }
             )
         }
@@ -50,11 +51,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
         // Retorna a Consulta encontrada
         return NextResponse.json(appointment, { status: 200 })
 
-    } catch (error){
+    } catch (error) {
         // Trata erros inesperados
         console.error("Erro no servidor", error)
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno no servidor" },
             { status: 500 }
         )
     }
@@ -64,20 +65,30 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = parseInt(params.id)
+
+        // Verifica se o ID é inválido
+        if (isNaN(id)) {
+            return NextResponse.json(
+                { error: "ID inválido" },
+                { status: 400 }
+            )
+        }
+
         const body = await request.json()
 
         // Validação dos dados de entrada
-        const validateData = updateAppointmentSchema.parse(body)
+        const validatedData = appointmentSchema.parse(body)
 
         // Atualiza a consulta no banco de dados
         const updatedAppointment = await prisma.appointment.update({
             where: { id },
-            data: validateData
+            data: validatedData
         })
 
-        return NextResponse.json(updatedAppointment, { statusText: "Consulta atualizada com sucesso!", status: 200 })
+        return NextResponse.json(updatedAppointment, { status: 200 })
+
     } catch (error) {
-        // Tratamento de erros
+        // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 { error: "Dados inválidos", details: error.errors },
@@ -85,15 +96,22 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             )
         }
 
-        if (error instanceof Error && error.message.includes("RecordNotFound")) {
-            return NextResponse.json(
-                { error: "Consulta não encontrada" },
-                { status: 400 }
-            )
+        // Tratamento de erros caso não encontre a consulta
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2025") {
+                return NextResponse.json(
+                    { error: "Consulta não encontrada" },
+                    { status: 400 }
+                )
+            }
         }
 
+        // Log de erros para debug
+        console.error("Erro no servidor", error)
+        
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno no servidor", details: String(error) },
             { status: 500 }
         )
     }
@@ -103,20 +121,30 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = parseInt(params.id)
+
+        // Verifica se o ID é inválido
+        if (isNaN(id)) {
+            return NextResponse.json(
+                { error: "ID inválido" },
+                { status: 400 }
+            )
+        }
+
         const body = await request.json()
 
         // Validação dos dados de entrada
-        const validateData = partialUpdateAppointmentSchema.parse(body)
+        const validatedData = partialAppointmentSchema.parse(body)
 
         // Atualiza apenas os campos enviados
         const updatedAppointment = await prisma.appointment.update({
             where: { id },
-            data: validateData
+            data: validatedData
         })
 
         return NextResponse.json(updatedAppointment, { status: 200 })
+
     } catch (error) {
-        // Tratamento de erros
+        // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 { error: "Dados inválidos", details: error.errors },
@@ -124,22 +152,29 @@ export async function PATCH(request: Request, { params }: { params: { id: string
             )
         }
 
-        if (error instanceof Error && error.message.includes("RecordNotFound")) {
-            return NextResponse.json(
-                { error: "Consulta não encontrada" },
-                { status: 400 }
-            )
+        // Tratamento de erros caso não encontre a consulta
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2025") {
+                return NextResponse.json(
+                    { error: "Consulta não encontrada" },
+                    { status: 400 }
+                )
+            }
         }
 
+        // Log de erros para debug
+        console.error("Erro no servidor", error)
+        
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno no servidor", details: String(error) },
             { status: 500 }
         )
     }
 }
 
 // DELETE /api/appointment/id
-export async function DELETE(request: Request, { params }: { params: { id: string } } ) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
     try {
         // Converte o ID para número
         const id = parseInt(params.id)
@@ -158,20 +193,24 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
         // Retorna a Consulta excluída
         return NextResponse.json(deletedAppointment, { status: 200 })
-        
+
     } catch (error) {
-        // Trata erros específicos do Prisma
-        if (error instanceof Error && error.message.includes("Record to delete does not exist")) {
-            return NextResponse.json(
-                { error: "Consulta não encontrada" },
-                { status: 404 }
-            )
+        // Tratamento de erros caso não encontre a consulta
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2025") {
+                return NextResponse.json(
+                    { error: "Consulta não encontrada" },
+                    { status: 400 }
+                )
+            }
         }
 
-        // Trata outros erros
+        // Log de erros para debug
         console.error("Erro no servidor", error)
+
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno no servidor" },
             { status: 500 }
         )
     }
