@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 // Esquema de validação com Zod
-const updateUserSchema = z.object({
+const receptionistSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     phone: z.string(),
@@ -16,20 +17,31 @@ const updateUserSchema = z.object({
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = parseInt(params.id)
+
+        // Verifica se o ID é inválido
+        if (isNaN(id)) {
+            return NextResponse.json(
+                { error: "ID inválido" },
+                { status: 400 }
+            )
+        }
+
         const body = await request.json()
 
         // Validação dos dados de entrada
-        const validateData = updateUserSchema.parse(body)
+        const validatedData = receptionistSchema.parse(body)
 
-        //Atualiza o usuário no banco de dados
-        const updateUser = await prisma.receptionist.update({
+        // Atualiza o usuário no banco de dados
+        const updatedReceptionist = await prisma.receptionist.update({
             where: { id },
-            data: validateData
+            data: validatedData
         })
 
-        return NextResponse.json(updateUser)
+        // Retorna o receptionista atualizado
+        return NextResponse.json(updatedReceptionist, { status: 200 })
+
     } catch (error) {
-        // Tratamento de erros
+        // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 { error: "Dados inválidos", details: error.errors },
@@ -37,16 +49,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             )
         }
 
-        if (error instanceof Error && error.message.includes("RecordNotFound")) {
-            return NextResponse.json(
-                { error: "Usuário não encontrado" },
-                { status: 400 }
-            )
+        // Tratamento de erros caso não encontre o recepcionista
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2025") {
+                return NextResponse.json(
+                    { error: "Recepcionista não encontrado" },
+                    { status: 404 }
+                )
+            }
         }
 
+        // Log de erros para debug
+        console.error("PUT /api/receptionist Error:", error)
+
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
-            { status: 500}
+            { error: "Erro interno no servidor", details: String(error) },
+            { status: 500 }
         )
     }
 }
