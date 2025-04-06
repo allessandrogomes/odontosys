@@ -8,6 +8,8 @@ const appointmentSchema = z.object({
     patientId: z.number().int().positive(),
     dentistId: z.number().int().positive(),
     scheduledAt: z.string().datetime(),
+    endsAt: z.string().datetime(),
+    durationMinutes: z.number().int().positive(),
     procedure: z.string().min(1, "O procedimento é obrigatório"),
     status: z.enum(["AGENDADA", "CANCELADA", "CONCLUIDA"])
 })
@@ -17,6 +19,8 @@ const partialAppointmentSchema = z.object({
     patientId: z.number().int().positive().optional(),
     dentistId: z.number().int().positive().optional(),
     scheduledAt: z.string().datetime().optional(),
+    endsAt: z.string().datetime().optional(),
+    durationMinutes: z.number().int().positive().optional(),
     procedure: z.string().optional(),
     status: z.enum(["AGENDADA", "CANCELADA", "CONCLUIDA"]).optional()
 })
@@ -108,7 +112,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
         // Log de erros para debug
         console.error("Erro no servidor", error)
-        
+
         // Retorna um erro genérico
         return NextResponse.json(
             { error: "Erro interno no servidor", details: String(error) },
@@ -164,7 +168,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
         // Log de erros para debug
         console.error("Erro no servidor", error)
-        
+
         // Retorna um erro genérico
         return NextResponse.json(
             { error: "Erro interno no servidor", details: String(error) },

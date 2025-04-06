@@ -75,6 +75,8 @@ export async function POST(request: Request) {
                     patientId: appointment.patientId,
                     dentistId: appointment.dentistId,
                     scheduledAt: appointment.scheduledAt,
+                    endsAt: appointment.endsAt,
+                    durationMinutes: appointment.durationMinutes,
                     procedure: appointment.procedure,
                     reason: validatedData.reason || null
                 }

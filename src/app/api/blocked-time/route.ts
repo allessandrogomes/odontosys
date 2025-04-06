@@ -4,7 +4,8 @@ import { z } from "zod"
 
 
 const blockeTimeSchema = z.object({
-    blockedTime: z.string().datetime(),
+    startOfBlockedTime: z.string().datetime(),
+    endOfBlockedTime: z.string().datetime(),
     dentistId: z.number().int().positive()
 })
 

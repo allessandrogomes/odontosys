@@ -56,40 +56,46 @@ enum AppointmentStatus {
 }
 
 model Appointment {
-  id            Int                @id @default(autoincrement())
-  patient       Patient            @relation(fields: [patientId], references: [id])
-  patientId     Int
-  dentist       Dentist            @relation(fields: [dentistId], references: [id])
-  dentistId     Int
-  scheduledAt   DateTime
-  procedure     String
-  status        AppointmentStatus  @default(AGENDADA)
-  createdAt     DateTime           @default(now())
+  id              Int                @id @default(autoincrement())
+  patient         Patient            @relation(fields: [patientId], references: [id])
+  patientId       Int
+  dentist         Dentist            @relation(fields: [dentistId], references: [id])
+  dentistId       Int
+  scheduledAt     DateTime
+  endsAt          DateTime
+  durationMinutes Int
+  procedure       String
+  status          AppointmentStatus  @default(AGENDADA)
+  createdAt       DateTime           @default(now())
 }
 
 model CompletedAppointment {
-  id            Int                @id
-  patient       Patient            @relation(fields: [patientId], references: [id])
-  patientId     Int
-  dentist       Dentist            @relation(fields: [dentistId], references: [id])
-  dentistId     Int
-  scheduledAt   DateTime
-  procedure     String
-  status        AppointmentStatus  @default(CONCLUIDA)
-  createdAt     DateTime           @default(now())
+  id              Int                @id
+  patient         Patient            @relation(fields: [patientId], references: [id])
+  patientId       Int
+  dentist         Dentist            @relation(fields: [dentistId], references: [id])
+  dentistId       Int
+  scheduledAt     DateTime
+  endsAt          DateTime
+  durationMinutes Int
+  procedure       String
+  status          AppointmentStatus  @default(CONCLUIDA)
+  createdAt       DateTime           @default(now())
 }
 
 model CancelledAppointment {
-  id            Int                @id
-  patient       Patient            @relation(fields: [patientId], references: [id])
-  patientId     Int
-  dentist       Dentist            @relation(fields: [dentistId], references: [id])
-  dentistId     Int
-  scheduledAt   DateTime
-  procedure     String
-  status        AppointmentStatus  @default(CANCELADA)
-  reason        String?
-  createdAt     DateTime           @default(now())
+  id              Int                @id
+  patient         Patient            @relation(fields: [patientId], references: [id])
+  patientId       Int
+  dentist         Dentist            @relation(fields: [dentistId], references: [id])
+  dentistId       Int
+  scheduledAt     DateTime
+  endsAt          DateTime
+  durationMinutes Int
+  procedure       String
+  status          AppointmentStatus  @default(CANCELADA)
+  reason          String?
+  createdAt       DateTime           @default(now())
 }
 
 model Prescription {
@@ -103,9 +109,10 @@ model Prescription {
 }
 
 model BlockedTime {
-  id            Int       @id @default(autoincrement())
-  blockedTime   DateTime
-  dentist       Dentist   @relation(fields: [dentistId], references: [id])
-  dentistId     Int
-  createdAt     DateTime  @default(now())
+  id                   Int       @id @default(autoincrement())
+  startOfBlockedTime   DateTime
+  endOfBlockedTime     DateTime
+  dentist              Dentist   @relation(fields: [dentistId], references: [id])
+  dentistId            Int
+  createdAt            DateTime  @default(now())
 }
