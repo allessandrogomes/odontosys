@@ -32,10 +32,12 @@ export async function POST(request: Request) {
             )
         }
 
-        // Tratamento de erros inesperados
+        // Log de erros para debug
         console.error("Erro no servidor", error)
+
+        // Retorna um erro genérico
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno do servidor", details: String(error) },
             { status: 500 }
         )
     }
