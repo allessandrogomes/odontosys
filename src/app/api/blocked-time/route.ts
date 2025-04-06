@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 
 
-const schemaValidation = z.object({
+const blockeTimeSchema = z.object({
     blockedTime: z.string().datetime(),
     dentistId: z.number().int().positive()
 })
@@ -14,9 +14,9 @@ export async function POST(request: Request) {
         const data = await request.json()
 
         // Realiza a validação dos dados recebidos
-        const validateData = schemaValidation.parse(data)
+        const validateData = blockeTimeSchema.parse(data)
 
-        // Cria o time item no banco de dados
+        // Cria o blocked time no banco de dados
         const newBlockedTime = await prisma.blockedTime.create({ data: validateData })
 
         return NextResponse.json(newBlockedTime, { status: 201 })
@@ -30,9 +30,12 @@ export async function POST(request: Request) {
             )
         }
 
+        // Log de erros para debug
+        console.error("Erro no servidor", error)
+
         // Tratamento de erros inesperados
         return NextResponse.json(
-            { error: "Erro interno do servidor" },
+            { error: "Erro interno do servidor", details: String(error) },
             { status: 500 }
         )
     }
