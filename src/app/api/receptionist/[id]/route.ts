@@ -9,6 +9,7 @@ const receptionistSchema = z.object({
     email: z.string().email(),
     phone: z.string(),
     cpf: z.string(),
+    password: z.string(),
     birthDate: z.string()
 })
 

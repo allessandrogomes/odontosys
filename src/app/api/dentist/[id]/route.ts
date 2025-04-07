@@ -9,6 +9,7 @@ const dentistSchema = z.object({
     email: z.string().email(),
     phone: z.string(),
     cpf: z.string(),
+    password: z.string(),
     birthDate: z.string(),
     croNumber: z.string(),
     specialty: z.string()
