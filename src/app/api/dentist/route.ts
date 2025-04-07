@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import bcrypt from "bcrypt"
 
 // GET /api/dentist
 export async function GET() {
@@ -34,6 +35,7 @@ const dentistSchema = z.object({
     phone: z.string(),
     cpf: z.string(),
     password: z.string(),
+    role: z.string(),
     birthDate: z.string(),
     croNumber: z.string(),
     specialty: z.string()
@@ -47,19 +49,30 @@ export async function POST(request: Request) {
         // Validação dos dados de entrada
         const validatedData = dentistSchema.parse(body)
 
+        // Hasheia a senha
+        const hashedPassword = await bcrypt.hash(validatedData.password, 10)
+
         // Cria o dentista no banco de dados
         const newDentist = await prisma.dentist.create({
-            data: validatedData
+            data: {
+                ...validatedData,
+                password: hashedPassword
+            }
         })
 
+        // Retorna sem a senha
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...dentistWithoutPassword } = newDentist
+
         // Retorna o dentista criado
-        return NextResponse.json(newDentist, { status: 201 })
+        return NextResponse.json(dentistWithoutPassword, { status: 201 })
 
     } catch (error) {
         // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: "Dados inválidos", details: error.errors }
+                { error: "Dados inválidos", details: error.errors },
+                { status: 400 }
             )
         }
 

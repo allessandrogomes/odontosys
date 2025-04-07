@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
+import bcrypt from "bcrypt"
 
 // Esquema de validação com Zod
 const receptionistSchema = z.object({
@@ -10,6 +11,7 @@ const receptionistSchema = z.object({
     phone: z.string(),
     cpf: z.string(),
     password: z.string(),
+    role: z.string(),
     birthDate: z.string()
 })
 
@@ -32,14 +34,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         // Validação dos dados de entrada
         const validatedData = receptionistSchema.parse(body)
 
+        // Hasheia a senha
+        const hashedPassword = await bcrypt.hash(validatedData.password, 10)
+
         // Atualiza o usuário no banco de dados
-        const updatedReceptionist = await prisma.receptionist.update({
+        const updatedReceptionist = await prisma.dentist.update({
             where: { id },
-            data: validatedData
+            data: {
+                ...validatedData,
+                password: hashedPassword
+            }
         })
 
-        // Retorna o receptionista atualizado
-        return NextResponse.json(updatedReceptionist, { status: 200 })
+        // Retorna sem a senha
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...updatedReceptionistWithoutPassword } = updatedReceptionist
+
+        return NextResponse.json(updatedReceptionistWithoutPassword, { status: 200 })
 
     } catch (error) {
         // Tratamento de erros de validação

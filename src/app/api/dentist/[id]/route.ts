@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
+import bcrypt from "bcrypt"
 
 // Esquema de validação com Zod
 const dentistSchema = z.object({
@@ -10,6 +11,7 @@ const dentistSchema = z.object({
     phone: z.string(),
     cpf: z.string(),
     password: z.string(),
+    role: z.string(),
     birthDate: z.string(),
     croNumber: z.string(),
     specialty: z.string()
@@ -34,13 +36,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         // Validação dos dados de entrada
         const validatedData = dentistSchema.parse(body)
 
+        // Hasheia a senha
+        const hashedPassword = await bcrypt.hash(validatedData.password, 10)
+
         //Atualiza o usuário no banco de dados
         const updatedDentist = await prisma.dentist.update({
             where: { id },
-            data: validatedData
+            data: {
+                ...validatedData,
+                password: hashedPassword
+            }
         })
 
-        return NextResponse.json(updatedDentist, { status: 200 })
+        // Retorna sem a senha
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...updatedDentistWithoutPassword } = updatedDentist
+
+        return NextResponse.json(updatedDentistWithoutPassword, { status: 200 })
 
     } catch (error) {
         // Tratamento de erros
