@@ -15,6 +15,7 @@ model Receptionist {
   createdAt DateTime @default(now())
   cpf       String      @unique
   password  String
+  role      String
   birthDate String
 }
 
@@ -26,6 +27,7 @@ model Dentist {
   createdAt             DateTime @default(now())
   cpf                   String      @unique
   password              String
+  role                  String
   birthDate             String
   croNumber             String      @unique
   specialty             String
