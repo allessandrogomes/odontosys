@@ -2,44 +2,100 @@ import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { z } from "zod"
+
+interface AuthUser {
+    id: number,
+    role: string,
+    name: string,
+    cpf: string,
+    password: string
+}
+
+const loginSchema = z.object({
+    cpf: z.string()
+        .transform(val => val.replace(/\D/g, ''))
+        .refine(val => val.length === 11, "CPF deve conter 11 dígitos"),
+    password: z.string().min(1, "Senha obrigatória")
+})
 
 export async function POST(request: Request) {
-    const { cpf, password } = await request.json()
+    try {
+        const data = await request.json()
 
-    // Busca no banco de dados o tipo de usuário por meio do CPF
-    const user = 
-        (await prisma.receptionist.findUnique({ where: { cpf } })) ||
-        (await prisma.dentist.findUnique({ where: { cpf } }))
+        // Valida os dados de entrada
+        const validatedData = loginSchema.parse(data)
 
-    // Retorna caso não encontre esse usuário
-    if (!user) {
-        return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 })
-    }
+        const { cpf, password } = validatedData
 
-    // Verifica a senha
-    const passwordMatch = await bcrypt.compare(password, user.password)
-    if (!passwordMatch) {
-        return NextResponse.json({ error: "Senha incorreta" }, { status: 401 })
-    }
+        // Busca no banco de dados o tipo de usuário por meio do CPF
+        const user = await prisma.$transaction([
+            prisma.receptionist.findUnique({ where: { cpf } }),
+            prisma.dentist.findUnique({ where: { cpf } })
+        ]).then(([receptionist, dentist]) => receptionist || dentist) as AuthUser | null
 
-    // Gera o token
-    const token = jwt.sign(
-        {
-            id: user.id,
-            role: user.role,
-            name: user.name,
-            cpf: user.cpf
-        },
-        process.env.JWT_SECRET!,
-        { expiresIn: '1d' }
-    )
+        // Verificação unificada com proteção contra timing attack
+        const passwordMatch = user
+            ? await bcrypt.compare(password, user.password)
+            : await bcrypt.compare(password, "$2b$10$fakestringdummyhash")
 
-    return NextResponse.json({
-        token,
-        user: {
-            id: user.id,
-            name: user.name,
-            role: user.role
+
+        if (!user || !passwordMatch) {
+            return NextResponse.json(
+                { error: "Credenciais inválidas" },
+                { status: 401 }
+            )
         }
-    })
+
+        // Valida existência da secret antes de usar
+        if (!process.env.JWT_SECRET) {
+            throw new Error("Variável de ambiente JWT_SECRET não configurada")
+        }
+
+        // Gera o token
+        const token = jwt.sign(
+            {
+                sub: user.id,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        )
+
+        // Resposta segura
+        const response = NextResponse.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                role: user.role
+            }
+        })
+
+        response.cookies.set("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 86400
+        })
+
+        return response
+
+    } catch (error) {
+        // Tratamento de erros de validação
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: "Dados inválidos", details: error.errors },
+                { status: 400 }
+            )
+        }
+
+        // Log de erros para debug
+        console.error("Erro no servidor", error)
+
+        // Retorna um erro genérico
+        return NextResponse.json(
+            { error: "Erro interno no servidor", ...(process.env.NODE_ENV === "development" && { details: String(error) }) },
+            { status: 500 }
+        )
+    }
 }
