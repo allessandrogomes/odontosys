@@ -26,11 +26,16 @@ export default function Home() {
     })
 
     const data = await response.json()
+    console.log(data)
 
     if (!response.ok) {
       alert(data.error || "Erro ao fazer o login")
     } else {
-      router.push("/dentist-dashboard")
+      if (data.user.role === "DENTISTA") {
+        router.push("/dentist-dashboard")
+      } else {
+        router.push("/receptionist-dashboard")
+      }
     }
   }
 
