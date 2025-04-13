@@ -55,7 +55,7 @@ export async function POST(request: Request) {
         // Gera o token
         const token = jwt.sign(
             {
-                sub: user.id,
+                id: user.id,
                 role: user.role
             },
             process.env.JWT_SECRET,
