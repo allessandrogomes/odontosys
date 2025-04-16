@@ -46,7 +46,6 @@ model Patient {
   createdAt             DateTime @default(now())
   cpf                   String      @unique
   birthDate             String
-  medicalHistory        Int[]
   appointments          Appointment[]
   prescriptions         Prescription[]
   completedAppointments CompletedAppointment[]

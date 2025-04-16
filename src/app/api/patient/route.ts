@@ -33,8 +33,7 @@ const patientSchema = z.object({
     email: z.string().email(),
     phone: z.string(),
     cpf: z.string(),
-    birthDate: z.string(),
-    medicalHistory: z.array(z.number().int().positive())
+    birthDate: z.string()
 })
 
 // POST /api/patient
@@ -56,7 +55,8 @@ export async function POST(request: Request) {
         // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: "Dados inválidos", details: error.errors }
+                { error: "Dados inválidos", details: error.errors },
+                { status: 400 }
             )
         }
 
