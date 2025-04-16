@@ -1,5 +1,6 @@
 'use client'
 
+import PatientRegistrationForm from "@/components/PatientRegistrationForm"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -63,6 +64,7 @@ export default function ReceptionistDashboard() {
             <h2>{user.croNumber}</h2>
             <p>Dashboard Recepcionista</p>
             <button onClick={handleLogout}>Sair</button>
+            <PatientRegistrationForm />
         </>
     )
 }
