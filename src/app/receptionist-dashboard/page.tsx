@@ -1,5 +1,6 @@
 'use client'
 
+import AppointmentSchedulingForm from "@/components/AppointmentSchedulingForm"
 import PatientRegistrationForm from "@/components/PatientRegistrationForm"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -65,6 +66,7 @@ export default function ReceptionistDashboard() {
             <p>Dashboard Recepcionista</p>
             <button onClick={handleLogout}>Sair</button>
             <PatientRegistrationForm />
+            <AppointmentSchedulingForm />
         </>
     )
 }
