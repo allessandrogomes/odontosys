@@ -119,3 +119,9 @@ model BlockedTime {
   dentistId            Int
   createdAt            DateTime  @default(now())
 }
+
+model Procedure {
+  id                Int          @id @default(autoincrement())
+  procedure         String       
+  durationMinutes   Int
+}
