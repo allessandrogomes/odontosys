@@ -38,7 +38,7 @@ const dentistSchema = z.object({
     role: z.string(),
     birthDate: z.string(),
     croNumber: z.string(),
-    specialty: z.string()
+    specialty: z.array(z.string())
 })
 
 // POST /api/dentist

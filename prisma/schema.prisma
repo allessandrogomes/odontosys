@@ -30,7 +30,7 @@ model Dentist {
   role                  String
   birthDate             String
   croNumber             String      @unique
-  specialty             String
+  specialty             String[]
   appointments          Appointment[]
   prescriptions         Prescription[]
   completedAppointments CompletedAppointment[]
