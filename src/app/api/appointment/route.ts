@@ -36,8 +36,7 @@ const appointmentSchema = z.object({
     scheduledAt: z.string().datetime(),
     endsAt: z.string().datetime(),
     durationMinutes: z.number().int().positive(),
-    procedure: z.string().min(1, "O procedimento é obrigatório"),
-    status: z.enum(["AGENDADA", "CANCELADA", "CONCLUIDA"])
+    procedure: z.string().min(1, "O procedimento é obrigatório")
 })
 
 // POST /api/appointment
