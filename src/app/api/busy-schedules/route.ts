@@ -12,8 +12,16 @@ export async function GET() {
         ])
 
         // Extrai os horários ocupados e bloqueados
-        const busySchedules = appointments.map(item => item.scheduledAt)
-        const arrayOfBlockedTimes = blockedTimes.map(item => item.blockedTime)
+        const busySchedules = appointments.map(item => ({
+            dentistId: item.dentistId,
+            start: item.scheduledAt,
+            end: item.endsAt
+        }))
+        const arrayOfBlockedTimes = blockedTimes.map(item => ({
+            dentistId: item.dentistId,
+            start: item.startOfBlockedTime,
+            end: item.endOfBlockedTime
+        }))
 
         // Concatena todos os horários ocupados/bloqueados
         const allBlockedTimes = [...busySchedules, ...arrayOfBlockedTimes]
