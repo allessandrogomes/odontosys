@@ -1,0 +1,97 @@
+.loginPage {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/images/bg.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .login {
+        position: relative;
+        box-sizing: border-box;
+        width: 350px;
+        height: 450px;
+        background-color: var(--secondary-color);
+        border-radius: 50px;
+        color: var(--primary-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        gap: 10px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        h1 {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .fields {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+
+            .labelInput {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                label {
+                    position: relative;
+                    left: 10px;
+                }
+
+                input {
+                    border-radius: 50px;
+                    border-width: 1px;
+                    border: 1px solid var(--primary-color);
+                    outline: none;
+                    box-shadow: none;
+                    box-sizing: border-box;
+                    padding: 0.5rem 0.75rem;
+                    width: 220px;
+                    background-color: var(--secondary-color);
+                    color: var(--primary-color);
+                }
+            }
+        }
+
+        button {
+            border: none;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border-radius: 50px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+
+        }
+
+        span {
+            color: red;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+    }
+}
+
+@keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }

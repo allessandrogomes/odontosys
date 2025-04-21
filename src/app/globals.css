@@ -1,4 +1,6 @@
-body {
-    background-color: black;
-    color: white;
+:root {
+    --primary-color: #006A71;
+    --secondary-color: #FAFAFA;
+    font-family: var(--font-poppins), sans-serif;
+    color: var(--primary-color);
 }

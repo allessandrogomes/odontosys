@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
         if (!user || !passwordMatch) {
             return NextResponse.json(
-                { error: "Credenciais inválidas" },
+                { error: "CPF ou senha incorretos" },
                 { status: 401 }
             )
         }
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
         // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: "Dados inválidos", details: error.errors },
+                { error: "Dados inválidos" },
                 { status: 400 }
             )
         }
