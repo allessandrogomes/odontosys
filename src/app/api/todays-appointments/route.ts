@@ -9,20 +9,47 @@ export async function GET() {
     const endOfDay = new Date(today.setHours(23, 59, 59, 999))
 
     try {
-        // Busca as consultas do dia
-        const appointments = await prisma.appointment.findMany({
+        // Busca dentistas com consulta no dia
+        const dentistsWithAppointmentsToday = await prisma.dentist.findMany({
             where: {
-                scheduledAt: {
-                    gte: startOfDay,
-                    lte: endOfDay
+                appointments: {
+                    some: {
+                        scheduledAt: {
+                            gte: startOfDay,
+                            lte: endOfDay
+                        }
+                    }
                 }
             },
-            orderBy: {
-                scheduledAt: "asc"
+            select: {
+                id: true,
+                name: true,
+                appointments: {
+                    where: {
+                        scheduledAt: {
+                            gte: startOfDay,
+                            lte: endOfDay
+                        }
+                    },
+                    orderBy: {
+                        scheduledAt: "asc"
+                    },
+                    select: {
+                        id: true,
+                        scheduledAt: true,
+                        endsAt: true,
+                        procedure: true,
+                        patient: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
             }
         })
         
-        return NextResponse.json(appointments, { status: 200 })
+        return NextResponse.json(dentistsWithAppointmentsToday, { status: 200 })
     } catch (error) {
         console.error("Erro ao buscar as consultas do dia", error)
 

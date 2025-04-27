@@ -9,8 +9,7 @@ const patientSchema = z.object({
     email: z.string().email(),
     phone: z.string(),
     cpf: z.string(),
-    birthDate: z.string(),
-    medicalHistory: z.array(z.number().int())
+    birthDate: z.string()
 }).strict()
 
 // PUT /api/patient/id

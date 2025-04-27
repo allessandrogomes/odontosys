@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import DashboardLogo from "@/components/DashboardLogo"
 import DashboardSideBar from "@/components/DashboardSideBar"
 import DashboardHeader from "@/components/DashboardHeader"
+import DashboardContent from "@/components/DashboardContent"
 
 export default function ReceptionistDashboard() {
     const [user, setUser] = useState<IReceptionist | null>(null)
@@ -70,7 +71,13 @@ export default function ReceptionistDashboard() {
                 <DashboardLogo />
                 <DashboardSideBar />
             </div>
-            <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"}/>
+
+            {/* Início */}
+            <div>
+                <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
+                <DashboardContent />
+            </div>
+            {/* Início */}
         </div>
     )
 }
