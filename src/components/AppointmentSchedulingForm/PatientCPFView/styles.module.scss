@@ -1,0 +1,38 @@
+.box {
+
+    span {
+        font-weight: 600;
+    }
+
+    input {
+        box-sizing: border-box;
+        border-radius: 10px;
+        outline: none;
+        border: 1px solid var(--primary-color);
+        padding: 5px 10px;
+        color: var(--primary-color);
+    }
+
+    button {
+        box-sizing: border-box;
+        border: none;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border-radius: 50px;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .ask {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        div {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+    }
+}

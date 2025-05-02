@@ -2,7 +2,29 @@
     display: flex;
     flex-direction: column;
     width: 500px;
+    min-height: 400px;
     gap: 25px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50px;
+    box-sizing: border-box;
+    padding: 30px;
+    margin: 20px 0;
+
+    .btns {
+        display: flex;
+        flex-direction: row;
+        align-self: end;
+        gap: 10px;
+
+        button {
+            border: none;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    }
 
     h3 {
         font-size: 2rem;

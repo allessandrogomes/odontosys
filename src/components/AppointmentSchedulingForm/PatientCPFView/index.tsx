@@ -1,12 +1,14 @@
 import { useState } from "react"
+import styles from "./styles.module.scss"
 
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
+    onChangePatient: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 
 
-export default function PatientCPFView({ onSelectPatientId }: IPatientCPFView) {
+export default function PatientCPFView({ onSelectPatientId, onChangePatient }: IPatientCPFView) {
     const [cpf, setCpf] = useState<string>("")
     const [patientFinded, setPatientFinded] = useState<IPatient | null>(null)
     const [patientSelected, setPatientSelected] = useState<string | null>(null)
@@ -42,30 +44,38 @@ export default function PatientCPFView({ onSelectPatientId }: IPatientCPFView) {
         }
     }
 
-    function wrongPatient() {
+    function wrongPatient(e: React.MouseEvent<HTMLButtonElement>) {
         setCpf("")
         setPatientFinded(null)
-
+        setPatientSelected(null)
+        onChangePatient(e)
     }
 
     return (
-        <div>
+        <div className={styles.box}>
             {!patientSelected && (
                 <>
                     <label>CPF do Paciente</label>
                     <input onChange={e => setCpf(e.target.value)} value={cpf} />
-                    <button onClick={handleSearchPatient}>Buscar Paciente</button>
+                    <button style={cpf.length === 0 ? { backgroundColor: "gray", cursor: "initial" } : {}} disabled={!cpf} onClick={handleSearchPatient}>Buscar</button>
                 </>
             )}
             {notFound && <p>Nenhum paciente encontrado.</p>}
             {patientFinded && !patientSelected && (
-                <div>
-                    <p>O Paciente se chama {patientFinded.name}?</p>
-                    <button onClick={correctPatient}>Sim</button>
-                    <button onClick={wrongPatient}>Não</button>
+                <div className={styles.ask}>
+                    <p>O Paciente se chama <span>{patientFinded.name}</span>?</p>
+                    <div>
+                        <button onClick={correctPatient}>Sim</button>
+                        <button onClick={wrongPatient}>Não</button>
+                    </div>
                 </div>
             )}
-            {patientSelected && <p>Paciente selecionado: {patientSelected}</p>}
+            {patientSelected && (
+                <>
+                    <p>Paciente selecionado: <span>{patientSelected}</span></p>
+                    <button onClick={e => wrongPatient(e)}>Alterar</button>
+                </>
+            )}
         </div>
     )
 }
