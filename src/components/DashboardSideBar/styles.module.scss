@@ -40,6 +40,11 @@
                     position: relative;
                     top: 5px;
                 }
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: var(--secondary-color);
+                }
             }
 
             .submenu {
@@ -52,12 +57,17 @@
                 animation: fadeInDown 0.3s ease-in-out;
 
                 .submenuItem {
+                    box-sizing: border-box;
                     width: 100%;
                     text-align: left;
                     cursor: pointer;
                     padding: 4px 8px;
-                    text-decoration: underline;
                     margin-bottom: 5px;
+
+                    &:hover {
+                        background-color: var(--primary-color);
+                        color: var(--secondary-color);
+                    }
                 }
             }
 

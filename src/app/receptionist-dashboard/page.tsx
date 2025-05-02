@@ -15,6 +15,7 @@ export default function ReceptionistDashboard() {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
+    const [dashboardToShow, setDashboardToShow] = useState<string>("Resumo")
 
     const handleLogout = async () => {
         try {
@@ -62,20 +63,17 @@ export default function ReceptionistDashboard() {
 
     return (
         <div className={styles.dashboard}>
-            {/* <h1>Bem-vindo, {capitalize(user.role)} {user.name}</h1>
-            <p>Dashboard Recepcionista</p>
-            <button onClick={handleLogout}>Sair</button>
-            <PatientRegistrationForm />
-            <AppointmentSchedulingForm /> */}
             <div>
                 <DashboardLogo />
-                <DashboardSideBar />
+                <DashboardSideBar dashboardSelected={dashboard => setDashboardToShow(dashboard)}/>
             </div>
 
             {/* Início */}
             <div>
                 <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
-                <DashboardContent />
+                {dashboardToShow === "Resumo" && <DashboardContent />}
+                {dashboardToShow === "Nova Consulta" && <AppointmentSchedulingForm />}
+                {dashboardToShow === "Cadastrar" && <PatientRegistrationForm />}
             </div>
             {/* Início */}
         </div>
