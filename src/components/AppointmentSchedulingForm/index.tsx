@@ -55,6 +55,13 @@ export default function AppointmentSchedulingForm() {
         }
     }
 
+    function handleBack() {
+        if (currentView === PROCEDURE_VIEW) {
+            setFormData(prev => ({ ...prev, patientId: null, procedure: null }))
+            setCurrentView(PATIENT_VIEW)
+        }
+    }
+
     async function handleSubmitAppointment() {
         try {
             const response = await fetch("/api/appointment", {
@@ -77,7 +84,7 @@ export default function AppointmentSchedulingForm() {
     return (
         <div className={styles.form}>
             <h3>Agendamento de Consulta</h3>
-
+            {/* <p>{JSON.stringify(formData)}</p> */}
             {/* Escolha do Paciente */}
             {currentView === PATIENT_VIEW && (
                 <>
@@ -93,7 +100,10 @@ export default function AppointmentSchedulingForm() {
             {currentView === PROCEDURE_VIEW && (
                 <>
                     <ProcedureView onSelectProcedure={e => setFormData(prev => ({ ...prev, procedure: e.procedure, durationMinutes: e.durationMinutes }))} />
-                    <button onClick={handleNext} disabled={!formData.procedure}>Próximo</button>
+                    <div className={styles.btns}>
+                        <button onClick={handleBack} disabled={!formData.procedure}>Voltar</button>
+                        {formData.procedure && <button onClick={handleNext} disabled={!formData.procedure}>Próximo</button>}
+                    </div>
                 </>
             )}
 

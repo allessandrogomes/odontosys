@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
+import styles from "./styles.module.scss"
 
 interface IProcedure {
-    id: number,
-    procedure: string,
-    durationMinutes: number
+    id: number | null
+    procedure: string | null
+    durationMinutes: number | null
 }
 
 interface IProcedureViewProps {
@@ -18,6 +19,12 @@ export default function ProcedureView({ onSelectProcedure }: IProcedureViewProps
         const procedure = procedures.find(p => p.id === selectId) || null
         if (procedure) {
             onSelectProcedure(procedure)
+        } else {
+            onSelectProcedure({ 
+                id: null,
+                procedure: null,
+                durationMinutes: null
+             })
         }
     }
 
@@ -36,11 +43,11 @@ export default function ProcedureView({ onSelectProcedure }: IProcedureViewProps
     }, [])
 
     return (
-        <div>
-            <h4>Escolha o Procedimento</h4>
+        <div className={styles.box}>
+            <label>Escolha o Procedimento</label>
             <select onChange={handleChange}>
                 <option value="">Selecione</option>
-                {procedures.map(item => <option key={item.id} value={item.id}>{item.procedure}</option>)}
+                {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
             </select>
         </div>
     )
