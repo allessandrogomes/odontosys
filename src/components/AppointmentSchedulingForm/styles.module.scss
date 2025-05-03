@@ -1,41 +1,30 @@
 .form {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 500px;
     min-height: 400px;
     gap: 25px;
-    border: 2px solid var(--primary-color);
-    border-radius: 50px;
     box-sizing: border-box;
     padding: 30px;
-    margin: 20px 0;
+    margin: 40px 0;
+    border-radius: 50px;
+    background: linear-gradient(145deg, #e1e1e1, #ffffff);
+    box-shadow: 25px 25px 15px #d5d5d5,
+        -25px -25px 15px #ffffff;
 
-    .btns {
-        display: flex;
-        flex-direction: row;
-        align-self: end;
-        gap: 10px;
-
-        button {
-            border: none;
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 10px;
-            border-radius: 50px;
-            cursor: pointer;
-        }
-    }
-
-    h3 {
+    h1 {
         font-size: 2rem;
+        text-align: center;
     }
 
-    div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    button {
+    .btn {
+        border: none;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        padding: 10px;
+        border-radius: 50px;
+        cursor: pointer;
         width: 100px;
         align-self: end;
     }

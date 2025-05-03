@@ -1,38 +1,80 @@
 .box {
 
-    span {
-        font-weight: 600;
-    }
+    .cpfField {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-    input {
-        box-sizing: border-box;
-        border-radius: 10px;
-        outline: none;
-        border: 1px solid var(--primary-color);
-        padding: 5px 10px;
-        color: var(--primary-color);
-    }
+        input {
+            box-sizing: border-box;
+            border-radius: 10px;
+            outline: none;
+            border: 1px solid var(--primary-color);
+            padding: 5px 10px;
+            color: var(--primary-color);
+            background-color: transparent;
+            width: 150px;
+        }
 
-    button {
-        box-sizing: border-box;
-        border: none;
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-        border-radius: 50px;
-        padding: 10px;
-        cursor: pointer;
-        margin-top: 10px;
+        button {
+            box-sizing: border-box;
+            border: none;
+            background-color: gray;
+            color: var(--secondary-color);
+            border-radius: 50px;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100px;
+        }
+
+        button.active {
+            background-color: var(--primary-color);
+            cursor: pointer;
+        }
     }
 
     .ask {
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: center;
+        text-align: center;
+
+        span {
+            font-weight: 600;
+        }
 
         div {
             display: flex;
-            flex-direction: row;
             gap: 10px;
+
+            button {
+                background-color: var(--tertiary-color);
+                border: none;
+                color: var(--secondary-color);
+                border-radius: 50px;
+                padding: 10px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .selected {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        span {
+            font-weight: 600;
+        }
+
+        button {
+            background-color: var(--tertiary-color);
+            border: none;
+            color: var(--secondary-color);
+            padding: 10px;
+            border-radius: 50px;
+            cursor: pointer;
         }
     }
 }

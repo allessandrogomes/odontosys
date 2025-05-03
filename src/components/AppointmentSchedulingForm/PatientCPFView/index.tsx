@@ -1,5 +1,6 @@
 import { useState } from "react"
 import styles from "./styles.module.scss"
+import { IMaskInput } from "react-imask"
 
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
@@ -24,7 +25,8 @@ export default function PatientCPFView({ onSelectPatientId, onChangePatient }: I
 
             const data = await response.json()
 
-            const patient = data.find((item: IPatient) => item.cpf === cpf)
+            const numericCPF = cpf.replace(/\D/g, "")
+            const patient = data.find((item: IPatient) => item.cpf.replace(/\D/g, "") === numericCPF)
             if (patient) {
                 setPatientFinded(patient)
                 setNotFound(false)
@@ -53,28 +55,43 @@ export default function PatientCPFView({ onSelectPatientId, onChangePatient }: I
 
     return (
         <div className={styles.box}>
+
+            {/* Campo para buscar paciente pelo CPF */}
             {!patientSelected && (
-                <>
+                <div className={styles.cpfField}>
                     <label>CPF do Paciente</label>
-                    <input onChange={e => setCpf(e.target.value)} value={cpf} />
-                    <button style={cpf.length === 0 ? { backgroundColor: "gray", cursor: "initial" } : {}} disabled={!cpf} onClick={handleSearchPatient}>Buscar</button>
-                </>
+                    <IMaskInput
+                        mask="000.000.000-00"
+                        value={cpf}
+                        onAccept={(value) => setCpf(value)}
+                        overwrite
+                        minLength={14}
+                        required
+                    />
+                    <button className={cpf.length === 14 ? `${styles.active}` : ""} disabled={!cpf} onClick={handleSearchPatient}>Buscar</button>
+                </div>
             )}
-            {notFound && <p>Nenhum paciente encontrado.</p>}
+
+            {/* Mensagem caso não encontre o Paciente */}
+            {notFound && <p>Nenhum paciente encontrado</p>}
+
+            {/* Confirmação do Paciente encontrado */}
             {patientFinded && !patientSelected && (
                 <div className={styles.ask}>
-                    <p>O Paciente se chama <span>{patientFinded.name}</span>?</p>
+                    <p>O Paciente se chama <br/><span>{patientFinded.name}</span>?</p>
                     <div>
                         <button onClick={correctPatient}>Sim</button>
                         <button onClick={wrongPatient}>Não</button>
                     </div>
                 </div>
             )}
+
+            {/* Mostra Paciente selecionado */}
             {patientSelected && (
-                <>
-                    <p>Paciente selecionado: <span>{patientSelected}</span></p>
+                <div className={styles.selected}>
+                    <p>Paciente selecionado: <br/><span>{patientSelected}</span></p>
                     <button onClick={e => wrongPatient(e)}>Alterar</button>
-                </>
+                </div>
             )}
         </div>
     )

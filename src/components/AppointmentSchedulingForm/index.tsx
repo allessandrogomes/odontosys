@@ -83,7 +83,7 @@ export default function AppointmentSchedulingForm() {
 
     return (
         <div className={styles.form}>
-            <h3>Agendamento de Consulta</h3>
+            <h1>Agendamento de Consulta</h1>
             {/* <p>{JSON.stringify(formData)}</p> */}
             {/* Escolha do Paciente */}
             {currentView === PATIENT_VIEW && (
@@ -92,7 +92,7 @@ export default function AppointmentSchedulingForm() {
                         onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
                         onChangePatient={() => setFormData(prev => ({ ...prev, patientId: null }))}
                     />
-                    {formData.patientId && <div className={styles.btns}><button onClick={handleNext}>Próximo</button></div>}
+                    {formData.patientId && <button className={styles.btn} onClick={handleNext}>Próximo</button>}
                 </>
             )}
             {/* Escolha do Paciente */}
