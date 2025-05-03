@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
+import styles from "./styles.module.scss"
 
 interface IDentistView {
     procedure: string | null,
-    dentistId: (id: number) => void
+    dentistId: (id: number | null) => void
 }
 
 export default function DentistView({ procedure, dentistId }: IDentistView) {
@@ -12,6 +13,11 @@ export default function DentistView({ procedure, dentistId }: IDentistView) {
     function handleSelectDentist(dentist: IDentist) {
         setSelectedDentist(dentist)
         dentistId(dentist.id)
+    }
+
+    function handleChangeDentist() {
+        setSelectedDentist(null)
+        dentistId(null)
     }
 
     useEffect(() => {
@@ -33,21 +39,22 @@ export default function DentistView({ procedure, dentistId }: IDentistView) {
     return (
         <>
             {!selectedDentist && (
-                <div>
+                <div className={styles.box}>
                     <h4>Selecione o Dentista</h4>
-                    {dentists && dentists.map(dentist => (
-                        <div key={dentist.id}>
-                            <p>{dentist.name}</p>
-                            <button onClick={() => handleSelectDentist(dentist)}>Selecionar</button>
-                        </div>
-                    ))}
+                    <div className={styles.containerDentists}>
+                        {dentists && dentists.map(dentist => (
+                            <div className={styles.dentist} onClick={() => handleSelectDentist(dentist)} key={dentist.id}>
+                                <p>Dr. {dentist.name}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 
             {selectedDentist && (
                 <>
-                    <p>Dentista selecionado: {selectedDentist.name}</p>
-                    <button onClick={() => setSelectedDentist(null)}>Trocar dentista</button>
+                    <p>Dentista selecionado: <span className={styles.span}>Dr. {selectedDentist.name}</span></p>
+                    <button onClick={handleChangeDentist}>Alterar Dentista</button>
                 </>
             )}
         </>

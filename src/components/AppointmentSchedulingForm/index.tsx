@@ -110,7 +110,7 @@ export default function AppointmentSchedulingForm() {
             {currentView === DENTIST_VIEW && (
                 <>
                     <DentistView procedure={formData.procedure} dentistId={id => setFormData(prev => ({ ...prev, dentistId: id }))} />
-                    <button onClick={handleNext} disabled={!formData.dentistId}>Próximo</button>
+                    {formData.dentistId && <button onClick={handleNext}>Próximo</button>}
                 </>
             )}
 

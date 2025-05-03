@@ -1,0 +1,21 @@
+.box {
+
+    .containerDentists {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        .dentist {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            width: max-content;
+            padding: 0 20px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    }
+}
+
+.span {
+    font-weight: 600;
+}
