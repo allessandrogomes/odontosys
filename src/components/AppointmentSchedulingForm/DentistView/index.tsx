@@ -40,7 +40,7 @@ export default function DentistView({ procedure, dentistId }: IDentistView) {
         <>
             {!selectedDentist && (
                 <div className={styles.box}>
-                    <h4>Selecione o Dentista</h4>
+                    <h4>Escolha o Dentista</h4>
                     <div className={styles.containerDentists}>
                         {dentists && dentists.map(dentist => (
                             <div className={styles.dentist} onClick={() => handleSelectDentist(dentist)} key={dentist.id}>
