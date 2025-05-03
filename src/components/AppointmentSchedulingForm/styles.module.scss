@@ -28,4 +28,15 @@
         width: 100px;
         align-self: end;
     }
+
+    .btnsProcedure {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin: auto 0 0 0;
+
+        button:first-child {
+            align-self: left;
+        }
+    }
 }

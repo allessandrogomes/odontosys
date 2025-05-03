@@ -100,9 +100,9 @@ export default function AppointmentSchedulingForm() {
             {currentView === PROCEDURE_VIEW && (
                 <>
                     <ProcedureView onSelectProcedure={e => setFormData(prev => ({ ...prev, procedure: e.procedure, durationMinutes: e.durationMinutes }))} />
-                    <div className={styles.btns}>
-                        <button onClick={handleBack} disabled={!formData.procedure}>Voltar</button>
-                        {formData.procedure && <button onClick={handleNext} disabled={!formData.procedure}>Próximo</button>}
+                    <div className={styles.btnsProcedure}>
+                        <button className={styles.btn} onClick={handleBack}>Voltar</button>
+                        {formData.procedure && <button className={styles.btn} onClick={handleNext} disabled={!formData.procedure}>Próximo</button>}
                     </div>
                 </>
             )}
