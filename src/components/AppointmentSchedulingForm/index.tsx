@@ -83,20 +83,17 @@ export default function AppointmentSchedulingForm() {
 
     return (
         <div className={styles.form}>
-            <h1>Agendamento de Consulta</h1>
-            {/* <p>{JSON.stringify(formData)}</p> */}
-            {/* Escolha do Paciente */}
-            {currentView === PATIENT_VIEW && (
-                <>
-                    <PatientCPFView
-                        onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
-                        onChangePatient={() => setFormData(prev => ({ ...prev, patientId: null }))}
-                    />
-                    {formData.patientId && <button className={styles.btn} onClick={handleNext}>Próximo</button>}
-                </>
-            )}
-            {/* Escolha do Paciente */}
+            <h1 className={styles.title}>Agendamento de Consulta</h1>
 
+            {/* Escolha do Paciente */}
+            {currentView === PATIENT_VIEW &&
+                <PatientCPFView
+                    onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
+                    onNext={handleNext}
+                />
+            }
+
+            {/* Escolha do Procedimento */}
             {currentView === PROCEDURE_VIEW && (
                 <>
                     <ProcedureView onSelectProcedure={e => setFormData(prev => ({ ...prev, procedure: e.procedure, durationMinutes: e.durationMinutes }))} />

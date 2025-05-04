@@ -1,9 +1,27 @@
 .box {
+    height: 100%;
+    width: 100%;
 
     .cpfField {
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        position: relative;
+
+        p {
+            margin: 0;
+            position: absolute;
+            bottom: 65px;
+        }
+
+        label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
 
         input {
             box-sizing: border-box;
@@ -13,68 +31,79 @@
             padding: 5px 10px;
             color: var(--primary-color);
             background-color: transparent;
-            width: 150px;
+            width: 170px;
+            text-align: center;
         }
 
-        button {
-            box-sizing: border-box;
-            border: none;
-            background-color: gray;
-            color: var(--secondary-color);
-            border-radius: 50px;
-            padding: 10px;
-            margin-top: 10px;
-            width: 100px;
-        }
-
-        button.active {
-            background-color: var(--primary-color);
-            cursor: pointer;
-        }
-    }
-
-    .ask {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-
-        span {
-            font-weight: 600;
-        }
-
-        div {
+        .btns {
+            width: 100%;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
 
             button {
-                background-color: var(--tertiary-color);
                 border: none;
                 color: var(--secondary-color);
                 border-radius: 50px;
                 padding: 10px;
+                width: 100px;
+            }
+
+            .nextBtn {
+                background-color: gray;
+                margin-left: auto;
+            }
+
+            button.active {
+                background-color: var(--primary-color);
                 cursor: pointer;
             }
         }
     }
 
-    .selected {
+    .selectedView {
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         text-align: center;
+        position: relative;
+
+        p {
+            font-size: 1.25rem;
+            margin: 0;
+        }
 
         span {
             font-weight: 600;
         }
 
-        button {
-            background-color: var(--tertiary-color);
-            border: none;
-            color: var(--secondary-color);
-            padding: 10px;
-            border-radius: 50px;
-            cursor: pointer;
+        .btns {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+
+            button {
+                border: none;
+                color: var(--secondary-color);
+                border-radius: 50px;
+                padding: 10px;
+                width: 100px;
+                cursor: pointer;
+            }
+
+            .nextBtn {
+                background-color: var(--primary-color);
+            }
+
+            .backBtn {
+                background-color: var(--tertiary-color);
+            }
         }
     }
 }

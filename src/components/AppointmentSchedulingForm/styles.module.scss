@@ -1,11 +1,8 @@
 .form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 500px;
     min-height: 400px;
-    gap: 25px;
     box-sizing: border-box;
     padding: 30px;
     margin: 40px 0;
@@ -14,9 +11,11 @@
     box-shadow: 25px 25px 15px #d5d5d5,
         -25px -25px 15px #ffffff;
 
-    h1 {
+    .title {
         font-size: 2rem;
         text-align: center;
+        margin: 0;
+        margin-top: 20px;
     }
 
     .btn {

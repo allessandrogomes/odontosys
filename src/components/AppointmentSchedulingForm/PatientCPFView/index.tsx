@@ -4,14 +4,13 @@ import { IMaskInput } from "react-imask"
 
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
-    onChangePatient: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 
 
-export default function PatientCPFView({ onSelectPatientId, onChangePatient }: IPatientCPFView) {
+export default function PatientCPFView({ onSelectPatientId, onNext }: IPatientCPFView) {
     const [cpf, setCpf] = useState<string>("")
-    const [patientFinded, setPatientFinded] = useState<IPatient | null>(null)
     const [patientSelected, setPatientSelected] = useState<string | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false)
 
@@ -28,29 +27,15 @@ export default function PatientCPFView({ onSelectPatientId, onChangePatient }: I
             const numericCPF = cpf.replace(/\D/g, "")
             const patient = data.find((item: IPatient) => item.cpf.replace(/\D/g, "") === numericCPF)
             if (patient) {
-                setPatientFinded(patient)
+                setPatientSelected(patient.name)
+                onSelectPatientId(patient.id)
                 setNotFound(false)
             } else {
-                setPatientFinded(null)
                 setNotFound(true)
             }
         } catch (error) {
             alert(error)
         }
-    }
-
-    function correctPatient() {
-        if (patientFinded) {
-            onSelectPatientId(patientFinded.id)
-            setPatientSelected(patientFinded.name)
-        }
-    }
-
-    function wrongPatient(e: React.MouseEvent<HTMLButtonElement>) {
-        setCpf("")
-        setPatientFinded(null)
-        setPatientSelected(null)
-        onChangePatient(e)
     }
 
     return (
@@ -68,29 +53,21 @@ export default function PatientCPFView({ onSelectPatientId, onChangePatient }: I
                         minLength={14}
                         required
                     />
-                    <button className={cpf.length === 14 ? `${styles.active}` : ""} disabled={!cpf} onClick={handleSearchPatient}>Buscar</button>
-                </div>
-            )}
-
-            {/* Mensagem caso não encontre o Paciente */}
-            {notFound && <p>Nenhum paciente encontrado</p>}
-
-            {/* Confirmação do Paciente encontrado */}
-            {patientFinded && !patientSelected && (
-                <div className={styles.ask}>
-                    <p>O Paciente se chama <br/><span>{patientFinded.name}</span>?</p>
-                    <div>
-                        <button onClick={correctPatient}>Sim</button>
-                        <button onClick={wrongPatient}>Não</button>
+                    {notFound && <p className={styles.notFound}>Nenhum paciente encontrado</p>}
+                    <div className={styles.btns}>
+                        <button className={`${styles.nextBtn} ${cpf.length === 14 ? styles.active : ""}`} disabled={!(cpf.length === 14)} onClick={handleSearchPatient}>Próximo</button>
                     </div>
                 </div>
             )}
 
             {/* Mostra Paciente selecionado */}
             {patientSelected && (
-                <div className={styles.selected}>
-                    <p>Paciente selecionado: <br/><span>{patientSelected}</span></p>
-                    <button onClick={e => wrongPatient(e)}>Alterar</button>
+                <div className={styles.selectedView}>
+                    <p>Paciente selecionado: <br /><span>{patientSelected}</span></p>
+                    <div className={styles.btns}>
+                        <button className={styles.backBtn} onClick={() => setPatientSelected(null)}>Voltar</button>
+                        <button className={styles.nextBtn} onClick={e => onNext(e)}>Próximo</button>
+                    </div>
                 </div>
             )}
         </div>
