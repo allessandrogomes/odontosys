@@ -5,11 +5,12 @@ import { IMaskInput } from "react-imask"
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
     onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    active: boolean
 }
 
 
 
-export default function PatientCPFView({ onSelectPatientId, onNext }: IPatientCPFView) {
+export default function PatientCPFView({ onSelectPatientId, onNext, active }: IPatientCPFView) {
     const [cpf, setCpf] = useState<string>("")
     const [patientSelected, setPatientSelected] = useState<string | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false)
@@ -39,7 +40,7 @@ export default function PatientCPFView({ onSelectPatientId, onNext }: IPatientCP
     }
 
     return (
-        <div className={styles.box}>
+        <div className={`${styles.box} ${active && styles.active}`}>
 
             {/* Campo para buscar paciente pelo CPF */}
             {!patientSelected && (

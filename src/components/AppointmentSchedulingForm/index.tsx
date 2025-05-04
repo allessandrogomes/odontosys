@@ -57,8 +57,9 @@ export default function AppointmentSchedulingForm() {
 
     function handleBack() {
         if (currentView === PROCEDURE_VIEW) {
-            setFormData(prev => ({ ...prev, patientId: null, procedure: null }))
             setCurrentView(PATIENT_VIEW)
+        } else if (currentView === DENTIST_VIEW) {
+            setCurrentView(PROCEDURE_VIEW)
         }
     }
 
@@ -86,30 +87,28 @@ export default function AppointmentSchedulingForm() {
             <h1 className={styles.title}>Agendamento de Consulta</h1>
 
             {/* Escolha do Paciente */}
-            {currentView === PATIENT_VIEW &&
-                <PatientCPFView
-                    onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
-                    onNext={handleNext}
-                />
-            }
+            <PatientCPFView
+                onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
+                onNext={handleNext}
+                active={currentView === PATIENT_VIEW}
+            />
 
             {/* Escolha do Procedimento */}
-            {currentView === PROCEDURE_VIEW && (
-                <>
-                    <ProcedureView onSelectProcedure={e => setFormData(prev => ({ ...prev, procedure: e.procedure, durationMinutes: e.durationMinutes }))} />
-                    <div className={styles.btnsProcedure}>
-                        <button className={styles.btn} onClick={handleBack}>Voltar</button>
-                        {formData.procedure && <button className={styles.btn} onClick={handleNext} disabled={!formData.procedure}>Próximo</button>}
-                    </div>
-                </>
-            )}
+            <ProcedureView
+                onSelectProcedure={e => setFormData(prev => ({ ...prev, procedure: e.procedure, durationMinutes: e.durationMinutes }))}
+                onBack={handleBack}
+                onNext={handleNext}
+                active={currentView === PROCEDURE_VIEW}
+            />
 
-            {currentView === DENTIST_VIEW && (
-                <>
-                    <DentistView procedure={formData.procedure} dentistId={id => setFormData(prev => ({ ...prev, dentistId: id }))} />
-                    {formData.dentistId && <button onClick={handleNext}>Próximo</button>}
-                </>
-            )}
+            {/* Escolha do Dentista */}
+            <DentistView
+                procedure={formData.procedure}
+                dentistId={id => setFormData(prev => ({ ...prev, dentistId: id }))}
+                onBack={handleBack}
+                onNext={handleNext}
+                active={currentView === DENTIST_VIEW}
+            />
 
             {currentView === SCHEDULED_VIEW && (
                 <>

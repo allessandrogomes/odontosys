@@ -1,6 +1,7 @@
 .box {
     height: 100%;
     width: 100%;
+    display: none;
 
     .cpfField {
         width: 100%;
@@ -38,7 +39,7 @@
         .btns {
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: right;
             position: absolute;
             bottom: 0;
 
@@ -52,7 +53,6 @@
 
             .nextBtn {
                 background-color: gray;
-                margin-left: auto;
             }
 
             button.active {
@@ -106,4 +106,8 @@
             }
         }
     }
+}
+
+.box.active {
+    display: block;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import styles from "./styles.module.scss"
 
 interface IProcedure {
@@ -9,22 +9,28 @@ interface IProcedure {
 
 interface IProcedureViewProps {
     onSelectProcedure: (procedure: IProcedure) => void
+    onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    onBack: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    active: boolean
 }
 
-export default function ProcedureView({ onSelectProcedure }: IProcedureViewProps) {
+export default function ProcedureView({ onSelectProcedure, onNext, onBack, active }: IProcedureViewProps) {
     const [procedures, setProcedures] = useState<IProcedure[]>([])
+    const [selectedProcedure, setSelectedProcedure] = useState<IProcedure | null>(null)
 
     function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         const selectId = Number(e.target.value)
         const procedure = procedures.find(p => p.id === selectId) || null
         if (procedure) {
             onSelectProcedure(procedure)
+            setSelectedProcedure(procedure)
         } else {
-            onSelectProcedure({ 
+            onSelectProcedure({
                 id: null,
                 procedure: null,
                 durationMinutes: null
-             })
+            })
+            setSelectedProcedure(null)
         }
     }
 
@@ -43,12 +49,22 @@ export default function ProcedureView({ onSelectProcedure }: IProcedureViewProps
     }, [])
 
     return (
-        <div className={styles.box}>
+        <div className={`${styles.box} ${active && styles.active}`}>
             <label>Escolha o Procedimento</label>
             <select onChange={handleChange}>
                 <option value="">Selecione</option>
                 {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
             </select>
+            <div className={styles.boxBtns}>
+                <button onClick={e => onBack(e)} className={styles.backBtn}>Voltar</button>
+                <button
+                    disabled={!selectedProcedure}
+                    className={`${styles.nextBtn} ${selectedProcedure && styles.active}`}
+                    onClick={e => onNext(e)}
+                >
+                    Próximo
+                </button>
+            </div>
         </div>
     )
 }
