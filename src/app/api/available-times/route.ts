@@ -1,100 +1,75 @@
-// src/app/api/available-slots/route.ts
-import { NextResponse } from "next/server"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest, NextResponse } from "next/server"
 
-interface BlockedSlot {
-  start: string
-  end: string
-  dentistId: number
+interface BusySchedule {
+    dentistId: number
+    start: string,
+    end: string,
 }
 
-function getTimeIntervals(start: string, end: string, duration: number) {
-  const intervals = []
-  let current = new Date(start)
+function generateSlots(date: string, startHour: number, endHour: number, durationMinutes: number): { start: Date; end: Date }[] {
+    const slots: { start: Date; end: Date }[] = []
+    let cursor = new Date(`${date}T${String(startHour).padStart(2, '0')}:00:00`)
 
-  while (current < new Date(end)) {
-    const endSlot = new Date(current.getTime() + duration * 60000)
-    if (endSlot > new Date(end)) break
-
-    intervals.push({
-      start: current.toTimeString().slice(0, 5),
-      end: endSlot.toTimeString().slice(0, 5),
-      startISO: current.toISOString(),
-      endISO: endSlot.toISOString()
-    })
-
-    current = endSlot
-  }
-
-  return intervals
+    const periodEnd = new Date(`${date}T${String(endHour).padStart(2, '0')}:00:00`)
+    while (cursor.getTime() + durationMinutes * 60000 <= periodEnd.getTime()) {
+        const slotStart = new Date(cursor)
+        const slotEnd = new Date(cursor.getTime() + durationMinutes * 60000)
+        slots.push({ start: slotStart, end: slotEnd })
+        cursor = slotEnd
+    }
+    return slots
 }
 
-function isOverlapping(slotStart: Date, slotEnd: Date, blocked: BlockedSlot[]) {
-  return blocked.some(b => {
-    const bStart = new Date(b.start)
-    const bEnd = new Date(b.end)
-    return slotStart < bEnd && slotEnd > bStart
-  })
+function overlaps(
+    aStart: Date, aEnd: Date,
+    bStart: Date, bEnd: Date
+): boolean {
+    return aStart < bEnd && bStart < aEnd
 }
 
-export async function POST(req: Request) {
-  const { dentistId, durationMinutes } = await req.json()
+export async function POST(request: NextRequest) {
+    try {
+        const { date, durationMinutes, dentistId } = await request.json()
 
-  // Simulação do fetch dos horários ocupados
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
-  const response = await fetch(`${baseUrl}/api/busy-schedules`)
-  const blockedSlots: BlockedSlot[] = await response.json()
+        // 1. Buscar todos os horários ocupados
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
+        const resp = await fetch(`${baseUrl}/api/busy-schedules`)
+        if (!resp.ok) throw new Error('Erro ao buscar horários ocupados')
+        const allBusy: BusySchedule[] = await resp.json()
 
-  const filteredBlocked = blockedSlots.filter(b => b.dentistId === dentistId)
+        // 2. Filtrar apenas do dentista e da data informada
+        const busyOnDate = allBusy
+            .filter(s => s.dentistId === dentistId)
+            .filter(s => s.start.slice(0, 10) === date)
 
-  const result = []
+        // 3. Gerar todos os slots nos dois períodos
+        const morningSlots = generateSlots(date, 8, 12, durationMinutes)
+        const afternoonSlots = generateSlots(date, 14, 18, durationMinutes)
+        const allSlots = [...morningSlots, ...afternoonSlots]
 
-  for (let i = 0; i < 7; i++) {
-    const day = new Date()
-    day.setDate(day.getDate() + i)
-    const weekday = day.getDay()
+        // 4. Filtrar os que não colidem com nenhum busyOnDate
+        const available = allSlots.filter(slot => {
+            return !busyOnDate.some(busy =>
+                overlaps(
+                    slot.start, slot.end,
+                    new Date(busy.start),
+                    new Date(busy.end)
+                )
+            )
+        })
 
-    if (weekday === 0 || weekday === 6) continue
+        // 5. Retornar em ISO strings
+        const result = available.map(slot => ({
+            start: slot.start.toISOString(),
+            end: slot.end.toISOString()
+        }))
 
-    const dateString = day.toLocaleDateString("pt-BR", {
-      weekday: "long",
-      day: "2-digit",
-      month: "2-digit"
-    })
-
-    const slots = []
-
-    // Manhã
-    const morningStart = new Date(day)
-    morningStart.setHours(8, 0, 0, 0)
-    const morningEnd = new Date(day)
-    morningEnd.setHours(12, 0, 0, 0)
-
-    slots.push(...getTimeIntervals(morningStart.toISOString(), morningEnd.toISOString(), durationMinutes))
-
-    // Tarde
-    const afternoonStart = new Date(day)
-    afternoonStart.setHours(14, 0, 0, 0)
-    const afternoonEnd = new Date(day)
-    afternoonEnd.setHours(18, 0, 0, 0)
-
-    slots.push(...getTimeIntervals(afternoonStart.toISOString(), afternoonEnd.toISOString(), durationMinutes))
-
-    const available = slots.filter(slot => {
-      const start = new Date(slot.startISO)
-      const end = new Date(slot.endISO)
-      return !isOverlapping(start, end, filteredBlocked)
-    })
-
-    result.push({
-      day: dateString,
-      slots: available.map(s => ({
-        start: s.start,
-        end: s.end,
-        startISO: s.startISO,
-        endISO: s.endISO
-      }))
-    })
-  }
-
-  return NextResponse.json(result)
+        return NextResponse.json(result)
+    } catch (error: any) {
+        return NextResponse.json(
+            { message: error.message || 'Erro interno' },
+            { status: 500 }
+        )
+    }
 }

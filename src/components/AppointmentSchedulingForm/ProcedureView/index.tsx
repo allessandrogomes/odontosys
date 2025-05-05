@@ -51,8 +51,8 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
     return (
         <div className={`${styles.box} ${active && styles.active}`}>
             <label>Escolha o Procedimento</label>
-            <select onChange={handleChange}>
-                <option value="">Selecione</option>
+            <select onChange={handleChange} value={selectedProcedure ? selectedProcedure.id! : ""}>
+                <option disabled value="">Selecione</option>
                 {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
             </select>
             <div className={styles.boxBtns}>

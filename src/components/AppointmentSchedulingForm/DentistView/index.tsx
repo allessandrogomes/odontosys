@@ -4,6 +4,7 @@ import styles from "./styles.module.scss"
 interface IDentistView {
     procedure: string | null,
     dentistId: (id: number | null) => void
+    dentistName: (dentistName: string | null) => void
     active: boolean
     onBack: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
     onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -12,18 +13,22 @@ interface IDentistView {
 const SELECT_VIEW = "SELECT_VIEW"
 const SHOW_SELECTED_VIEW = "SHOW_SELECTED_VIEW"
 
-export default function DentistView({ procedure, dentistId, active, onBack, onNext }: IDentistView) {
+export default function DentistView({ procedure, dentistId, dentistName, active, onBack, onNext }: IDentistView) {
     const [dentists, setDentists] = useState<IDentist[]>([])
     const [selectedDentist, setSelectedDentist] = useState<IDentist | null>(null)
     const [currentView, setCurrentView] = useState<string>(SELECT_VIEW)
 
     function handleNext() {
         dentistId(selectedDentist!.id)
+        dentistName(selectedDentist!.name)
         setCurrentView(SHOW_SELECTED_VIEW)
     }
 
     function handleBack() {
         setCurrentView(SELECT_VIEW)
+        dentistId(null)
+        dentistName(null)
+        setSelectedDentist(null)
     }
 
     useEffect(() => {
@@ -72,7 +77,7 @@ export default function DentistView({ procedure, dentistId, active, onBack, onNe
             {/* Mostra o Dentista selecionado */}
             {currentView === SHOW_SELECTED_VIEW && (
                 <div className={styles.showSelectedView}>
-                    <p>Dentista selecionado: <br/><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
+                    <p>Dentista selecionado: <br/><br/><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
                     <div className={styles.boxBtns}>
                         <button onClick={handleBack} className={styles.backBtn}>Voltar</button>
                         <button onClick={e => onNext(e)} className={styles.nextBtn}>Próximo</button>

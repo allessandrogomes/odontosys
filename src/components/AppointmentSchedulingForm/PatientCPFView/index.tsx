@@ -4,16 +4,16 @@ import { IMaskInput } from "react-imask"
 
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
+    patientName: (patientName: string | null) => void
     onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
     active: boolean
 }
 
-
-
-export default function PatientCPFView({ onSelectPatientId, onNext, active }: IPatientCPFView) {
+export default function PatientCPFView({ onSelectPatientId, onNext, active, patientName}: IPatientCPFView) {
     const [cpf, setCpf] = useState<string>("")
     const [patientSelected, setPatientSelected] = useState<string | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false)
+
 
     async function handleSearchPatient() {
         try {
@@ -30,6 +30,7 @@ export default function PatientCPFView({ onSelectPatientId, onNext, active }: IP
             if (patient) {
                 setPatientSelected(patient.name)
                 onSelectPatientId(patient.id)
+                patientName(patient.name)
                 setNotFound(false)
             } else {
                 setNotFound(true)
