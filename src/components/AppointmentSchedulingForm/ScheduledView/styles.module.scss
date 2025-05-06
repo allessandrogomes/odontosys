@@ -11,12 +11,11 @@
         align-items: center;
         justify-content: center;
         position: relative;
+        gap: 20px;
 
         label {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 5px;
-            margin-top: 80px;
         }
 
         input {
@@ -28,14 +27,14 @@
             padding: 5px;
             color: var(--primary-color);
             border-radius: 50px;
-            margin-bottom: 30px;
         }
 
         .boxBtns {
             width: 100%;
             display: flex;
             justify-content: space-between;
-            margin-top: auto;
+            position: absolute;
+            bottom: 0;
 
             button {
                 border: none;
@@ -66,15 +65,16 @@
             flex-wrap: wrap;
             gap: 10px;
             width: 100%;
-            margin-bottom: 50px;
 
             button {
-                width: 130px;
+                width: 100px;
                 border: none;
+                border-radius: 5px;
                 background-color: var(--tertiary-color);
                 color: var(--secondary-color);
                 padding: 5px 0;
                 cursor: pointer;
+                font-size: 0.85rem;
             }
 
             button.selected {

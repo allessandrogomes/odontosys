@@ -77,7 +77,7 @@ export default function DentistView({ procedure, dentistId, dentistName, active,
             {/* Mostra o Dentista selecionado */}
             {currentView === SHOW_SELECTED_VIEW && (
                 <div className={styles.showSelectedView}>
-                    <p>Dentista selecionado: <br/><br/><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
+                    <p>Dentista selecionado: <br/><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
                     <div className={styles.boxBtns}>
                         <button onClick={handleBack} className={styles.backBtn}>Voltar</button>
                         <button onClick={e => onNext(e)} className={styles.nextBtn}>Próximo</button>
