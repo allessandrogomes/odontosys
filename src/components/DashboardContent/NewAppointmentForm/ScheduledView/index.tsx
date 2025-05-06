@@ -66,7 +66,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                     <label>Escolha o dia e horário</label>
                     <input onChange={e => setDay(e.target.value)} type="date" value={day}/>
                     <div className={styles.timesBtns}>
-                        {times.map((time, index) => <button className={`${selectedTime === time && styles.selected}`} onClick={() => setSelectedTime(time)} key={index}>{formatHour(time.start)} - {formatHour(time.end)}</button>)}
+                        {Array.isArray(times) && times.map((time, index) => <button className={`${selectedTime?.start === time.start && styles.selected}`} onClick={() => setSelectedTime(time)} key={index}>{formatHour(time.start)} - {formatHour(time.end)}</button>)}
                     </div>
                     <div className={styles.boxBtns}>
                         <button onClick={e => onBack(e)} className={styles.backBtn}>Voltar</button>
