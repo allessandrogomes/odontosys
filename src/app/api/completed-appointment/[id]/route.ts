@@ -7,10 +7,10 @@ const idSchema = z.object({
 })
 
 // GET /api/completed-appointment/id
-export async function GET(request: Request, context: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         // Converte o ID para número
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verificação explícita para NaN
         if (isNaN(id)) {
@@ -47,7 +47,7 @@ export async function GET(request: Request, context: { params: { id: string } })
         }
 
         // Log detalhado do erro
-        console.error(`Erro ao buscar a consulta concluída (ID: ${context.params.id}):`, error)
+        console.error(`Erro ao buscar a consulta concluída (ID: ${(await params).id}):`, error)
 
         // Resposta de erro genérica
         return NextResponse.json(

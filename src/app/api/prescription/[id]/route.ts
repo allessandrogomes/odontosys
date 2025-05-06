@@ -20,10 +20,10 @@ const partialPrescriptionSchema = z.object({
 })
 
 // GET /api/prescriptions/id
-export async function GET(request: Request, context: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         // Converte o ID para número
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é um número válido
         if (isNaN(id)) {
@@ -59,9 +59,9 @@ export async function GET(request: Request, context: { params: { id: string } })
 }
 
 //PUT /api/prescription/id
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é válido
         if (isNaN(id)) {
@@ -116,9 +116,9 @@ export async function PUT(request: Request, context: { params: { id: string } })
 }
 
 // PATCH /api/prescriptions/id
-export async function PATCH(request: Request, context: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é válido
         if (isNaN(id)) {
@@ -167,9 +167,9 @@ export async function PATCH(request: Request, context: { params: { id: string } 
 }
 
 // DELETE /api/prescription/id
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se ID é válido
         if(isNaN(id)) {

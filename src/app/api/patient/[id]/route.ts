@@ -13,9 +13,9 @@ const patientSchema = z.object({
 }).strict()
 
 // PUT /api/patient/id
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
         //Verifica se o ID é inválido
         if (isNaN(id)) {
             return NextResponse.json(

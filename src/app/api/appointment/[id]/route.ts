@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
@@ -26,10 +27,10 @@ const partialAppointmentSchema = z.object({
 })
 
 // GET /api/appointment/id
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         // Converte o ID para número
-        const id = parseInt(params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é um número válido
         if (isNaN(id)) {
@@ -66,9 +67,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT /api/appointment/id
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {
@@ -122,9 +123,9 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
 }
 
 // PATCH /api/appointment/id
-export async function PATCH(request: Request, context: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {
@@ -178,10 +179,10 @@ export async function PATCH(request: Request, context: { params: { id: string } 
 }
 
 // DELETE /api/appointment/id
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         // Converte o ID para número
-        const id = parseInt(context.params.id)
+        const id = parseInt((await params).id)
 
         if (isNaN(id)) {
             return NextResponse.json(
