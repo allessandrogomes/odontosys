@@ -1,0 +1,133 @@
+.box {
+    width: 100%;
+    height: 100%;
+    display: none;
+
+    .scheduled {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: 20px;
+
+        label {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 150px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            outline: none;
+            background-color: var(--secondary-color);
+            padding: 5px;
+            color: var(--primary-color);
+            border-radius: 50px;
+        }
+
+        .boxBtns {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+
+            button {
+                border: none;
+                color: var(--secondary-color);
+                border-radius: 50px;
+                padding: 10px;
+                width: 100px;
+            }
+
+            .nextBtn {
+                background-color: gray;
+            }
+
+            .nextBtn.active {
+                background-color: var(--primary-color);
+                cursor: pointer;
+            }
+
+            .backBtn {
+                background-color: var(--tertiary-color);
+                cursor: pointer;
+            }
+        }
+
+        .timesBtns {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+
+            button {
+                width: 100px;
+                border: none;
+                border-radius: 5px;
+                background-color: var(--tertiary-color);
+                color: var(--secondary-color);
+                padding: 5px 0;
+                cursor: pointer;
+                font-size: 0.85rem;
+            }
+
+            button.selected {
+                background-color: var(--primary-color);
+            }
+        }
+    }
+
+    .showSchedule {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+
+        p {
+            text-align: center;
+            font-size: 1.25rem;
+
+            span {
+                font-weight: 600;
+            }
+        }
+
+        .boxBtns {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+
+            button {
+                border: none;
+                color: var(--secondary-color);
+                border-radius: 50px;
+                padding: 10px;
+                width: 100px;
+                cursor: pointer;
+            }
+
+            .nextBtn {
+                background-color: var(--primary-color);
+            }
+
+            .backBtn {
+                background-color: var(--tertiary-color);
+            }
+        }
+    }
+}
+
+.box.active {
+    display: block;
+}

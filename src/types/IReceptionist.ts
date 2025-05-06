@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-interface Receptionist {
+interface IReceptionist {
     id: number,
     name: string,
     email: string,

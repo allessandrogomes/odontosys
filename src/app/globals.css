@@ -1,6 +1,7 @@
 :root {
     --primary-color: #006A71;
     --secondary-color: #FAFAFA;
+    --tertiary-color: #48A6A7;
     font-family: var(--font-poppins), sans-serif;
     color: var(--primary-color);
 }

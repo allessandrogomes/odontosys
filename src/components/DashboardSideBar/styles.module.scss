@@ -1,0 +1,91 @@
+.aside {
+    width: 270px;
+    height: calc(100vh - 200px);
+    color: var(--primary-color);
+    border-right: 1px solid var(--tertiary-color);
+
+    nav {
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+
+            .menuItem {
+                box-sizing: border-box;
+                width: 100%;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                padding-left: 40px;
+                gap: 5px;
+                border-left: 1px solid var(--tertiary-color);
+                border-top: 1px solid var(--tertiary-color);
+                cursor: pointer;
+
+                .icon {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                h3 {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    position: relative;
+                    top: 5px;
+                }
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: var(--secondary-color);
+                }
+            }
+
+            .submenu {
+                width: calc(100% - 90px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 5px;
+                margin-left: 90px;
+                animation: fadeInDown 0.3s ease-in-out;
+
+                .submenuItem {
+                    box-sizing: border-box;
+                    width: 100%;
+                    text-align: left;
+                    cursor: pointer;
+                    padding: 4px 8px;
+                    margin-bottom: 5px;
+
+                    &:hover {
+                        background-color: var(--primary-color);
+                        color: var(--secondary-color);
+                    }
+                }
+            }
+
+            .menu:last-child {
+                border-bottom: 1px solid var(--tertiary-color);
+            }
+        }
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

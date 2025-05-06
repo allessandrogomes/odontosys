@@ -1,15 +1,21 @@
 'use client'
 
-import AppointmentSchedulingForm from "@/components/AppointmentSchedulingForm"
-import PatientRegistrationForm from "@/components/PatientRegistrationForm"
+import styles from "./styles.module.scss"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import DashboardLogo from "@/components/DashboardLogo"
+import DashboardSideBar from "@/components/DashboardSideBar"
+import DashboardHeader from "@/components/DashboardHeader"
+import NewAppointmentForm from "@/components/DashboardContent/NewAppointmentForm"
+import NewPatientForm from "@/components/DashboardContent/NewPatientForm"
+import Resume from "@/components/DashboardContent/Resume"
 
 export default function ReceptionistDashboard() {
-    const [user, setUser] = useState<IDentist | null>(null)
+    const [user, setUser] = useState<IReceptionist | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
+    const [dashboardToShow, setDashboardToShow] = useState<string>("Resumo")
 
     const handleLogout = async () => {
         try {
@@ -27,7 +33,7 @@ export default function ReceptionistDashboard() {
             // Limpa o estado
             setUser(null)
         } catch (err) {
-            setError(err instanceof Error ? err.message: "Erro ao sair")
+            setError(err instanceof Error ? err.message : "Erro ao sair")
         }
     }
 
@@ -41,7 +47,7 @@ export default function ReceptionistDashboard() {
 
                 setUser(data.user)
             } catch (err) {
-                setError(err instanceof Error ? err.message: "Erro desconhecido")
+                setError(err instanceof Error ? err.message : "Erro desconhecido")
                 // Redireciona ou mostra mensagem de erro
             } finally {
                 setIsLoading(false)
@@ -55,18 +61,21 @@ export default function ReceptionistDashboard() {
     if (error) return <p>Erro: {error}</p>
     if (!user) return <p>Não foi possível carregar os dados do usuário</p>
 
-    function capitalize(str: string) {
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
-    }
-
     return (
-        <>
-            <h1>Bem-vindo, {capitalize(user.role)} {user.name}</h1>
-            <h2>{user.croNumber}</h2>
-            <p>Dashboard Recepcionista</p>
-            <button onClick={handleLogout}>Sair</button>
-            <PatientRegistrationForm />
-            <AppointmentSchedulingForm />
-        </>
+        <div className={styles.dashboard}>
+            <div>
+                <DashboardLogo />
+                <DashboardSideBar dashboardSelected={dashboard => setDashboardToShow(dashboard)}/>
+            </div>
+
+            {/* Início */}
+            <div className={styles.content}>
+                <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
+                {dashboardToShow === "Resumo" && <Resume />}
+                {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
+                {dashboardToShow === "Cadastrar" && <NewPatientForm />}
+            </div>
+            {/* Início */}
+        </div>
     )
 }

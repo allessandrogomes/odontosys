@@ -4,7 +4,7 @@
 import { useState } from "react"
 import styles from "./styles.module.scss"
 
-export default function PatientRegistrationForm() {
+export default function NewPatientForm() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
