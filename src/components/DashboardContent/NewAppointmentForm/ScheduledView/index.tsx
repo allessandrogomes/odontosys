@@ -56,7 +56,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
         }
 
         if (day) getAvailableTimes()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [day])
 
     return (
@@ -64,9 +64,17 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
             {currentView === SELECT_DAY_AND_TIME_VIEW && (
                 <div className={styles.scheduled}>
                     <label>Escolha o dia e horário</label>
-                    <input onChange={e => setDay(e.target.value)} type="date" value={day}/>
+                    <input onChange={e => setDay(e.target.value)} type="date" value={day} />
                     <div className={styles.timesBtns}>
-                        {Array.isArray(times) && times.map((time, index) => <button className={`${selectedTime?.start === time.start && styles.selected}`} onClick={() => setSelectedTime(time)} key={index}>{formatHour(time.start)} - {formatHour(time.end)}</button>)}
+                        {Array.isArray(times) && times.map((time, index) =>
+                            <button
+                                className={`${selectedTime?.start === time.start && styles.selected}`}
+                                onClick={() => setSelectedTime(time)}
+                                key={index}
+                            >
+                                {typeof window !== undefined && formatHour(time.start)} - {typeof window !== undefined && formatHour(time.end)}
+                            </button>
+                        )}
                     </div>
                     <div className={styles.boxBtns}>
                         <button onClick={e => onBack(e)} className={styles.backBtn}>Voltar</button>
@@ -77,7 +85,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
 
             {currentView === SHOW_SELECTED_DAY_AND_TIME_VIEW && selectedTime && day && (
                 <div className={styles.showSchedule}>
-                    <p>Dia e o Horário selecionados: <br/><br/><span>{formatDate(day)} | {formatHour(selectedTime.start)} - {formatHour(selectedTime.end)}</span></p>
+                    <p>Dia e o Horário selecionados: <br /><br /><span>{formatDate(day)} | {formatHour(selectedTime.start)} - {formatHour(selectedTime.end)}</span></p>
                     <div className={styles.boxBtns}>
                         <button onClick={() => setCurrentView(SELECT_DAY_AND_TIME_VIEW)} className={styles.backBtn}>Voltar</button>
                         <button onClick={e => onNext(e)} className={styles.nextBtn}>Próximo</button>
