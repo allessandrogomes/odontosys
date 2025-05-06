@@ -6,7 +6,6 @@ import AppointmentCard from "./AppointmentCard"
 import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
 import { formatHour } from "@/utils/formatHour"
-import { sleep } from "@/utils/sleep"
 import { Toaster, toast } from "react-hot-toast"
 
 interface ITodayAppointment {
@@ -109,7 +108,6 @@ export default function Resume() {
         } catch (error: any) {
             setError(error instanceof Error ? error.message : "Erro desconhecido")
         } finally {
-            await sleep(2000)
             setIsLoading(false)
         }
     }

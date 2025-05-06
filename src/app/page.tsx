@@ -18,13 +18,10 @@ export default function Home() {
 
   const router = useRouter()
 
-  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    await sleep(2000)
 
     try {
       const response = await fetch("/api/login", {
