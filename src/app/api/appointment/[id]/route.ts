@@ -26,10 +26,10 @@ const partialAppointmentSchema = z.object({
 })
 
 // GET /api/appointment/id
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         // Converte o ID para número
-        const id = parseInt(context.params.id)
+        const id = parseInt(params.id)
 
         // Verifica se o ID é um número válido
         if (isNaN(id)) {
