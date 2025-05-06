@@ -23,7 +23,7 @@ interface ITodaysAppointments {
     appointments: ITodayAppointment[]
 }
 
-export default function DashboardContent() {
+export default function Resume() {
     const [todaysAppointments, setTodaysAppointments] = useState<ITodaysAppointments[] | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)

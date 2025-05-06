@@ -1,14 +1,14 @@
 'use client'
 
-import AppointmentSchedulingForm from "@/components/AppointmentSchedulingForm"
-import PatientRegistrationForm from "@/components/PatientRegistrationForm"
 import styles from "./styles.module.scss"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import DashboardLogo from "@/components/DashboardLogo"
 import DashboardSideBar from "@/components/DashboardSideBar"
 import DashboardHeader from "@/components/DashboardHeader"
-import DashboardContent from "@/components/DashboardContent"
+import NewAppointmentForm from "@/components/DashboardContent/NewAppointmentForm"
+import NewPatientForm from "@/components/DashboardContent/NewPatientForm"
+import Resume from "@/components/DashboardContent/Resume"
 
 export default function ReceptionistDashboard() {
     const [user, setUser] = useState<IReceptionist | null>(null)
@@ -71,9 +71,9 @@ export default function ReceptionistDashboard() {
             {/* Início */}
             <div className={styles.content}>
                 <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
-                {dashboardToShow === "Resumo" && <DashboardContent />}
-                {dashboardToShow === "Nova Consulta" && <AppointmentSchedulingForm />}
-                {dashboardToShow === "Cadastrar" && <PatientRegistrationForm />}
+                {dashboardToShow === "Resumo" && <Resume />}
+                {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
+                {dashboardToShow === "Cadastrar" && <NewPatientForm />}
             </div>
             {/* Início */}
         </div>

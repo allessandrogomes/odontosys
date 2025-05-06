@@ -27,7 +27,7 @@ interface IFormData {
     procedure: string | null
 }
 
-export default function AppointmentSchedulingForm() {
+export default function NewAppointmentForm() {
     const [currentView, setCurrentView] = useState<string>(PATIENT_VIEW)
     const [formData, setFormData] = useState<IFormData>({
         patientName: null,
