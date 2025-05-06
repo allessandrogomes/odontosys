@@ -22,7 +22,7 @@ const SELECT_DAY_AND_TIME_VIEW = "SELECT_DAY_AND_TIME_VIEW"
 const SHOW_SELECTED_DAY_AND_TIME_VIEW = "SHOW_SELECTED_DAY_AND_TIME_VIEW"
 
 export default function ScheduledView({ durationMinutes, dentistId, active, scheduledAt, endsAt, onBack, onNext }: IScheduledView) {
-    const [day, setDay] = useState<string | undefined>(undefined)
+    const [day, setDay] = useState<string>("")
     const [times, setTimes] = useState<ITime[] | []>([])
     const [selectedTime, setSelectedTime] = useState<ITime | null>(null)
     const [currentView, setCurrentView] = useState<string>(SELECT_DAY_AND_TIME_VIEW)
