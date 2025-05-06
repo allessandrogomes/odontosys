@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
@@ -66,7 +66,7 @@ export async function GET(request: Request, context: { params: { id: string } })
 }
 
 // PUT /api/appointment/id
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: { id: string } }) {
     try {
         const id = parseInt(context.params.id)
 
