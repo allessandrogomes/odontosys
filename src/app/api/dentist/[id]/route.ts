@@ -14,14 +14,14 @@ const dentistSchema = z.object({
     role: z.string(),
     birthDate: z.string(),
     croNumber: z.string(),
-    specialty: z.string()
+    specialty: z.array(z.string())
 })
 
 // PUT /api/dentist/:id
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {

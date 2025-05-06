@@ -26,10 +26,10 @@ const partialAppointmentSchema = z.object({
 })
 
 // GET /api/appointment/id
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, context: { params: { id: string } }) {
     try {
         // Converte o ID para número
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         // Verifica se o ID é um número válido
         if (isNaN(id)) {
@@ -66,9 +66,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PUT /api/appointment/id
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {
@@ -122,9 +122,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // PATCH /api/appointment/id
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, context: { params: { id: string } }) {
     try {
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {
@@ -178,10 +178,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 }
 
 // DELETE /api/appointment/id
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
     try {
         // Converte o ID para número
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         if (isNaN(id)) {
             return NextResponse.json(

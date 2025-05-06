@@ -17,9 +17,9 @@ const receptionistSchema = z.object({
 
 // PUT /api/recepcionists/:id
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
     try {
-        const id = parseInt(params.id)
+        const id = parseInt(context.params.id)
 
         // Verifica se o ID é inválido
         if (isNaN(id)) {
