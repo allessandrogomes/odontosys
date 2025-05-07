@@ -9,15 +9,27 @@ interface BusySchedule {
 
 function generateSlots(date: string, startHour: number, endHour: number, durationMinutes: number): { start: Date; end: Date }[] {
     const slots: { start: Date; end: Date }[] = []
-    let cursor = new Date(`${date}T${String(startHour).padStart(2, '0')}:00:00`)
+    let cursor = new Date(Date.UTC(
+        Number(date.slice(0, 4)), // ano
+        Number(date.slice(5, 7)) - 1, // mês (0-based)
+        Number(date.slice(8, 10)), // dia
+        startHour, 0, 0, 0 // hora, minuto, segundo, milissegundo
+    ))
 
-    const periodEnd = new Date(`${date}T${String(endHour).padStart(2, '0')}:00:00`)
+    const periodEnd = new Date(Date.UTC(
+        Number(date.slice(0, 4)),
+        Number(date.slice(5, 7)) - 1,
+        Number(date.slice(8, 10)),
+        endHour, 0, 0, 0
+    ))
+
     while (cursor.getTime() + durationMinutes * 60000 <= periodEnd.getTime()) {
         const slotStart = new Date(cursor)
         const slotEnd = new Date(cursor.getTime() + durationMinutes * 60000)
         slots.push({ start: slotStart, end: slotEnd })
         cursor = slotEnd
     }
+
     return slots
 }
 
@@ -44,8 +56,8 @@ export async function POST(request: NextRequest) {
             .filter(s => s.start.slice(0, 10) === date)
 
         // 3. Gerar todos os slots nos dois períodos
-        const morningSlots = generateSlots(date, 8, 12, durationMinutes)
-        const afternoonSlots = generateSlots(date, 14, 18, durationMinutes)
+        const morningSlots = generateSlots(date, 11, 15, durationMinutes)
+        const afternoonSlots = generateSlots(date, 17, 21, durationMinutes)
         const allSlots = [...morningSlots, ...afternoonSlots]
 
         // 4. Filtrar os que não colidem com nenhum busyOnDate

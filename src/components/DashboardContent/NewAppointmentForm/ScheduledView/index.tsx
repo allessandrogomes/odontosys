@@ -72,7 +72,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                                 onClick={() => setSelectedTime(time)}
                                 key={index}
                             >
-                                {typeof window !== undefined && formatHour(time.start)} - {typeof window !== undefined && formatHour(time.end)}
+                                {formatHour(time.start)} - {formatHour(time.end)}
                             </button>
                         )}
                     </div>
