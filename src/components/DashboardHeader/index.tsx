@@ -3,9 +3,10 @@ import styles from "./styles.module.scss"
 interface IDashboardHeader {
     receptionist: string
     onLogout: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    title: string
 }
 
-export default function DashboardHeader({ receptionist, onLogout }: IDashboardHeader) {
+export default function DashboardHeader({ receptionist, title, onLogout }: IDashboardHeader) {
     const date = new Date()
 
     const formatDate = new Intl.DateTimeFormat("pt-BR", {
@@ -23,7 +24,7 @@ export default function DashboardHeader({ receptionist, onLogout }: IDashboardHe
                 <h2>Olá, Recepcionista <span>{receptionist}</span></h2>
                 <button onClick={onLogout}>Sair</button>
             </div>
-            <h1>Consultas de Hoje | {todayDate}</h1>
+            <h1>{title} | {todayDate}</h1>
         </header>
     )
 }

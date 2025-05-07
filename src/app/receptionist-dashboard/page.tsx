@@ -70,7 +70,7 @@ export default function ReceptionistDashboard() {
 
             {/* Início */}
             <div className={styles.content}>
-                <DashboardHeader onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
+                <DashboardHeader title={dashboardToShow} onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
                 {dashboardToShow === "Resumo" && <Resume />}
                 {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
                 {dashboardToShow === "Cadastrar" && <NewPatientForm />}
