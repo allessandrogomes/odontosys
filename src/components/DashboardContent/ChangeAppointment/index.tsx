@@ -1,54 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
-import { MdContentPasteSearch } from "react-icons/md"
 import { useState } from "react"
-import { Loader } from "lucide-react"
+import SearchAndSelectAppointmentView from "./SearchAndSelectAppointmentView"
+import ChangeAppointmentView from "./ChangeAppointmentView"
+
+const SEARCH_AND_SELECT = "SEARCH_AND_SELECT"
+const CHANGE = "CHANGE"
 
 export default function ChangeAppointment() {
-    const [cpf, setCpf] = useState<string>("")
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [appointments, setAppointments] = useState<IAppointment[]>([])
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [viewToShow, setViewToShow] = useState<string>(SEARCH_AND_SELECT)
+    const [appointment, setAppointment] = useState<IAppointment | null>(null)
 
-    async function fetchAppointments(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        setError(undefined)
-        setAppointments([])
-        setIsLoading(true)
+    function handleSelectedAppointment(app: IAppointment) {
+        setAppointment(app)
+        handleNextView()
+    }
 
-        try {
-            const response = await fetch(`/api/appointment/cpf/${cpf}`, {
-                method: "GET"
-            })
-            const data = await response.json()
+    function handleNextView() {
+        if (viewToShow === SEARCH_AND_SELECT) {
+            setViewToShow(CHANGE)
+        }
+    }
 
-            if (!response.ok) throw new Error(data.error || "Erro ao buscar as consultas")
-
-            if (data.length === 0) throw new Error("Nenhuma consulta encontrada")
-
-            setAppointments(data)
-        } catch (error: any) {
-            setError(error.message)
-        } finally {
-            setIsLoading(false)
+    function handleBackView() {
+        if (viewToShow === CHANGE) {
+            setViewToShow(SEARCH_AND_SELECT)
         }
     }
 
     return (
-        <form onSubmit={fetchAppointments} className={styles.form}>
-            <label>Digite o CPF do Paciente</label>
-            <IMaskInput
-                mask="000.000.000-00"
-                value={cpf}
-                onAccept={(value) => setCpf(value)}
-                overwrite
-                minLength={14}
-                required
-            />
-            {!isLoading ? <button type="submit"><MdContentPasteSearch className={styles.icon} /> Buscar Consultas</button> : <Loader className={styles.spinner} />}
-            {error && <p>{error}</p>}
-            {appointments && appointments.map(item => <p key={item.id}>{item.id}</p>)}
-        </form>
+        <div className={styles.containerChangeAppointment}>
+            {viewToShow === SEARCH_AND_SELECT && 
+                <SearchAndSelectAppointmentView 
+                    onSelectAppointment={app => handleSelectedAppointment(app)}
+                />}
+            {viewToShow === CHANGE && <ChangeAppointmentView />}
+        </div>
     )
 }
