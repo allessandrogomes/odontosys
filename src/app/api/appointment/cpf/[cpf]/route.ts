@@ -21,6 +21,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ cpf:
             include: {
                 patient: true,
                 dentist: true
+            },
+            orderBy: {
+                scheduledAt: "asc"
             }
         })
 
