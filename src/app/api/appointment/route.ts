@@ -6,7 +6,12 @@ import { z } from "zod"
 export async function GET() {
     try {
         // Busca todas as consultas
-        const appointments = await prisma.appointment.findMany()
+        const appointments = await prisma.appointment.findMany({
+            include: {
+                patient: true,
+                dentist: true
+            }
+        })
 
         // Se não houver consultas, retorna um array vazio]
         if (appointments.length === 0) {
