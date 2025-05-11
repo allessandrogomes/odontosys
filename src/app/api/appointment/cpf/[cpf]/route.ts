@@ -17,6 +17,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ cpf:
         const appointmentsByCPF = await prisma.appointment.findMany({
             where: {
                 patient: { cpf: validatedCPF.cpf }
+            },
+            include: {
+                patient: true,
+                dentist: true
             }
         })
 
