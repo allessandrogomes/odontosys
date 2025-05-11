@@ -7,7 +7,7 @@ import { useState } from "react"
 
 const sidebarBtns = [
     { icon: <IoMdHome className={styles.icon} />, title: "Início", childrens: ["Resumo"] },
-    { icon: <FaCalendarAlt className={styles.icon} />, title: "Agendamentos", childrens: ["Nova Consulta", "Reagendar Consulta", "Cancelar Consulta", "Alterar Consulta"] },
+    { icon: <FaCalendarAlt className={styles.icon} />, title: "Agendamentos", childrens: ["Buscar Consulta", "Nova Consulta", "Alterar Consulta"] },
     { icon: <FaRegUser className={styles.icon} />, title: "Pacientes", childrens: ["Pesquisar", "Cadastrar", "Editar informações"] },
     { icon: <TbReportAnalytics className={styles.icon} />, title: "Relatórios" }
 ]

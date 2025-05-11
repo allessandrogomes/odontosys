@@ -9,6 +9,8 @@ import DashboardHeader from "@/components/DashboardHeader"
 import NewAppointmentForm from "@/components/DashboardContent/NewAppointmentForm"
 import NewPatientForm from "@/components/DashboardContent/NewPatientForm"
 import Resume from "@/components/DashboardContent/Resume"
+import RescheduleAppointment from "@/components/DashboardContent/ChangeAppointment"
+import DashboardContent from "@/components/DashboardContent"
 
 export default function ReceptionistDashboard() {
     const [user, setUser] = useState<IReceptionist | null>(null)
@@ -65,15 +67,20 @@ export default function ReceptionistDashboard() {
         <div className={styles.dashboard}>
             <div>
                 <DashboardLogo />
-                <DashboardSideBar dashboardSelected={dashboard => setDashboardToShow(dashboard)}/>
+                <DashboardSideBar dashboardSelected={dashboard => setDashboardToShow(dashboard)} />
             </div>
 
             {/* Início */}
             <div className={styles.content}>
                 <DashboardHeader title={dashboardToShow} onLogout={handleLogout} receptionist={user.name || "Nome do recepcionsta não encontrado"} />
-                {dashboardToShow === "Resumo" && <Resume />}
-                {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
-                {dashboardToShow === "Cadastrar" && <NewPatientForm />}
+                <DashboardContent>
+                    <>
+                        {dashboardToShow === "Resumo" && <Resume />}
+                        {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
+                        {dashboardToShow === "Cadastrar" && <NewPatientForm />}
+                        {dashboardToShow === "Alterar Consulta" && <RescheduleAppointment />}
+                    </>
+                </DashboardContent>
             </div>
             {/* Início */}
         </div>
