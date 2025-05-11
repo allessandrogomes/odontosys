@@ -143,7 +143,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         // Atualiza apenas os campos enviados
         const updatedAppointment = await prisma.appointment.update({
             where: { id },
-            data: validatedData
+            data: validatedData,
+            include: {
+                patient: true,
+                dentist: true
+            }
         })
 
         return NextResponse.json(updatedAppointment, { status: 200 })
