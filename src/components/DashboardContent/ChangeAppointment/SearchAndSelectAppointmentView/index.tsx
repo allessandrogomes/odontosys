@@ -64,7 +64,7 @@ export default function SearchAndSelectAppointmentView({ onSelectAppointment }: 
                 </form>
             ) : (
                 <div className={styles.selectAppointment}>
-                    <button onClick={() => setAppointments([])}><FaArrowLeft className={styles.icon}/>Voltar</button>
+                    <button onClick={() => setAppointments([])}><FaArrowLeft />Voltar</button>
                     <h1>Selecione a Consulta</h1>
                     <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
                     {appointments.map(app => (

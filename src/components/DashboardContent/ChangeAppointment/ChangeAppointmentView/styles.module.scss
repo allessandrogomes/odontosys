@@ -1,0 +1,122 @@
+.changeAppointment {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .backBtn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        border: none;
+        text-decoration: underline;
+        cursor: pointer;
+        background-color: transparent;
+        width: max-content;
+        padding: 0;
+        position: absolute;
+        top: 30px;
+        left: 50px;
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+
+    .btns {
+        display: flex;
+        gap: 10px;
+
+        button {
+            border: none;
+            background-color: var(--primary-color);
+            border-radius: 50px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 20px;
+            font-weight: 500;
+
+            &:hover {
+                background-color: var(--tertiary-color);
+            }
+        }
+    }
+
+    .selectProcedure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+
+        label {
+            font-weight: 500;
+        }
+
+        select {
+            width: 200px;
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            background-color: transparent;
+            color: var(--primary-color);
+            text-align: center;
+            outline: none;
+        }
+    }
+
+    .selectDentist {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+
+        label {
+            font-weight: 500;
+        }
+
+        select {
+            width: 200px;
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            background-color: transparent;
+            color: var(--primary-color);
+            text-align: center;
+            outline: none;
+        }
+    }
+
+    .btnSubmit {
+        border: none;
+        width: 100px;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        padding: 10px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 500;
+        align-self: center;
+
+        &:hover {
+            background-color: var(--tertiary-color);
+        }
+    }
+
+    .btnSubmit.disable {
+        cursor: initial;
+        background-color: gray;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        align-self: center;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

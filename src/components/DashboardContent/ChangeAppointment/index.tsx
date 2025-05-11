@@ -33,7 +33,7 @@ export default function ChangeAppointment() {
                 <SearchAndSelectAppointmentView 
                     onSelectAppointment={app => handleSelectedAppointment(app)}
                 />}
-            {viewToShow === CHANGE && <ChangeAppointmentView />}
+            {viewToShow === CHANGE && <ChangeAppointmentView onBack={handleBackView} appointment={appointment!} />}
         </div>
     )
 }
