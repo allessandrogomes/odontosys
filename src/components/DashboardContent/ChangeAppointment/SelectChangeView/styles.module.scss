@@ -1,5 +1,5 @@
-.changeAppointment {
-    display: flex;
+.selectChange {
+    display: none;
     flex-direction: column;
     gap: 20px;
 
@@ -113,6 +113,10 @@
         animation: spin 1s linear infinite;
         align-self: center;
     }
+}
+
+.selectChange.visible {
+    display: flex;
 }
 
 @keyframes spin {
