@@ -1,3 +1,4 @@
+
 import { FaArrowLeft } from "react-icons/fa"
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
@@ -7,6 +8,7 @@ import { Loader } from "lucide-react"
 interface IChangeAppointmentView {
     appointment: IAppointment
     onBack: (onBack: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    onUpdate: (appointmentUpdated: IAppointment) => void
 }
 
 interface IDataToPatch {
@@ -16,19 +18,19 @@ interface IDataToPatch {
     durationMinutes: number
 }
 
-export default function ProcedureAndDentistView({ appointment, onBack }: IChangeAppointmentView) {
+export default function ChangeProcedureAndDentistView({ appointment, onUpdate, onBack }: IChangeAppointmentView) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [currentAppointment, setCurrentAppointment] = useState<IAppointment>(appointment)
+    const [isSubmiting, setIsSubmiting] = useState<boolean>(false)
     const [procedures, setProcedures] = useState<IProcedure[]>([])
     const [dentists, setDentists] = useState<IDentist[]>([])
     const [dataToPatch, setDataToPatch] = useState<IDataToPatch>({
-        dentistId: currentAppointment.dentistId,
-        dentist: currentAppointment.dentist.name,
-        procedure: currentAppointment.procedure,
-        durationMinutes: currentAppointment.durationMinutes
+        dentistId: appointment.dentistId,
+        dentist: appointment.dentist.name,
+        procedure: appointment.procedure,
+        durationMinutes: appointment.durationMinutes
     })
 
-    const thereWasNotAChange: boolean = dataToPatch.dentistId === currentAppointment.dentistId && dataToPatch.procedure === currentAppointment.procedure
+    const thereWasNotAChange: boolean = dataToPatch.dentistId === appointment.dentistId && dataToPatch.procedure === appointment.procedure
 
     function handleChangeProcedure(e: React.ChangeEvent<HTMLSelectElement>) {
         const selectProcedure = e.target.value
@@ -50,13 +52,13 @@ export default function ProcedureAndDentistView({ appointment, onBack }: IChange
 
     async function handleSubmitPatch(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        setIsLoading(true)
+        setIsSubmiting(true)
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { dentist, ...form } = dataToPatch
 
         try {
-            const response = await fetch(`/api/appointment/id/${currentAppointment.id}`, {
+            const response = await fetch(`/api/appointment/id/${appointment.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
@@ -66,16 +68,17 @@ export default function ProcedureAndDentistView({ appointment, onBack }: IChange
 
             if (!response.ok) throw new Error(data.error || "Erro ao atualizar os dados")
 
-            setIsLoading(false)
-            setCurrentAppointment(data)
+            setIsSubmiting(false)
+            onUpdate(data)
             toast.success("Informações alteradas com sucesso!")
         } catch (error) {
-            setIsLoading(false)
+            setIsSubmiting(false)
             alert(JSON.stringify(error))
         }
     }
 
     useEffect(() => {
+        setIsLoading(true)
         async function fetchProcedures() {
             try {
                 const response = await fetch("/api/procedure")
@@ -94,10 +97,13 @@ export default function ProcedureAndDentistView({ appointment, onBack }: IChange
             try {
                 const response = await fetch("/api/dentist")
                 const data = await response.json()
-                const filteredDentists = data.filter((dentist: IDentist) => dentist.specialty.includes(dataToPatch.procedure))
+                const filteredDentists = data.filter((dentist: IDentist) => dentist.specialty.includes(dataToPatch.procedure!))
                 setDentists(filteredDentists)
+                
             } catch (error) {
                 alert(JSON.stringify(error))
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -108,28 +114,35 @@ export default function ProcedureAndDentistView({ appointment, onBack }: IChange
 
     return (
         <form onSubmit={handleSubmitPatch} className={styles.changeAppointment}>
-            <button onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
+            <button type="button" onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
             <h1>Alterar Procedimento e Dentista</h1>
-            <div className={styles.selectProcedure}>
-                <label>Procedimento</label>
-                <select onChange={handleChangeProcedure} value={dataToPatch.procedure}>
-                    <option disabled value="">Selecione</option>
-                    {procedures.map(procedure => <option value={procedure.procedure} key={procedure.id}>{procedure.procedure}</option>)}
-                </select>
-            </div>
-
-            <div className={styles.selectDentist}>
-                <label>Dentista</label>
-                <select onChange={handleChangeDentist} value={dataToPatch.dentist}>
-                    <option disabled value="">Selecione</option>
-                    {dentists.map(dentist => <option value={dentist.name} key={dentist.id}>Dr. {dentist.name}</option>)}
-                </select>
-            </div>
-
-            {!isLoading ? (
-                <button disabled={thereWasNotAChange} className={`${thereWasNotAChange && styles.disable} ${styles.btnSubmit}`} type="submit">Concluir</button>
+            {isLoading ? (
+                <Loader className={styles.spinnerLoading} />
             ) : (
-                <Loader className={styles.spinner} />
+                <>
+                    <div className={styles.selectField}>
+                        <label>Procedimento</label>
+                        <select onChange={handleChangeProcedure} value={dataToPatch.procedure}>
+                            <option disabled value="">Selecione</option>
+                            {procedures.map(procedure => <option value={procedure.procedure} key={procedure.id}>{procedure.procedure}</option>)}
+                        </select>
+                    </div>
+
+                    <div className={styles.selectField}>
+                        <label>Dentista</label>
+                        <select onChange={handleChangeDentist} value={dataToPatch.dentist}>
+                            <option disabled value="">Selecione</option>
+                            {dentists.map(dentist => <option value={dentist.name} key={dentist.id}>Dr. {dentist.name}</option>)}
+                        </select>
+                    </div>
+
+                    {!isSubmiting ? (
+                        <button disabled={thereWasNotAChange} className={`${thereWasNotAChange && styles.disable} ${styles.btnSubmit}`} type="submit">Concluir</button>
+                    ) : (
+                        <Loader className={styles.spinnerSubmiting} />
+                    )}
+
+                </>
             )}
 
             <Toaster />
