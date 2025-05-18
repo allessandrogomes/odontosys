@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 // GET /api/patient
 export async function GET() {
@@ -29,12 +30,22 @@ export async function GET() {
 
 // Esquema do Paciente
 const patientSchema = z.object({
-    name: z.string(),
+    name: z.string().transform(val => 
+        val.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
+    ),
     email: z.string().email(),
-    phone: z.string(),
-    cpf: z.string(),
+    phone: z.string().transform(val => val.replace(/\D/g, "")),
+    cpf: z.string()
+        .transform(val => val.replace(/\D/g, ""))
+        .refine(val => val.length === 11, "CPF deve conter 11 dígitos"),
     birthDate: z.string()
 })
+
+const fieldLabels: Record<string, string> = {
+    cpf: "CPF",
+    email: "Email",
+    phone: "Telefone"
+}
 
 // POST /api/patient
 export async function POST(request: Request) {
@@ -57,6 +68,19 @@ export async function POST(request: Request) {
             return NextResponse.json(
                 { error: "Dados inválidos", details: error.errors },
                 { status: 400 }
+            )
+        }
+
+        // Erro de campo duplicado (único) no Prisma
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
+            const target = (error.meta?.target as string[])?.[0] //exemplo: "cpf" ou "email"
+            const fieldName = fieldLabels[target] || target
+            return NextResponse.json(
+                { error: `Já existe um Paciente cadastrado com esse ${fieldName}`},
+                { status: 409 }
             )
         }
 
