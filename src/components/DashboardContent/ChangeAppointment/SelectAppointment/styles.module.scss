@@ -1,0 +1,94 @@
+.selectAppointment {
+    width: 100%;
+    height: calc(100% - 60px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    overflow: auto;
+    align-self: end;
+
+    .patientName {
+        margin: 0;
+        position: absolute;
+        top: 60px;
+
+        span {
+            font-weight: 600;
+        }
+    }
+
+    div {
+        width: 600px;
+        box-sizing: border-box;
+        background-color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 50px;
+        cursor: pointer;
+        gap: 15px;
+
+        p {
+            margin: 0;
+            color: var(--secondary-color);
+        }
+
+        span {
+            width: 5px;
+            height: 5px;
+            border-radius: 100%;
+            background-color: var(--secondary-color);
+        }
+
+        &:hover {
+            background-color: var(--tertiary-color);
+        }
+    }
+
+    button {
+        width: max-content;
+        border: none;
+        color: var(--primary-color);
+        cursor: pointer;
+        position: absolute;
+        top: 30px;
+        left: 50px;
+        background: transparent;
+        text-decoration: underline;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+    }
+
+    h1 {
+        margin: 0;
+        position: absolute;
+        top: 25px;
+        font-size: 1.5rem;
+    }
+}
+
+.selectAppointment::-webkit-scrollbar {
+    width: 13px;
+}
+
+.selectAppointment::-webkit-scrollbar-track {
+    background: rgb(182, 182, 182);
+    border-radius: 10px;
+}
+
+.selectAppointment::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+
+    &:hover {
+        background-color: var(--tertiary-color);
+    }
+}
+
+.selectAppointment.visible {
+    display: flex;
+}

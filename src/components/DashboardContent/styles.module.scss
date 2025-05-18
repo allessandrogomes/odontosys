@@ -1,0 +1,10 @@
+.dashboard {
+    width: 100%;
+    height: calc(100% - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/images/bg-2.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
