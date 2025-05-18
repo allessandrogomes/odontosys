@@ -7,11 +7,11 @@ import DashboardLogo from "@/components/DashboardLogo"
 import DashboardSideBar from "@/components/DashboardSideBar"
 import DashboardHeader from "@/components/DashboardHeader"
 import NewAppointmentForm from "@/components/DashboardContent/NewAppointmentForm"
-import NewPatientForm from "@/components/DashboardContent/NewPatientForm"
 import Resume from "@/components/DashboardContent/Resume"
 import RescheduleAppointment from "@/components/DashboardContent/ChangeAppointment"
 import DashboardContent from "@/components/DashboardContent"
 import SearchAppointment from "@/components/DashboardContent/SearchAppointment"
+import RegisterPatient from "@/components/DashboardContent/Patients/Register"
 
 export default function ReceptionistDashboard() {
     const [user, setUser] = useState<IReceptionist | null>(null)
@@ -78,7 +78,7 @@ export default function ReceptionistDashboard() {
                     <>
                         {dashboardToShow === "Resumo" && <Resume />}
                         {dashboardToShow === "Nova Consulta" && <NewAppointmentForm />}
-                        {dashboardToShow === "Cadastrar" && <NewPatientForm />}
+                        {dashboardToShow === "Cadastrar" && <RegisterPatient />}
                         {dashboardToShow === "Alterar Consulta" && <RescheduleAppointment />}
                         {dashboardToShow === "Buscar Consulta" && <SearchAppointment />}
                     </>
