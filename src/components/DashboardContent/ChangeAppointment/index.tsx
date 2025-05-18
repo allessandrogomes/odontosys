@@ -1,10 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+ 
 import styles from "./styles.module.scss"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import SearchView from "./SearchView"
 import SelectAppointmentView from "./SelectAppointment"
 import SelectChangeView from "./SelectChangeView"
 import ChangeProcedureAndDentistView from "./ChangeProcedureAndDentistView"
+import DayAndTimeView from "./DayAndTimeView"
+import toast, { Toaster } from "react-hot-toast"
 
 const SEARCH_VIEW = "SEARCH_VIEW"
 const SELECT_APPOINTMENT_VIEW = "SELECT_APPOINTMENT_VIEW"
@@ -35,21 +37,34 @@ export default function ChangeAppointment() {
         }
     }
 
-    useEffect(() => {
-        if (viewToShow === SEARCH_VIEW) {
-            if (appointmentsFound.length > 0) {
-                setViewToShow(SELECT_APPOINTMENT_VIEW)
+    async function updateFoundAppointments() {
+        try {
+            const response = await fetch(`/api/appointment/cpf/${appointmentSelected?.patient.cpf}`, {
+                method: "GET"
+            })
+            const data = await response.json()
+
+            if (!response.ok) throw new Error(data.error || "Erro ao buscar as consultas")
+
+            if (data.length === 0) {
+                setAppointmentsFound([])
+                throw new Error("Nenhuma consulta encontrada")
             }
-        } else if (viewToShow === SELECT_APPOINTMENT_VIEW) {
-            setViewToShow(SELECT_CHANGE_VIEW)
+
+            setAppointmentsFound(data)
+        } catch (error) {
+            alert(JSON.stringify(error))
         }
-    }, [appointmentsFound])
+    }
 
     return (
         <div className={styles.containerChangeAppointment}>
             {/* Tela de busca das consultas por meio do CPF do Paciente */}
             <SearchView
-                appointmentsFound={value => setAppointmentsFound(value)}
+                appointmentsFound={value => {
+                    setAppointmentsFound(value)
+                    if (value.length > 0) handleNextView()
+                }}
                 visible={viewToShow === SEARCH_VIEW}
             />
 
@@ -75,10 +90,28 @@ export default function ChangeAppointment() {
             {viewToShow === PROCEDURE_AND_DENTIST && (
                 <ChangeProcedureAndDentistView
                     appointment={appointmentSelected!}
-                    onUpdate={appointmentUpdated => setSelectedAppointment(appointmentUpdated)}
+                    onUpdate={appointmentUpdated => {
+                        setSelectedAppointment(appointmentUpdated)
+                        updateFoundAppointments()
+                    }}
                     onBack={handleBackView}
                 />
             )}
+
+            {/* Tela para alterar o Dia e Horário */}
+            {viewToShow === TIME_AND_DAY && (
+                <DayAndTimeView
+                    appointment={appointmentSelected!}
+                    onUpdate={appointment => {
+                        setSelectedAppointment(appointment)
+                        handleBackView()
+                        toast.success("Informações alteradas com sucesso!")
+                        updateFoundAppointments()
+                    }}
+                    onBack={handleBackView}
+                />
+            )}
+            <Toaster />
         </div>
     )
 }
