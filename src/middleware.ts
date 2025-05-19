@@ -4,8 +4,8 @@ import * as jwt from "jsonwebtoken"
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value
   const { pathname } = request.nextUrl
-  // Rota pública "/" - Se tiver token válido, redireciona para a dashboard
-  if (pathname === "/" && token) {
+  // Rota pública "/login" - Se tiver token válido, redireciona para a dashboard
+  if (pathname === "/login" && token) {
     try {
       const isValid = await validateToken(token, request)
       if (isValid) {
@@ -21,14 +21,14 @@ export async function middleware(request: NextRequest) {
   // Rotas protegidas - Se não tiver token ou for inválido, redireciona para login
   if (pathname.startsWith("/dentist-dashboard") || pathname.startsWith("/receptionist-dashboard")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/", request.url))
+      return NextResponse.redirect(new URL("/login", request.url))
     }
 
     const isValid = await validateToken(token, request)
     const role = getRoleFromToken(token)
 
     if (!isValid) {
-      const response = NextResponse.redirect(new URL("/", request.url))
+      const response = NextResponse.redirect(new URL("/login", request.url))
       response.cookies.delete("token") // Remove o token inválido
       return response
     }
@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
       (pathname.startsWith("/dentist-dashboard") && role !== "DENTISTA") ||
       (pathname.startsWith("/receptionist-dashboard") && role !== "RECEPCIONISTA")
     ) {
-      const response = NextResponse.redirect(new URL("/", request.url))
+      const response = NextResponse.redirect(new URL("/login", request.url))
       return response
     }
   }
@@ -83,5 +83,5 @@ async function validateToken(token: string, request: NextRequest): Promise<boole
 
 // Configuração para aplicar apenas nas rotas desejadas
 export const config = {
-  matcher: ["/", "/receptionist-dashboard/:path*", "/dentist-dashboard/:path*"]
+  matcher: ["/login", "/receptionist-dashboard/:path*", "/dentist-dashboard/:path*"]
 }
