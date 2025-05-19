@@ -74,12 +74,17 @@ export default function Login() {
           </div>
           <div className={styles.labelInput}>
             <label>Senha</label>
-            <input type="password" onChange={e => setFormData({ ...formData, password: e.target.value })} value={formData.password} required/>
+            <input type="password" onChange={e => setFormData({ ...formData, password: e.target.value })} value={formData.password} required />
           </div>
         </div>
         {!loading ? <button disabled={loading} type="submit">Entrar</button> : <Loader className={styles.spinner} />}
         {error && <span>{error}</span>}
       </form>
+      <div className={styles.infosLogin}>
+        <span>Informações de Login para teste</span>
+        <span>Login: 87590814333</span>
+        <span>Senha: Teste123*</span>
+      </div>
     </div>
   )
 }

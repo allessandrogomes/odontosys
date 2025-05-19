@@ -88,6 +88,16 @@
             animation: spin 1s linear infinite;
         }
     }
+
+    .infosLogin {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        background-color: yellow;
+        padding: 5px;
+        top: 10px;
+        left: 10px;
+    }
 }
 
 @keyframes spin {
