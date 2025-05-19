@@ -4,6 +4,7 @@ import { FaCalendarAlt } from "react-icons/fa"
 import { FaRegUser } from "react-icons/fa"
 import { TbReportAnalytics } from "react-icons/tb"
 import { useState } from "react"
+import Image from "next/image"
 
 const sidebarBtns = [
     { icon: <IoMdHome className={styles.icon} />, title: "Início", childrens: ["Resumo"] },
@@ -33,6 +34,9 @@ export default function DashboardSideBar({ dashboardSelected }: { dashboardSelec
 
     return (
         <aside className={styles.aside}>
+            <div className={styles.logo}>
+                <Image className={styles.image} src="/images/logo.webp" width={500} height={500} alt="Logo OdontoSys" />
+            </div>
             <nav>
                 <ul>
                     {sidebarBtns.map(btn => (
