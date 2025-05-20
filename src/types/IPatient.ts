@@ -7,7 +7,6 @@ interface IPatient{
     createdAt: string,
     cpf: string,
     birthDate: string,
-    medicalHistory: number[],
     appointments: IAppointment[],
     prescriptions: IPrescription[],
     completedAppointments: ICompletedAppointment[],

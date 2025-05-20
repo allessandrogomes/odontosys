@@ -11,6 +11,7 @@ import RescheduleAppointment from "@/components/DashboardContent/Appointments/Ch
 import DashboardContent from "@/components/DashboardContent"
 import SearchAppointment from "@/components/DashboardContent/Appointments/SearchAppointment"
 import RegisterPatient from "@/components/DashboardContent/Patients/Register"
+import Search from "@/components/DashboardContent/Patients/Search"
 
 export default function ReceptionistDashboard() {
     const [user, setUser] = useState<IReceptionist | null>(null)
@@ -77,6 +78,7 @@ export default function ReceptionistDashboard() {
                         {dashboardToShow === "Cadastrar" && <RegisterPatient />}
                         {dashboardToShow === "Alterar Consulta" && <RescheduleAppointment />}
                         {dashboardToShow === "Buscar Consulta" && <SearchAppointment />}
+                        {dashboardToShow === "Pesquisar" && <Search />}
                     </>
                 </DashboardContent>
             </div>

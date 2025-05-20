@@ -1,0 +1,105 @@
+.search {
+    position: relative;
+    width: 700px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    box-sizing: border-box;
+    border-radius: 50px;
+    background: linear-gradient(145deg, #e1e1e1, #ffffff);
+    box-shadow: 25px 25px 15px #d5d5d5,
+        -25px -25px 15px #ffffff;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 10px;
+
+        label {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 200px;
+            background-color: transparent;
+            outline: none;
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            color: var(--primary-color);
+            box-sizing: border-box;
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 10px;
+            padding-right: 12px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            .icon {
+                font-size: 20px;
+            }
+
+            &:hover {
+                background-color: var(--tertiary-color);
+            }
+        }
+
+        button.disabled {
+            background-color: gray;
+            cursor: initial;
+        }
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+    }
+
+    .message {
+        margin: auto;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: var(--secondary-color);
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        width: 360px;
+
+        p {
+            margin: 0;
+
+            span {
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+@keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
