@@ -37,20 +37,16 @@ export default function Login() {
 
       const data = await response.json()
 
-      if (!response.ok) {
-        throw new Error(data.error || "Erro inesperado no login")
-      }
+      if (!response.ok) throw new Error(data.error || "Erro inesperado no login")
 
       if (data.user.role === "DENTISTA") {
         router.push("/dentist-dashboard")
       } else {
         router.push("/receptionist-dashboard")
       }
-
     } catch (error: any) {
       setError(error.message)
       setFormData({ login: "", password: "" })
-    } finally {
       setLoading(false)
     }
   }
