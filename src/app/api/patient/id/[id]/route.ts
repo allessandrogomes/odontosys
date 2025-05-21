@@ -7,8 +7,11 @@ import { Prisma } from "@prisma/client"
 const patientSchema = z.object({
     name: z.string(),
     email: z.string().email(),
-    phone: z.string(),
-    cpf: z.string(),
+    phone: z.string()
+        .transform(val => val.replace(/\D/g, "")),
+    cpf: z.string()
+        .transform(val => val.replace(/\D/g, ""))
+        .refine(val => val.length === 11, "CPF deve conter 11 dígitos"),
     birthDate: z.string()
 }).strict()
 
