@@ -1,0 +1,103 @@
+.editInfo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .backBtn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        border: none;
+        text-decoration: underline;
+        cursor: pointer;
+        background-color: transparent;
+        width: max-content;
+        padding: 0;
+        position: absolute;
+        top: 30px;
+        left: 50px;
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+
+    .form {
+        width: 70%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        div {
+            display: flex;
+            flex-direction: column;
+
+            label {
+                position: relative;
+                left: 5px;
+            }
+
+            input {
+                width: 200px;
+                background-color: var(--secondary-color);
+                border: 1px solid var(--primary-color);
+                border-radius: 50px;
+                color: var(--primary-color);
+                box-sizing: border-box;
+                padding: 10px;
+                outline: none;
+            }
+
+            &:first-of-type input {
+                text-transform: capitalize;
+            }
+        }
+
+        .spinner {
+            position: relative;
+            top: 5px;
+            width: 130px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+        }
+
+        button {
+            width: 100px;
+            height: 45px;
+            background-color: var(--primary-color);
+            border-radius: 50px;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+            top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px;
+
+            .icon {
+                font-size: 20px;
+            }
+
+            &:hover {
+                background-color: var(--tertiary-color);
+            }
+        }
+
+        button.disabled {
+            background-color: gray;
+            cursor: initial;
+        }
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

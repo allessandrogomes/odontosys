@@ -6,11 +6,21 @@ import { Prisma } from "@prisma/client"
 // Esquema de validação com Zod
 const patientSchema = z.object({
     name: z.string(),
-    email: z.string().email(),
-    phone: z.string(),
-    cpf: z.string(),
+    email: z.string().email("Email inválido"),
+    phone: z.string()
+        .transform(val => val.replace(/\D/g, ""))
+        .refine(val => val.length === 11, "O Telefone deve conter 11 dígitos"),
+    cpf: z.string()
+        .transform(val => val.replace(/\D/g, ""))
+        .refine(val => val.length === 11, "CPF deve conter 11 dígitos"),
     birthDate: z.string()
 }).strict()
+
+const fieldLabels: Record<string, string> = {
+    cpf: "CPF",
+    email: "Email",
+    phone: "Telefone"
+}
 
 // PUT /api/patient/id
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -41,7 +51,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         // Tratamento de erros de validação
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: "Dados inválidos", details: error.errors },
+                { error: error.errors[0].message },
                 { status: 400 }
             )
         }
@@ -54,6 +64,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
                     { status: 404 }
                 )
             }
+        }
+
+        // Erro de campo duplicado (único) no Prisma
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
+            const target = (error.meta?.target as string[])?.[0] // exemplo: "cpf" ou "email"
+            const fieldName = fieldLabels[target] || target
+            return NextResponse.json(
+                { error: `Já existe um Paciente cadastrado com esse ${fieldName} ` },
+                { status: 409 }
+            )
         }
 
         // Log de erros para debug
