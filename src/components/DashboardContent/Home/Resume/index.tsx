@@ -7,6 +7,9 @@ import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
 import { formatHour } from "@/utils/formatHour"
 import { Toaster, toast } from "react-hot-toast"
+import { Loader, RefreshCw} from "lucide-react"
+import { FaCheck } from "react-icons/fa"
+import { FaXmark } from "react-icons/fa6"
 
 interface ITodayAppointment {
     id: number
@@ -25,7 +28,7 @@ interface ITodaysAppointments {
 export default function Resume() {
     const [todaysAppointments, setTodaysAppointments] = useState<ITodaysAppointments[] | null>(null)
     const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
     const [typeModal, setTypeModal] = useState<string | null>(null)
     const [contentModal, setContentModal] = useState<ITodayAppointment | null>(null)
@@ -56,6 +59,8 @@ export default function Resume() {
     }
 
     async function completeAppointemnt(id: number) {
+        setIsLoading(true)
+
         try {
             const response = await fetch("/api/completed-appointment", {
                 method: "POST",
@@ -75,6 +80,8 @@ export default function Resume() {
     }
 
     async function cancellAppointemnt(id: number) {
+        setIsLoading(true)
+        
         try {
             const response = await fetch("/api/cancelled-appointment", {
                 method: "POST",
@@ -118,18 +125,21 @@ export default function Resume() {
 
     return (
         <section className={styles.content}>
+
             {/* Cabeçalho */}
             <div className={styles.header}>
                 <h3>Dentista</h3>
                 <h3 className={styles.appointments}>Consultas</h3>
-                <button onClick={fetchAppointments}>Atualizar</button>
+                <button onClick={fetchAppointments}><RefreshCw className={`${styles.icon} ${isLoading && styles.spinner}`}/>  Atualizar</button>
             </div>
-            {/* Cabeçalho */}
 
-            {/* Conteúdo */}
+            {/* Consultas de hoje */}
             <div className={styles.container}>
-                {isLoading ? <p>Carregando...</p> : error ? <p>Erro: {error}</p> : !todaysAppointments ? <p>Não foi possível encontrar os dados das Consultas.</p> : (
-                    todaysAppointments.length === 0 ? <p>Nenhuma consulta para hoje.</p> : (
+                {isLoading ? <p className={styles.loading}><Loader className={`${styles.icon} ${isLoading && styles.spinner}`}/> Carregando</p> 
+                : error ? <p className={styles.error}>Erro: {error}</p> 
+                : !todaysAppointments ? <p className={styles.notFound}>Não foi possível encontrar os dados das Consultas</p> 
+                : (
+                    todaysAppointments.length === 0 ? <p className={styles.noAppointments}>Nenhuma consulta para hoje</p> : (
                         todaysAppointments.map(item => (
                             <div key={item.id} className={styles.timeline}>
                                 <DentistCard dentistName={item.name} />
@@ -149,25 +159,24 @@ export default function Resume() {
                     )
                 )}
             </div>
-            {/* Conteúdo */}
 
             {/* Modal de confirmação */}
             {modalIsOpen && contentModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
                         <h2>Deseja {typeModal} essa consulta?</h2>
-                        <p>Paciente: {contentModal.patient.name}</p>
-                        <p>Procedimento: {contentModal.procedure}</p>
-                        <p>Horário: {formatHour(contentModal.scheduledAt)} - {formatHour(contentModal.endsAt)}</p>
+                        <p>Paciente: <span>{contentModal.patient.name}</span></p>
+                        <p>Procedimento: <span>{contentModal.procedure}</span></p>
+                        <p>Horário: <span>{formatHour(contentModal.scheduledAt)} - {formatHour(contentModal.endsAt)}</span></p>
                         <div className={styles.btns}>
-                            <button onClick={() => handleModalAction(typeModal)}>{typeModal}</button>
-                            <button onClick={handleCloseModal}>Voltar</button>
+                            <button className={`${typeModal === "Finalizar" ? styles.finishBtn : styles.cancelBtn}`} onClick={() => handleModalAction(typeModal)}>{typeModal === "Finalizar" ? <FaCheck className={styles.finishIcon}/> : <FaXmark className={styles.cancelIcon}/>} {typeModal}</button>
+                            <button className={styles.backBtn} onClick={handleCloseModal}>Voltar</button>
                         </div>
                     </div>
                 </div>
             )}
-            {/* Modal de confirmação */}
 
+            {/* Mensagens de notificação */}
             <Toaster />
         </section>
     )

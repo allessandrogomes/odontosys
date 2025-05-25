@@ -1,6 +1,6 @@
 .content {
     width: calc(100vw - 271px);
-    height: calc(100vh - 215px);
+    height: 100%;
     background-image: url("/images/bg-2.webp");
     background-size: cover;
 
@@ -24,6 +24,10 @@
         }
 
         button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
             border: none;
             border-radius: 50px;
             padding: 10px;
@@ -31,6 +35,21 @@
             color: var(--tertiary-color);
             font-weight: 600;
             cursor: pointer;
+
+            .icon {
+                font-size: 25px;
+                position: relative;
+                bottom: 1px;
+            }
+
+            .icon.spinner {
+                animation: spin 1s linear infinite;
+            }
+
+            &:hover {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+            }
         }
     }
 
@@ -43,6 +62,33 @@
         height: calc(100vh - 270px);
         overflow: auto;
 
+        .loading,
+        .error,
+        .notFound,
+        .noAppointments {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            align-self: center;
+            margin: auto 0;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+            .icon {
+                font-size: 25px;
+                position: relative;
+                bottom: 1px;
+            }
+
+            .icon.spinner {
+                animation: spin 1s linear infinite;
+            }
+        }
+
         .timeline {
             display: flex;
         }
@@ -52,7 +98,7 @@
         width: 15px;
         height: 15px;
     }
-    
+
     .container::-webkit-scrollbar-track {
         background: var(--tertiary-color);
     }
@@ -81,6 +127,12 @@
             max-width: 90%;
             text-align: center;
 
+            p {
+                span {
+                    font-weight: 600;
+                }
+            }
+
             h2 {
                 font-weight: 600;
                 font-size: 1rem;
@@ -89,19 +141,62 @@
             .btns {
                 display: flex;
                 gap: 10px;
+                justify-content: center;
                 margin: 0 auto;
-                width: max-content;
 
                 button {
+                    height: 40px;
+                    width: 120px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     border: none;
-                    background-color: var(--tertiary-color);
+                    background-color: var(--primary-color);
                     color: var(--secondary-color);
                     padding: 10px;
                     border-radius: 50px;
                     cursor: pointer;
+                    box-sizing: border-box;
+
+                    .finishIcon {
+                        margin-right: 7px;
+                    }
+
+                    .cancelIcon {
+                        font-size: 20px;
+                        margin-right: 3px;
+                    }
+                }
+
+                .cancelBtn {
+                    background-color: red;
+
+                    &:hover {
+                        background-color: rgba(255, 0, 0, 0.5);
+                    }
+                }
+
+                .finishBtn {
+                    background-color: green;
+
+                    &:hover {
+                        background-color: rgba(0, 128, 0, 0.5);
+                    }
+                }
+
+                .backBtn {
+                    &:hover {
+                        background-color: var(--tertiary-color);
+                    }
                 }
             }
 
         }
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
