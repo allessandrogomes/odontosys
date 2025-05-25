@@ -13,7 +13,7 @@
     .card {
         width: 200px;
         height: 150px;
-        background-color: var(--tertiary-color);
+        background-color: var(--primary-color);
         border-radius: 10px;
         display: flex;
         flex-direction: column;
@@ -21,6 +21,7 @@
         color: var(--secondary-color);
         box-sizing: border-box;
         padding: 20px 0;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
         h4 {
             margin: 0;
@@ -32,7 +33,7 @@
         .divisory {
             width: 100%;
             height: 1px;
-            background-color: var(--secondary-color);
+            background-color: var(--tertiary-color);
             opacity: 80%;
         }
 
