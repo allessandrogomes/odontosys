@@ -55,38 +55,6 @@
             top: 5px;
             width: 130px;
             height: 45px;
-            animation: spin 1s linear infinite;
         }
-
-        button {
-            width: 130px;
-            height: 45px;
-            background-color: var(--primary-color);
-            border-radius: 50px;
-            border: none;
-            color: var(--secondary-color);
-            cursor: pointer;
-            font-weight: 500;
-            position: relative;
-            top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px;
-
-            .icon {
-                font-size: 20px;
-            }
-
-            &:hover {
-                background-color: var(--tertiary-color);
-            }
-        }
-    }
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
     }
 }

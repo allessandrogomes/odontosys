@@ -5,3 +5,16 @@
     font-family: var(--font-poppins), sans-serif;
     color: var(--primary-color);
 }
+
+.imask-input {
+    width: 200px;
+    background-color: transparent;
+    outline: none;
+    border: 1px solid var(--primary-color);
+    border-radius: 50px;
+    color: var(--primary-color);
+    box-sizing: border-box;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 1.25rem;
+}

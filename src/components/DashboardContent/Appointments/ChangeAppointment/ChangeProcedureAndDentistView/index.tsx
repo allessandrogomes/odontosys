@@ -3,7 +3,7 @@ import { FaArrowLeft } from "react-icons/fa"
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
-import { Loader } from "lucide-react"
+import Spinner from "@/components/shared/Spinner"
 
 interface IChangeAppointmentView {
     appointment: IAppointment
@@ -117,7 +117,7 @@ export default function ChangeProcedureAndDentistView({ appointment, onUpdate, o
             <button type="button" onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
             <h1>Alterar Procedimento e Dentista</h1>
             {isLoading ? (
-                <Loader className={styles.spinnerLoading} />
+                <div className={styles.spinnerLoading}><Spinner /></div>
             ) : (
                 <>
                     <div className={styles.selectField}>
@@ -139,7 +139,7 @@ export default function ChangeProcedureAndDentistView({ appointment, onUpdate, o
                     {!isSubmiting ? (
                         <button disabled={thereWasNotAChange} className={`${thereWasNotAChange && styles.disable} ${styles.btnSubmit}`} type="submit">Concluir</button>
                     ) : (
-                        <Loader className={styles.spinnerSubmiting} />
+                        <div className={styles.spinnerSubmiting}><Spinner /></div>
                     )}
 
                 </>

@@ -3,11 +3,12 @@
 
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { IoIosSave } from "react-icons/io"
 import { IMaskInput } from "react-imask"
 import toast, { Toaster } from "react-hot-toast"
-import { Loader } from "lucide-react"
+import { Save } from "lucide-react"
 import { FaArrowLeft } from "react-icons/fa"
+import Button from "@/components/shared/Button"
+import Spinner from "@/components/shared/Spinner"
 
 interface IEditForm {
     patient: IPatient | null
@@ -125,9 +126,9 @@ export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
                 </div>
 
                 {isLoading ? (
-                    <Loader className={styles.spinner} />
+                    <div className={styles.spinner}><Spinner /></div>
                 ) : (
-                    <button disabled={thereWasNoChange} className={`${thereWasNoChange && styles.disabled}`} type="submit"><IoIosSave className={styles.icon} /> Salvar</button>
+                    <Button type="submit" disabled={thereWasNoChange} icon={<Save />} text="Salvar"/>
                 )}
             </form>
             <Toaster />

@@ -5,8 +5,11 @@ import { IMaskInput } from "react-imask"
 import { formatDateISO } from "@/utils/formatDateISO"
 import { formatPhone } from "@/utils/formatPhone"
 import { formatCPF } from "@/utils/formatCPF"
-import { Loader } from "lucide-react"
-import { FiSearch } from "react-icons/fi"
+import { SearchIcon, UserX } from "lucide-react"
+import Button from "@/components/shared/Button"
+import Label from "@/components/shared/Label"
+import FeedbackMessage from "@/components/shared/FeedbackMessage"
+import Spinner from "@/components/shared/Spinner"
 
 export default function Search() {
     const [cpf, setCpf] = useState<string>("")
@@ -40,8 +43,9 @@ export default function Search() {
     return (
         <div className={styles.search}>
             <form onSubmit={handleSearchPatient}>
-                <label>Digite o CPF do Paciente</label>
+                <Label text="Digite o CPF do Paciente"/>
                 <IMaskInput
+                    className="imask-input"
                     mask="000.000.000-00"
                     value={cpf}
                     onAccept={(value) => setCpf(value)}
@@ -49,14 +53,14 @@ export default function Search() {
                     minLength={14}
                     required
                 />
-                <button disabled={isLoading} type="submit" className={`${isLoading && styles.disabled}`}><FiSearch className={styles.icon}/> Buscar</button>
+                <Button type="submit" icon={<SearchIcon />} text="Buscar" disabled={isLoading}/>
             </form>
 
             {isLoading ? (
-                <Loader className={styles.spinner}/>
+                <div className={styles.spinner}><Spinner /></div>
             ) : (
                 <>
-                    {message && <p className={styles.message}>{message}</p>}
+                    {message && <div className={styles.message}><FeedbackMessage message={message} icon={<UserX />}/></div>}
                     {patientInfo && (
                         <div className={styles.info}>
                             <p>Nome: <span>{patientInfo.name}</span></p>

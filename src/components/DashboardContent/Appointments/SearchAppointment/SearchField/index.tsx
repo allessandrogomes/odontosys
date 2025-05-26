@@ -2,8 +2,11 @@
 import { useState } from "react"
 import styles from "./styles.module.scss"
 import { IMaskInput } from "react-imask"
-import { Loader } from "lucide-react"
-import { MdSearchOff } from "react-icons/md"
+import Label from "@/components/shared/Label"
+import Spinner from "@/components/shared/Spinner"
+import FeedbackMessage from "@/components/shared/FeedbackMessage"
+import Button from "@/components/shared/Button"
+import { Search, SearchX } from "lucide-react"
 
 interface ISearchField {
     appointmentsFound: (appointments: IAppointment[]) => void
@@ -39,8 +42,9 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
 
     return (
         <form onSubmit={handleSearchAppointmentsByCPF} className={`${visible && styles.visible} ${styles.searchField}`}>
-            <label>Digite o CPF do Paciente:</label>
+            <Label text="Digite o CPF do Paciente:" />
             <IMaskInput
+                className="imask-input"
                 mask="000.000.000-00"
                 value={cpfField}
                 onAccept={(value) => setCpfField(value)}
@@ -48,9 +52,9 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
                 minLength={14}
                 required
             />
-            <button disabled={isLoading} type="submit" className={`${isLoading && styles.disabled}`}>Buscar</button>
-            {isLoading && <div className={styles.boxSpinner}><Loader className={styles.spinner}/></div>}
-            {message && <p className={styles.message}><MdSearchOff className={styles.icon} />{message}</p>}
+            <Button type="submit" icon={<Search />} text="Buscar" disabled={isLoading} />
+            {isLoading && <div className={styles.spinner}><Spinner /></div>}
+            {message && <div className={styles.message}><FeedbackMessage icon={<SearchX />} message={message} /></div>}
         </form>
     )
 }

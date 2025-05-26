@@ -1,6 +1,10 @@
 .box {
     display: flex;
 
+    &.lastCard {
+        padding-right: 20px;
+    }
+
     .connection {
         width: 75px;
         height: 1px;

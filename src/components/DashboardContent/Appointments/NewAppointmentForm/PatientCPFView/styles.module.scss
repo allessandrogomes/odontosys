@@ -13,27 +13,9 @@
         position: relative;
         gap: 5px;
 
-        p {
-            margin: 0;
+        .message {
             position: absolute;
-            bottom: 65px;
-        }
-
-        label {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        input {
-            box-sizing: border-box;
-            border-radius: 10px;
-            outline: none;
-            border: 1px solid var(--primary-color);
-            padding: 5px 10px;
-            color: var(--primary-color);
-            background-color: transparent;
-            width: 170px;
-            text-align: center;
+            bottom: 90px;
         }
 
         .btns {

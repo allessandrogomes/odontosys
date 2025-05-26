@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
-import { FiSearch } from "react-icons/fi"
 import { useState } from "react"
-import { Loader } from "lucide-react"
+import { Loader, Search, UserX } from "lucide-react"
+import Button from "@/components/shared/Button"
+import Label from "@/components/shared/Label"
+import FeedbackMessage from "@/components/shared/FeedbackMessage"
 
 interface ISearchForm {
     visible: boolean
@@ -39,8 +41,9 @@ export default function SearchForm({ visible, patient }: ISearchForm) {
     return (
         <form onSubmit={handleSearchPatient} className={`${visible && styles.visible} ${styles.searchForm}`}>
             <div>
-                <label>Digite o CPF do Paciente</label>
+                <Label text="Digite o CPF do Paciente"/>
                 <IMaskInput
+                    className="imask-input"
                     mask="000.000.000-00"
                     value={cpf}
                     onAccept={(value) => setCpf(value)}
@@ -52,9 +55,9 @@ export default function SearchForm({ visible, patient }: ISearchForm) {
             {isLoading ? (
                 <Loader className={styles.spinner}/>
             ) : (
-                <button type="submit"><FiSearch className={styles.icon} /> Buscar</button>
+                <Button type="submit" icon={<Search />} text="Buscar"/>
             )}
-            {message && <p className={styles.message}>{message}</p>}
+            {message && <div className={styles.message}><FeedbackMessage message={message} icon={<UserX />}/></div>}
         </form>
     )
 }
