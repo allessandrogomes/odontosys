@@ -16,16 +16,18 @@ interface IOnClick {
     onClickCancel: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-interface IAppointmentCardProps extends IAppointmentCard, IOnClick {}
+interface IAppointmentCardProps extends IAppointmentCard, IOnClick {
+    isLast?: boolean
+}
 
 function getFirstAndSecondName(fullName: string): string {
     const parts = fullName.trim().split(" ")
     return parts.slice(0, 2).join(" ")
 }
 
-export default function AppointmentCard({ patientName, procedure, start, end, onClickFinish, onClickCancel }: IAppointmentCardProps) {
+export default function AppointmentCard({ patientName, procedure, start, end, onClickFinish, onClickCancel, isLast }: IAppointmentCardProps) {
     return (
-        <div className={styles.box}>
+        <div className={`${styles.box} ${isLast ? styles.lastCard : ""}`}>
             <div className={styles.connection}></div>
             <div className={styles.card}>
                 <h4>{getFirstAndSecondName(patientName)} <br></br> {procedure} <br></br> {formatHour(start)} - {formatHour(end)}</h4>

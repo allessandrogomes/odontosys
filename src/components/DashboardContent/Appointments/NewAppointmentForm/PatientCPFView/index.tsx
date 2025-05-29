@@ -1,6 +1,9 @@
 import { useState } from "react"
 import styles from "./styles.module.scss"
 import { IMaskInput } from "react-imask"
+import Label from "@/components/shared/Label"
+import FeedbackMessage from "@/components/shared/FeedbackMessage"
+import { UserX } from "lucide-react"
 
 interface IPatientCPFView {
     onSelectPatientId: (id: number) => void
@@ -9,7 +12,7 @@ interface IPatientCPFView {
     active: boolean
 }
 
-export default function PatientCPFView({ onSelectPatientId, onNext, active, patientName}: IPatientCPFView) {
+export default function PatientCPFView({ onSelectPatientId, onNext, active, patientName }: IPatientCPFView) {
     const [cpf, setCpf] = useState<string>("")
     const [patientSelected, setPatientSelected] = useState<string | null>(null)
     const [notFound, setNotFound] = useState<boolean>(false)
@@ -46,8 +49,9 @@ export default function PatientCPFView({ onSelectPatientId, onNext, active, pati
             {/* Campo para buscar paciente pelo CPF */}
             {!patientSelected && (
                 <div className={styles.cpfField}>
-                    <label>CPF do Paciente</label>
+                    <Label text="CPF do Paciente" />
                     <IMaskInput
+                        className="imask-input"
                         mask="000.000.000-00"
                         value={cpf}
                         onAccept={(value) => setCpf(value)}
@@ -55,7 +59,7 @@ export default function PatientCPFView({ onSelectPatientId, onNext, active, pati
                         minLength={14}
                         required
                     />
-                    {notFound && <p className={styles.notFound}>Nenhum paciente encontrado</p>}
+                    {notFound && <div className={styles.message}><FeedbackMessage message="Nenhum paciente encontrado" icon={<UserX />} /></div>}
                     <div className={styles.btns}>
                         <button className={`${styles.nextBtn} ${cpf.length === 14 ? styles.active : ""}`} disabled={!(cpf.length === 14)} onClick={handleSearchPatient}>Próximo</button>
                     </div>

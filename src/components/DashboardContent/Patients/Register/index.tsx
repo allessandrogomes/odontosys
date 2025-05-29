@@ -3,10 +3,11 @@
 
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { MdPersonAdd } from "react-icons/md"
 import { IMaskInput } from "react-imask"
 import toast, { Toaster } from "react-hot-toast"
-import { Loader } from "lucide-react"
+import { UserPlus } from "lucide-react"
+import Button from "@/components/shared/Button"
+import Spinner from "@/components/shared/Spinner"
 
 export default function RegisterPatient() {
     const [formData, setFormData] = useState({
@@ -114,9 +115,9 @@ export default function RegisterPatient() {
                 </div>
 
                 {isLoading ? (
-                    <Loader className={styles.spinner}/>
+                    <div className={styles.spinner}><Spinner /></div>
                 ) : (
-                    <button disabled={isLoading} type="submit"><MdPersonAdd className={styles.icon} /> Cadastrar</button>
+                    <Button type="submit" icon={<UserPlus />} text="Cadastrar"/>
                 )}
             </form>
             <Toaster />

@@ -7,9 +7,10 @@ import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
 import { formatHour } from "@/utils/formatHour"
 import { Toaster, toast } from "react-hot-toast"
-import { Loader, RefreshCw} from "lucide-react"
 import { FaCheck } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
+import Spinner from "@/components/shared/Spinner"
+import { RefreshCw } from "lucide-react"
 
 interface ITodayAppointment {
     id: number
@@ -81,7 +82,7 @@ export default function Resume() {
 
     async function cancellAppointemnt(id: number) {
         setIsLoading(true)
-        
+
         try {
             const response = await fetch("/api/cancelled-appointment", {
                 method: "POST",
@@ -130,34 +131,35 @@ export default function Resume() {
             <div className={styles.header}>
                 <h3>Dentista</h3>
                 <h3 className={styles.appointments}>Consultas</h3>
-                <button onClick={fetchAppointments}><RefreshCw className={`${styles.icon} ${isLoading && styles.spinner}`}/>  Atualizar</button>
+                <button onClick={fetchAppointments}><RefreshCw className={`${isLoading && styles.rotateSpinner}`}/> Atualizar</button>
             </div>
 
             {/* Consultas de hoje */}
             <div className={styles.container}>
-                {isLoading ? <p className={styles.loading}><Loader className={`${styles.icon} ${isLoading && styles.spinner}`}/> Carregando</p> 
-                : error ? <p className={styles.error}>Erro: {error}</p> 
-                : !todaysAppointments ? <p className={styles.notFound}>Não foi possível encontrar os dados das Consultas</p> 
-                : (
-                    todaysAppointments.length === 0 ? <p className={styles.noAppointments}>Nenhuma consulta para hoje</p> : (
-                        todaysAppointments.map(item => (
-                            <div key={item.id} className={styles.timeline}>
-                                <DentistCard dentistName={item.name} />
-                                {item.appointments.map(appointment =>
-                                    <AppointmentCard
-                                        key={appointment.id}
-                                        patientName={appointment.patient.name}
-                                        procedure={appointment.procedure}
-                                        start={appointment.scheduledAt}
-                                        end={appointment.endsAt}
-                                        onClickFinish={() => handleOpenModal(appointment, "finish")}
-                                        onClickCancel={() => handleOpenModal(appointment, "cancel")}
-                                    />
-                                )}
-                            </div>
-                        ))
-                    )
-                )}
+                {isLoading ? <p className={styles.loading}><Spinner /> Carregando</p>
+                    : error ? <p className={styles.error}>Erro: {error}</p>
+                        : !todaysAppointments ? <p className={styles.notFound}>Não foi possível encontrar os dados das Consultas</p>
+                            : (
+                                todaysAppointments.length === 0 ? <p className={styles.noAppointments}>Nenhuma consulta para hoje</p> : (
+                                    todaysAppointments.map(item => (
+                                        <div key={item.id} className={styles.timeline}>
+                                            <DentistCard dentistName={item.name} />
+                                            {item.appointments.map((appointment, index, array) =>
+                                                <AppointmentCard
+                                                    key={appointment.id}
+                                                    patientName={appointment.patient.name}
+                                                    procedure={appointment.procedure}
+                                                    start={appointment.scheduledAt}
+                                                    end={appointment.endsAt}
+                                                    onClickFinish={() => handleOpenModal(appointment, "finish")}
+                                                    onClickCancel={() => handleOpenModal(appointment, "cancel")}
+                                                    isLast={index === array.length -1}
+                                                />
+                                            )}
+                                        </div>
+                                    ))
+                                )
+                            )}
             </div>
 
             {/* Modal de confirmação */}

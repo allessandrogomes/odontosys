@@ -18,58 +18,11 @@
         align-items: center;
         gap: 5px;
         margin-bottom: 10px;
-
-        label {
-            font-size: 1.25rem;
-            font-weight: 500;
-        }
-
-        input {
-            width: 200px;
-            background-color: transparent;
-            outline: none;
-            border: 1px solid var(--primary-color);
-            border-radius: 50px;
-            color: var(--primary-color);
-            box-sizing: border-box;
-            padding: 5px 10px;
-            text-align: center;
-            font-size: 1.25rem;
-            margin-bottom: 5px;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 50px;
-            padding: 10px;
-            padding-right: 12px;
-            color: var(--secondary-color);
-            cursor: pointer;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-
-            .icon {
-                font-size: 20px;
-            }
-
-            &:hover {
-                background-color: var(--tertiary-color);
-            }
-        }
-
-        button.disabled {
-            background-color: gray;
-            cursor: initial;
-        }
     }
 
     .spinner {
         width: 50px;
         height: 50px;
-        animation: spin 1s linear infinite;
         margin: auto;
     }
 
@@ -97,9 +50,3 @@
         }
     }
 }
-
-@keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }

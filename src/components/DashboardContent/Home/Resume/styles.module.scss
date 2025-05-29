@@ -24,33 +24,33 @@
         }
 
         button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
+            height: 40px;
             border: none;
             border-radius: 50px;
-            padding: 10px;
             background-color: var(--secondary-color);
-            color: var(--tertiary-color);
-            font-weight: 600;
+            padding: 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
             cursor: pointer;
 
-            .icon {
-                font-size: 25px;
+            svg {
                 position: relative;
-                bottom: 1px;
-            }
-
-            .icon.spinner {
-                animation: spin 1s linear infinite;
+                bottom: 2px;
             }
 
             &:hover {
                 background-color: var(--primary-color);
                 color: var(--secondary-color);
             }
+
+            .rotateSpinner {
+                animation: spin 1s linear infinite;
+            }
         }
+
     }
 
     .container {
@@ -58,8 +58,8 @@
         flex-direction: column;
         gap: 50px;
         box-sizing: border-box;
-        padding: 20px 20px 0 20px;
-        height: calc(100vh - 270px);
+        padding: 20px;
+        height: calc(100vh - 261px);
         overflow: auto;
 
         .loading,
@@ -77,16 +77,6 @@
             padding: 10px;
             border-radius: 50px;
             box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-
-            .icon {
-                font-size: 25px;
-                position: relative;
-                bottom: 1px;
-            }
-
-            .icon.spinner {
-                animation: spin 1s linear infinite;
-            }
         }
 
         .timeline {
@@ -95,16 +85,22 @@
     }
 
     .container::-webkit-scrollbar {
-        width: 15px;
-        height: 15px;
+        width: 10px;
+        height: 10px;
     }
 
     .container::-webkit-scrollbar-track {
-        background: var(--tertiary-color);
+        background: rgb(182, 182, 182);
+        border-radius: 10px;
     }
 
     .container::-webkit-scrollbar-thumb {
         background: var(--primary-color);
+        border-radius: 10px;
+
+        &:hover {
+            background-color: var(--tertiary-color);
+        }
     }
 
     .modalOverlay {

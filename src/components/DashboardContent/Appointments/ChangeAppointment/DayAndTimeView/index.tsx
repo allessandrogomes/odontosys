@@ -2,7 +2,7 @@ import { FaArrowLeft } from "react-icons/fa"
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
 import { formatHour } from "@/utils/formatHour"
-import { Loader } from "lucide-react"
+import Spinner from "@/components/shared/Spinner"
 
 interface ITime {
     start: string,
@@ -83,7 +83,7 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
                 <input onChange={e => setDay(e.target.value)} type="date" value={day} />
             </div>
             {isLoading ? (
-                <Loader className={`${styles.spinner} ${styles.loading}`} />
+                <div className={`${styles.spinner} ${styles.loading}`}><Spinner /></div>
             ) : (
                 <div className={styles.timesBtns}>
                     {Array.isArray(times) && times.map((time, index) =>
@@ -99,7 +99,7 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
                 </div>
             )}
             {isSubmiting ? (
-                <Loader className={styles.spinner} />
+                <div className={styles.spinner}><Spinner /></div>
             ) : (
                 <button disabled={!selectedTime} type="submit" className={`${!selectedTime && styles.disable} ${styles.btnSubmit}`}>Concluir</button>
             )}

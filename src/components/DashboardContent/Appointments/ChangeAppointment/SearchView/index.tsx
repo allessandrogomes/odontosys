@@ -2,8 +2,11 @@
 import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
 import { useState } from "react"
-import { MdContentPasteSearch } from "react-icons/md"
-import { Loader } from "lucide-react"
+import { FileSearch, SearchX } from "lucide-react"
+import Button from "@/components/shared/Button"
+import Label from "@/components/shared/Label"
+import FeedbackMessage from "@/components/shared/FeedbackMessage"
+import Spinner from "@/components/shared/Spinner"
 
 interface ISearchView {
     appointmentsFound: (appointmentsFound: IAppointment[]) => void
@@ -43,8 +46,9 @@ export default function SearchView({ appointmentsFound, visible }: ISearchView) 
 
     return (
         <form onSubmit={fetchAppointments} className={`${visible && styles.visible} ${styles.form}`}>
-            <label>Digite o CPF do Paciente</label>
+            <Label text="Digite o CPF do Paciente"/>
             <IMaskInput
+                className="imask-input"
                 mask="000.000.000-00"
                 value={cpf}
                 onAccept={(value) => setCpf(value)}
@@ -52,8 +56,8 @@ export default function SearchView({ appointmentsFound, visible }: ISearchView) 
                 minLength={14}
                 required
             />
-            {!isLoading ? <button type="submit"><MdContentPasteSearch className={styles.icon} /> Buscar Consultas</button> : <Loader className={styles.spinner} />}
-            {error && <p className={styles.error}>{error}</p>}
+            {!isLoading ? <Button text="Buscar Consultas" icon={<FileSearch />} type="submit" /> : <div className={styles.spinner}><Spinner /></div>}
+            {error && <div className={styles.message}><FeedbackMessage message={error} icon={<SearchX />}/></div>}
         </form>
     )
 }
