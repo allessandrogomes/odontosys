@@ -10,7 +10,7 @@ interface IAppointmentsFound {
 
 export default function AppointmentsFound({ appointments, selectedAppointment, visible }: IAppointmentsFound) {
     return (
-        <ul className={`${visible && styles.visible} ${styles.appointmentsFound}`}>
+        <ul className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
             <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
             {appointments.map(appointment => (
                 <li key={appointment.id} onClick={() => selectedAppointment(appointment)}>

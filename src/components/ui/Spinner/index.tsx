@@ -1,8 +1,12 @@
 import { Loader } from "lucide-react"
 import styles from "./styles.module.scss"
 
-export default function Spinner() {
+interface ISpinner {
+    className?: string
+}
+
+export default function Spinner({ className }: ISpinner) {
     return (
-        <Loader className={styles.spinner} />
+        <Loader className={`${styles.spinner} ${className ?? ""}`} />
     )
 }

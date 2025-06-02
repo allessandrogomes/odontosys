@@ -10,13 +10,15 @@ export default function SearchAppointment() {
 
     return (
         <div className={styles.searchAppointment}>
+            <h1>Buscar Consulta</h1>
+
+            <div className={styles.divider}></div>
+
             {/* Componente para buscar as consultas por CPF, e retorna ao encontrar */}
-            <SearchField 
+            <SearchField
                 appointmentsFound={appointments => setAppointments(appointments)}
                 visible={!selectedAppointment}
             />
-
-            <div className={styles.divisory}></div>
 
             {/* Mostra todas as consultas encontradas e retorna a clicada/selecionada */}
             {appointments.length > 0 &&

@@ -1,7 +1,24 @@
 .appointmentInformation {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    background-color: var(--secondary-color);
+    gap: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    margin: auto;
+
+    h2, p {
+        margin: 0;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    span {
+        font-weight: 600;
+    }
 
     .backBtn {
         display: flex;
@@ -18,23 +35,5 @@
         left: 50px;
         font-weight: 500;
         color: var(--primary-color);
-    }
-
-    h2, p {
-        margin: 0;
-    }
-
-    .info {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        span {
-            font-weight: 600;
-        }
     }
 }

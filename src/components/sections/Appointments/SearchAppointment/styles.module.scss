@@ -7,14 +7,18 @@
     align-items: center;
     padding: 30px;
     box-sizing: border-box;
-    background: linear-gradient(145deg, #e1e1e1, #ffffff);
+    background: var(--bg-color);
 
-    .divisory {
-        width: 100%;
+    h1 {
+        margin: 0;
+    }
+
+    .divider {
+        width: calc(100% + 60px);
         height: 1px;
+        min-height: 1px;
         background-color: var(--primary-color);
         opacity: 0.2;
-        position: absolute;
-        top: 90px;
+        margin: 30px 0;
     }
 }
