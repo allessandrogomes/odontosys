@@ -105,6 +105,7 @@ export default function NewAppointmentForm() {
 
     async function handleSubmitAppointment() {
         setIsLoading(true)
+         // Separa apenas as informações necessárias para criação da consulta em "...apointment"
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { patientName, dentistName, ...appointment } = formData
         try {

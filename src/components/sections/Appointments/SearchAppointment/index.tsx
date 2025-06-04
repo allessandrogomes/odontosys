@@ -2,8 +2,9 @@ import styles from "./styles.module.scss"
 import SearchField from "./SearchField"
 import { useState } from "react"
 import AppointmentsFound from "./AppointmentsFound"
-import AppointmentInformation from "./AppointmentInformation"
 import Divider from "@/components/ui/Divider"
+import AppointmentCard from "@/components/cards/AppointmentCard"
+import { FaArrowLeft } from "react-icons/fa"
 
 export default function SearchAppointment() {
     const [appointments, setAppointments] = useState<IAppointment[] | []>([])
@@ -30,11 +31,13 @@ export default function SearchAppointment() {
                 />
             }
 
-            {selectedAppointment && 
-                <AppointmentInformation 
-                    appointment={selectedAppointment}
-                    onBack={() => setSelectedAppointment(null)}
-                />}
+            {/* Mostra as informações da consulta */}
+            {selectedAppointment &&
+                <>
+                    <AppointmentCard appointment={selectedAppointment} />
+                    <button onClick={() => setSelectedAppointment(null)} className={styles.backBtn}><FaArrowLeft />Voltar</button>
+                </>
+            }
         </div>
     )
 }
