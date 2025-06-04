@@ -1,46 +1,27 @@
 .box {
-    height: 100%;
-    width: 100%;
+    width: 500px;
+    height: 300px;
     display: none;
+    align-items: center;
+    justify-content: center;
 
-    .cpfField {
-        width: 100%;
+    .searchView {
         height: 100%;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         position: relative;
-        gap: 5px;
 
-        .message {
+        p {
             position: absolute;
-            bottom: 90px;
+            bottom: 50px;
         }
 
-        .btns {
-            width: 100%;
-            display: flex;
-            justify-content: right;
+        .spinner {
             position: absolute;
-            bottom: 0;
-
-            button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-            }
-
-            .nextBtn {
-                background-color: gray;
-            }
-
-            button.active {
-                background-color: var(--primary-color);
-                cursor: pointer;
-            }
+            bottom: 35px;
         }
     }
 
@@ -71,25 +52,12 @@
             bottom: 0;
 
             button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-                cursor: pointer;
-            }
-
-            .nextBtn {
-                background-color: var(--primary-color);
-            }
-
-            .backBtn {
-                background-color: var(--tertiary-color);
+                width: 120px;
             }
         }
     }
 }
 
-.box.active {
-    display: block;
+.box.visible {
+    display: flex;
 }

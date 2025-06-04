@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react"
 import styles from "./styles.module.scss"
 import { formatHour } from "@/utils/formatHour"
 import { formatDate } from "@/utils/formatDate"
+import Label from "@/components/ui/Label"
+import Button from "@/components/ui/Button"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+import Spinner from "@/components/ui/Spinner"
 
 interface IScheduledView {
     durationMinutes: number | null
@@ -26,6 +30,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
     const [times, setTimes] = useState<ITime[] | []>([])
     const [selectedTime, setSelectedTime] = useState<ITime | null>(null)
     const [currentView, setCurrentView] = useState<string>(SELECT_DAY_AND_TIME_VIEW)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     function handleNext() {
         if (selectedTime) {
@@ -37,6 +42,7 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
 
     useEffect(() => {
         async function getAvailableTimes() {
+            setIsLoading(true)
             setSelectedTime(null)
             try {
                 const response = await fetch("/api/available-times", {
@@ -52,6 +58,8 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                 setTimes(data)
             } catch (error) {
                 alert(JSON.stringify(error))
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -61,34 +69,40 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
 
     return (
         <div className={`${styles.box} ${active && styles.active}`}>
+            {/* Tela para selecionar o dia e horário */}
             {currentView === SELECT_DAY_AND_TIME_VIEW && (
                 <div className={styles.scheduled}>
-                    <label>Escolha o dia e horário</label>
+                    <Label text="Escolha o dia e horário" />
                     <input onChange={e => setDay(e.target.value)} type="date" value={day} />
                     <div className={styles.timesBtns}>
-                        {Array.isArray(times) && times.map((time, index) =>
-                            <button
-                                className={`${selectedTime?.start === time.start && styles.selected}`}
-                                onClick={() => setSelectedTime(time)}
-                                key={index}
-                            >
-                                {formatHour(time.start)} - {formatHour(time.end)}
-                            </button>
+                        {isLoading ? (
+                            <Spinner className={styles.spinner} />
+                        ) : (
+                            Array.isArray(times) && times.map((time, index) =>
+                                <button
+                                    className={`${selectedTime?.start === time.start && styles.selected}`}
+                                    onClick={() => setSelectedTime(time)}
+                                    key={index}
+                                >
+                                    {formatHour(time.start)} - {formatHour(time.end)}
+                                </button>
+                            )
                         )}
                     </div>
                     <div className={styles.boxBtns}>
-                        <button onClick={e => onBack(e)} className={styles.backBtn}>Voltar</button>
-                        <button onClick={handleNext} disabled={!selectedTime} className={`${styles.nextBtn} ${selectedTime && styles.active}`}>Próximo</button>
+                        <Button text="Voltar" iconStart={<ArrowLeft />} onClick={e => onBack(e)} />
+                        <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!selectedTime} />
                     </div>
                 </div>
             )}
 
+            {/* Tela que mostra o dia e horário escolhido */}
             {currentView === SHOW_SELECTED_DAY_AND_TIME_VIEW && selectedTime && day && (
                 <div className={styles.showSchedule}>
                     <p>Dia e o Horário selecionados: <br /><br /><span>{formatDate(day)} | {formatHour(selectedTime.start)} - {formatHour(selectedTime.end)}</span></p>
                     <div className={styles.boxBtns}>
-                        <button onClick={() => setCurrentView(SELECT_DAY_AND_TIME_VIEW)} className={styles.backBtn}>Voltar</button>
-                        <button onClick={e => onNext(e)} className={styles.nextBtn}>Próximo</button>
+                        <Button onClick={() => setCurrentView(SELECT_DAY_AND_TIME_VIEW)} iconStart={<ArrowLeft />} text="Voltar" />
+                        <Button onClick={e => onNext(e)} iconEnd={<ArrowRight />} text="Próximo" />
                     </div>
                 </div>
             )}

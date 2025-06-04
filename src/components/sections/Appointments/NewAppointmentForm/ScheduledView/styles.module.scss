@@ -1,6 +1,6 @@
 .box {
-    width: 100%;
-    height: 100%;
+    width: 500px;
+    height: 300px;
     display: none;
 
     .scheduled {
@@ -11,12 +11,7 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        gap: 20px;
-
-        label {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
+        gap: 10px;
 
         input {
             width: 150px;
@@ -37,34 +32,23 @@
             bottom: 0;
 
             button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-            }
-
-            .nextBtn {
-                background-color: gray;
-            }
-
-            .nextBtn.active {
-                background-color: var(--primary-color);
-                cursor: pointer;
-            }
-
-            .backBtn {
-                background-color: var(--tertiary-color);
-                cursor: pointer;
+                width: 120px;
             }
         }
 
         .timesBtns {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            width: 100%;
+            width: 450px;
+            height: 100px;
+            margin: 0 auto;
+            overflow: auto;
+            border: 1px solid var(--primary-color);
+            position: relative;
+
+            .spinner {
+                position: absolute;
+                left: 205px;
+                bottom: 35px;
+            }
 
             button {
                 width: 100px;
@@ -75,6 +59,7 @@
                 padding: 5px 0;
                 cursor: pointer;
                 font-size: 0.85rem;
+                margin: 3px;
             }
 
             button.selected {
@@ -109,20 +94,7 @@
             bottom: 0;
 
             button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-                cursor: pointer;
-            }
-
-            .nextBtn {
-                background-color: var(--primary-color);
-            }
-
-            .backBtn {
-                background-color: var(--tertiary-color);
+                width: 120px;
             }
         }
     }

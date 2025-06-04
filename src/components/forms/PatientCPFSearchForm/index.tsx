@@ -25,7 +25,7 @@ export default function PatientCPFSearchForm({ cpf, isLoading, flexRow = false, 
                 minLength={14}
                 required
             />
-            <Button type="submit" icon={<Search />} text="Buscar" disabled={isLoading} />
+            <Button type="submit" iconStart={<Search />} text="Buscar" disabled={isLoading} />
         </form>
     )
 }

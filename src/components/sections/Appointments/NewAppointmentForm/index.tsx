@@ -8,6 +8,12 @@ import DentistView from "./DentistView"
 import ScheduledView from "./ScheduledView"
 import { formatHour } from "@/utils/formatHour"
 import { formatDateISO } from "@/utils/formatDateISO"
+import Divider from "@/components/ui/Divider"
+import Label from "@/components/ui/Label"
+import Button from "@/components/ui/Button"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+import Card from "@/components/ui/Card"
+import Spinner from "@/components/ui/Spinner"
 
 const PATIENT_VIEW = "PATIENT_VIEW"
 const PROCEDURE_VIEW = "PRECEDURE_VIEW"
@@ -29,6 +35,7 @@ interface IFormData {
 
 export default function NewAppointmentForm() {
     const [currentView, setCurrentView] = useState<string>(PATIENT_VIEW)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<IFormData>({
         patientName: null,
         patientId: null,
@@ -97,6 +104,7 @@ export default function NewAppointmentForm() {
     }
 
     async function handleSubmitAppointment() {
+        setIsLoading(true)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { patientName, dentistName, ...appointment } = formData
         try {
@@ -115,19 +123,24 @@ export default function NewAppointmentForm() {
             handleNext()
         } catch (error) {
             alert(JSON.stringify(error))
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
         <div className={styles.form}>
-            <h1 className={styles.title}>Agendamento de Consulta</h1>
+            <h1 className={styles.title}>Agendar Nova Consulta</h1>
+
+            <Divider />
 
             {/* Escolha do Paciente */}
             <PatientCPFView
-                onSelectPatientId={id => setFormData(prev => ({ ...prev, patientId: id }))}
-                patientName={name => setFormData(prev => ({ ...prev, patientName: name }))}
+                patient={patient => patient ?
+                    setFormData(prev => ({ ...prev, patientId: patient.id, patientName: patient.name })) :
+                    setFormData(prev => ({ ...prev, patientId: null, patientName: null }))}
                 onNext={handleNext}
-                active={currentView === PATIENT_VIEW}
+                visible={currentView === PATIENT_VIEW}
                 key={childsKey.patientCPFView}
             />
 
@@ -147,7 +160,7 @@ export default function NewAppointmentForm() {
                 dentistName={name => setFormData(prev => ({ ...prev, dentistName: name }))}
                 onBack={handleBack}
                 onNext={handleNext}
-                active={currentView === DENTIST_VIEW}
+                visible={currentView === DENTIST_VIEW}
                 key={childsKey.dentistView}
             />
 
@@ -165,19 +178,24 @@ export default function NewAppointmentForm() {
 
             {/* Confirmação do Agendamento */}
             <div key={childsKey.confirmAppointmentView} className={`${styles.confirmAppointmentView} ${currentView === CONFIRM_APPOINTMENT_VIEW && styles.active}`}>
-                <label>Informações do Agendamento</label>
-                <p>Paciente: <span>{formData.patientName}</span></p>
-                <p>Procedimento: <span>{formData.procedure}</span></p>
-                <p>Dentista: <span>Dr. {formData.dentistName}</span></p>
-                <p>Dia: <span>{formatDateISO(formData.scheduledAt!)}</span></p>
-                <p>Horário: <span>{formatHour(formData.scheduledAt!)} - {formatHour(formData.endsAt!)}</span></p>
-                <p>Duração: <span>{formData.durationMinutes} Minutos</span></p>
+                <Card width="max-content" height="190px">
+                    <>
+                        <Label text="Informações do Agendamento" />
+                        <p>Paciente: <span>{formData.patientName}</span></p>
+                        <p>Procedimento: <span>{formData.procedure}</span></p>
+                        <p>Dentista: <span>Dr. {formData.dentistName}</span></p>
+                        <p>Dia: <span>{formatDateISO(formData.scheduledAt!)}</span></p>
+                        <p>Horário: <span>{formatHour(formData.scheduledAt!)} - {formatHour(formData.endsAt!)}</span></p>
+                        <p>Duração: <span>{formData.durationMinutes} Minutos</span></p>
+                    </>
+                </Card>
                 <div className={styles.boxBtns}>
-                    <button onClick={handleBack} className={styles.backBtn}>Voltar</button>
-                    <button onClick={handleSubmitAppointment} className={styles.nextBtn}>Agendar</button>
+                    <Button onClick={handleBack} text="Voltar" iconStart={<ArrowLeft />} />
+                    <Button onClick={handleSubmitAppointment} text="Agendar" iconEnd={<ArrowRight />} disabled={isLoading}/>
+                    {isLoading && <Spinner className={styles.spinner}/>}
                 </div>
             </div>
-
+            
             {/* Ao confirmar o Agendamento */}
             <div key={childsKey.completedAppointmentView} className={`${styles.success} ${currentView === COMPLETED_APPOINTMENT_VIEW && styles.active}`}>
                 <h2>Agendamento realizado com sucesso!</h2>

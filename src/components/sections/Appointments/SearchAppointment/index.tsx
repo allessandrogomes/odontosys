@@ -3,6 +3,7 @@ import SearchField from "./SearchField"
 import { useState } from "react"
 import AppointmentsFound from "./AppointmentsFound"
 import AppointmentInformation from "./AppointmentInformation"
+import Divider from "@/components/ui/Divider"
 
 export default function SearchAppointment() {
     const [appointments, setAppointments] = useState<IAppointment[] | []>([])
@@ -12,7 +13,7 @@ export default function SearchAppointment() {
         <div className={styles.searchAppointment}>
             <h1>Buscar Consulta</h1>
 
-            <div className={styles.divider}></div>
+            <Divider />
 
             {/* Componente para buscar as consultas por CPF, e retorna ao encontrar */}
             <SearchField

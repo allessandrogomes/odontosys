@@ -1,21 +1,16 @@
 .form {
     display: flex;
     flex-direction: column;
-    width: 500px;
-    height: 500px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
     box-sizing: border-box;
     padding: 30px;
-    margin: 40px 0;
-    border-radius: 50px;
-    background: linear-gradient(145deg, #e1e1e1, #ffffff);
-    box-shadow: 25px 25px 15px #d5d5d5,
-        -25px -25px 15px #ffffff;
+    background: var(--bg-color);
 
     .title {
         font-size: 2rem;
-        text-align: center;
         margin: 0;
-        margin-top: 20px;
     }
 
     .btn {
@@ -43,18 +38,11 @@
 
     .confirmAppointmentView {
         display: none;
-        width: 100%;
-        height: 100%;
+        width: 500px;
+        height: 300px;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
         position: relative;
-
-        label {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
 
         p {
             margin: 0;
@@ -71,21 +59,13 @@
             position: absolute;
             bottom: 0;
 
+            .spinner {
+                position: absolute;
+                left: 225px;
+            }
+
             button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-                cursor: pointer;
-            }
-
-            .nextBtn {
-                background-color: var(--primary-color);
-            }
-
-            .backBtn {
-                background-color: var(--tertiary-color);
+                width: 120px;
             }
         }
     }
