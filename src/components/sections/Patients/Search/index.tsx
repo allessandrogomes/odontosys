@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { IMaskInput } from "react-imask"
 import { formatDateISO } from "@/utils/formatDateISO"
 import { formatPhone } from "@/utils/formatPhone"
 import { formatCPF } from "@/utils/formatCPF"
-import { SearchIcon, UserX } from "lucide-react"
-import Button from "@/components/ui/Button"
-import Label from "@/components/ui/Label"
+import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import Spinner from "@/components/ui/Spinner"
+import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
 
 export default function Search() {
     const [cpf, setCpf] = useState<string>("")
@@ -42,19 +40,7 @@ export default function Search() {
 
     return (
         <div className={styles.search}>
-            <form onSubmit={handleSearchPatient}>
-                <Label text="Digite o CPF do Paciente"/>
-                <IMaskInput
-                    className="imask-input"
-                    mask="000.000.000-00"
-                    value={cpf}
-                    onAccept={(value) => setCpf(value)}
-                    overwrite
-                    minLength={14}
-                    required
-                />
-                <Button type="submit" icon={<SearchIcon />} text="Buscar" disabled={isLoading}/>
-            </form>
+            <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
 
             {isLoading ? (
                 <div className={styles.spinner}><Spinner /></div>
