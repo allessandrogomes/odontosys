@@ -47,22 +47,6 @@
         }
     }
 
-    button {
-        width: max-content;
-        border: none;
-        color: var(--primary-color);
-        cursor: pointer;
-        position: absolute;
-        top: 30px;
-        left: 50px;
-        background: transparent;
-        text-decoration: underline;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-weight: 500;
-    }
-
     h1 {
         margin: 0;
         position: absolute;

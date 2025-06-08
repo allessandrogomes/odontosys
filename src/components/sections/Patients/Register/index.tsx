@@ -117,7 +117,7 @@ export default function RegisterPatient() {
                 {isLoading ? (
                     <div className={styles.spinner}><Spinner /></div>
                 ) : (
-                    <Button type="submit" icon={<UserPlus />} text="Cadastrar"/>
+                    <Button type="submit" iconStart={<UserPlus />} text="Cadastrar"/>
                 )}
             </form>
             <Toaster />

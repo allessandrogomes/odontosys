@@ -4,7 +4,7 @@ import { useState } from "react"
 import AppointmentsFound from "./AppointmentsFound"
 import Divider from "@/components/ui/Divider"
 import AppointmentCard from "@/components/cards/AppointmentCard"
-import { FaArrowLeft } from "react-icons/fa"
+import BackBtn from "@/components/ui/BackBtn"
 
 export default function SearchAppointment() {
     const [appointments, setAppointments] = useState<IAppointment[] | []>([])
@@ -35,7 +35,7 @@ export default function SearchAppointment() {
             {selectedAppointment &&
                 <>
                     <AppointmentCard appointment={selectedAppointment} />
-                    <button onClick={() => setSelectedAppointment(null)} className={styles.backBtn}><FaArrowLeft />Voltar</button>
+                    <BackBtn onClick={() => setSelectedAppointment(null)} />
                 </>
             }
         </div>

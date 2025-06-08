@@ -6,9 +6,9 @@ import styles from "./styles.module.scss"
 import { IMaskInput } from "react-imask"
 import toast, { Toaster } from "react-hot-toast"
 import { Save } from "lucide-react"
-import { FaArrowLeft } from "react-icons/fa"
 import Button from "@/components/ui/Button"
 import Spinner from "@/components/ui/Spinner"
+import BackBtn from "@/components/ui/BackBtn"
 
 interface IEditForm {
     patient: IPatient | null
@@ -82,7 +82,7 @@ export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
 
     return (
         <div className={styles.editInfo}>
-            <button type="button" onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
+            <BackBtn onClick={onBack} />
             <form onSubmit={handleSubmitUpdate} className={styles.form}>
                 <div>
                     <label>Nome Completo</label>
@@ -128,7 +128,7 @@ export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
                 {isLoading ? (
                     <div className={styles.spinner}><Spinner /></div>
                 ) : (
-                    <Button type="submit" disabled={thereWasNoChange} icon={<Save />} text="Salvar"/>
+                    <Button type="submit" disabled={thereWasNoChange} iconStart={<Save />} text="Salvar"/>
                 )}
             </form>
             <Toaster />

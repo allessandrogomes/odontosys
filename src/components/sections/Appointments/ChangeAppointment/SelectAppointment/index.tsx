@@ -1,7 +1,7 @@
+import BackBtn from "@/components/ui/BackBtn"
 import styles from "./styles.module.scss"
 import { formatDateISO } from "@/utils/formatDateISO"
 import { formatHour } from "@/utils/formatHour"
-import { FaArrowLeft } from "react-icons/fa"
 
 interface ISelectAppointmentView {
     onSelectAppointment: (appointment: IAppointment) => void
@@ -14,7 +14,7 @@ export default function SelectAppointmentView({ onSelectAppointment, onBack, vis
 
     return (
         <div className={`${visible && styles.visible} ${styles.selectAppointment}`}>
-            <button onClick={onBack}><FaArrowLeft />Voltar</button>
+            <BackBtn onClick={onBack}/>
             <h1>Selecione a Consulta</h1>
             {appointmentsFound.length > 0 ? (
                 <>
