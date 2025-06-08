@@ -131,7 +131,7 @@ export default function NewAppointmentForm() {
 
     return (
         <div className={styles.form}>
-            <h1 className={styles.title}>Agendar Nova Consulta</h1>
+            <h1>Agendar Nova Consulta</h1>
 
             <Divider />
 

@@ -1,0 +1,64 @@
+.appointmentList {
+    display: flex;
+    width: 95%;
+    height: 100%;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    padding-right: 10px;
+
+    li {
+        width: 100%;
+
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-sizing: border-box;
+            background-color: var(--primary-color);
+            border: none;
+            color: var(--secondary-color);
+            padding: 5px;
+            border-radius: 50px;
+            cursor: pointer;
+
+            .separatorIcon {
+                width: 20px;
+                height: 20px;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            &:hover {
+                background-color: var(--tertiary-color);
+            }
+        }
+    }
+
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgb(182, 182, 182);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 10px;
+
+        &:hover {
+            background-color: var(--tertiary-color);
+        }
+    }
+}

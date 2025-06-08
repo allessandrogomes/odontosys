@@ -1,6 +1,5 @@
-import { formatHour } from "@/utils/formatHour"
 import styles from "./styles.module.scss"
-import { formatDateISO } from "@/utils/formatDateISO"
+import AppointmentList from "@/components/lists/AppointmentList"
 
 interface IAppointmentsFound {
     appointments: IAppointment[] | []
@@ -10,16 +9,9 @@ interface IAppointmentsFound {
 
 export default function AppointmentsFound({ appointments, selectedAppointment, visible }: IAppointmentsFound) {
     return (
-        <ul className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
+        <div className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
             <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
-            {appointments.map(appointment => (
-                <li key={appointment.id} onClick={() => selectedAppointment(appointment)}>
-                    <p>{appointment.procedure}</p>
-                    <p>{formatDateISO(appointment.scheduledAt)}</p>
-                    <p>{formatHour(appointment.scheduledAt)} - {formatHour(appointment.endsAt)}</p>
-                </li>
-            ))
-            }
-        </ul>
+            <AppointmentList appointments={appointments} selectedAppointment={appointment => selectedAppointment(appointment)}/>
+        </div>
     )
 }
