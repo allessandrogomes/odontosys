@@ -3,35 +3,43 @@
 
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { IMaskInput } from "react-imask"
 import toast, { Toaster } from "react-hot-toast"
-import { Save } from "lucide-react"
-import Button from "@/components/ui/Button"
-import Spinner from "@/components/ui/Spinner"
 import BackBtn from "@/components/ui/BackBtn"
+import PatientInformationForm from "@/components/forms/PatientInformationForm"
+import { Save } from "lucide-react"
 
 interface IEditForm {
-    patient: IPatient | null
+    patient: IPatient
     onBack: (onBack: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
     onSuccess: () => void
 }
 
+interface IFormData {
+    name: string,
+    email: string,
+    phone: string,
+    cpf: string,
+    birthDate: string
+}
+
 export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
-    const [formData, setFormData] = useState({
-        name: patient?.name,
-        email: patient?.email,
-        phone: patient?.phone,
-        cpf: patient?.cpf,
-        birthDate: patient?.birthDate
+    // Campos do formulário
+    const [formData, setFormData] = useState<IFormData>({
+        name: patient.name,
+        email: patient.email,
+        phone: patient.phone,
+        cpf: patient.cpf,
+        birthDate: patient.birthDate
     })
 
+    // Dados completos alterados para comparar com o "patient" inicial, na const "thereWasNoChange"
     const updatedData = {
-        id: patient?.id,
+        id: patient.id,
         name: formData.name,
         email: formData.email,
-        phone: formData.phone?.replace(/\D/g, ""),
-        createdAt: patient?.createdAt,
-        cpf: formData.cpf?.replace(/\D/g, ""),
+        phone: formData.phone.replace(/\D/g, ""),
+        createdAt: patient.createdAt,
+        cpf: formData.cpf.replace(/\D/g, ""),
         birthDate: formData.birthDate
     }
 
@@ -52,6 +60,13 @@ export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
         setFormData(prev => ({
             ...prev,
             [name]: parsedValue
+        }))
+    }
+
+    function handleMaskedChange(name: keyof IFormData, value: string) {
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
         }))
     }
 
@@ -83,54 +98,16 @@ export default function EditForm({ patient, onBack, onSuccess }: IEditForm) {
     return (
         <div className={styles.editInfo}>
             <BackBtn onClick={onBack} />
-            <form onSubmit={handleSubmitUpdate} className={styles.form}>
-                <div>
-                    <label>Nome Completo</label>
-                    <IMaskInput
-                        mask={/^[A-Za-zÀ-ÿ\s]*$/}
-                        value={formData.name}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, name: value }))}
-                        overwrite
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                </div>
-                <div>
-                    <label>Telefone</label>
-                    <IMaskInput
-                        mask="(00) 00000-0000"
-                        value={formData.phone}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, phone: value }))}
-                        overwrite
-                        minLength={15}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>CPF</label>
-                    <IMaskInput
-                        mask="000.000.000-00"
-                        value={formData.cpf}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, cpf: value }))}
-                        overwrite
-                        minLength={14}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Data de Nascimento</label>
-                    <input type="date" name="birthDate" value={formData.birthDate ? formData.birthDate.substring(0, 10) : ""} onChange={handleChange} />
-                </div>
-
-                {isLoading ? (
-                    <div className={styles.spinner}><Spinner /></div>
-                ) : (
-                    <Button type="submit" disabled={thereWasNoChange} iconStart={<Save />} text="Salvar"/>
-                )}
-            </form>
+            <PatientInformationForm 
+                formData={formData} 
+                isLoading={isLoading} 
+                onChange={handleChange} 
+                onMaskInputChange={handleMaskedChange}
+                onSubmit={handleSubmitUpdate}
+                disabled={thereWasNoChange}
+                submitBtnIcon={<Save />}
+                submitBtnText="Salvar"
+            />
             <Toaster />
         </div>
     )
