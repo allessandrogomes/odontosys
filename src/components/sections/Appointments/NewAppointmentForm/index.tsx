@@ -10,7 +10,7 @@ import { formatHour } from "@/utils/formatHour"
 import { formatDateISO } from "@/utils/formatDateISO"
 import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, CalendarPlus } from "lucide-react"
 import Card from "@/components/ui/Card"
 import Spinner from "@/components/ui/Spinner"
 import SectionWrapper from "@/components/layout/SectionWrapper"
@@ -176,7 +176,7 @@ export default function NewAppointmentForm() {
 
                 {/* Confirmação do Agendamento */}
                 <div key={childsKey.confirmAppointmentView} className={`${styles.confirmAppointmentView} ${currentView === CONFIRM_APPOINTMENT_VIEW && styles.active}`}>
-                    <Card width="max-content" height="190px">
+                    <Card width="max-content" height="max-content">
                         <>
                             <Label text="Informações do Agendamento" />
                             <p>Paciente: <span>{formData.patientName}</span></p>
@@ -189,7 +189,7 @@ export default function NewAppointmentForm() {
                     </Card>
                     <div className={styles.boxBtns}>
                         <Button onClick={handleBack} text="Voltar" iconStart={<ArrowLeft />} />
-                        <Button onClick={handleSubmitAppointment} text="Agendar" iconEnd={<ArrowRight />} disabled={isLoading} />
+                        <Button onClick={handleSubmitAppointment} text="Agendar" iconStart={<CalendarPlus />} disabled={isLoading} />
                         {isLoading && <Spinner className={styles.spinner} />}
                     </div>
                 </div>

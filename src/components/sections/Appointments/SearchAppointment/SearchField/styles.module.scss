@@ -3,10 +3,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+    width: 550px;
 
-    .spinner, .message {
+    .message {
         position: absolute;
-        top: 60%;
+        bottom: -40px;
+    }
+
+    .spinner {
+        position: absolute;
+        bottom: -50px;
     }
 
     &.visible {

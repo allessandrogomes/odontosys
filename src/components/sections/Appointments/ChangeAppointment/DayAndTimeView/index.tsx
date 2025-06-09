@@ -1,8 +1,10 @@
-import { FaArrowLeft } from "react-icons/fa"
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
 import Spinner from "@/components/ui/Spinner"
 import ScheduleList from "@/components/lists/ScheduleList"
+import Label from "@/components/ui/Label"
+import BackBtn from "@/components/ui/BackBtn"
+import Button from "@/components/ui/Button"
 
 interface ITime {
     start: string,
@@ -76,25 +78,26 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
 
     return (
         <form onSubmit={handleSubmitPatch} className={styles.dayAndTime}>
-            <button onClick={onBack} type="button" className={styles.backBtn}><FaArrowLeft />Voltar</button>
-            <h1>Alterar Dia e Horário</h1>
+            <BackBtn onClick={onBack}/>
             <div className={styles.day}>
-                <label>Selecione o Dia e Horário</label>
+                <Label text="Selecione o Dia e Horário" />
                 <input onChange={e => setDay(e.target.value)} type="date" value={day} />
             </div>
             {isLoading ? (
-                <div className={`${styles.spinner} ${styles.loading}`}><Spinner /></div>
-            ) : (
+                <Spinner />
+            ) : day !== "" ? (
                 <ScheduleList
                     selectedSchedule={selectedTime}
                     schedules={times}
                     onSelectSchedule={schedule => setSelectedTime(schedule)}
                 />
+            ) : (
+                ""
             )}
             {isSubmiting ? (
-                <div className={styles.spinner}><Spinner /></div>
+                <Spinner />
             ) : (
-                <button disabled={!selectedTime} type="submit" className={`${!selectedTime && styles.disable} ${styles.btnSubmit}`}>Concluir</button>
+                <Button type="submit" text="Concluir" disabled={!selectedTime} />
             )}
         </form>
     )

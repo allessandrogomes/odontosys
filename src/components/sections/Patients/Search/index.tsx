@@ -7,6 +7,7 @@ import Spinner from "@/components/ui/Spinner"
 import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
 import PatientCard from "@/components/cards/PatientCard"
 import SectionWrapper from "@/components/layout/SectionWrapper"
+import BackBtn from "@/components/ui/BackBtn"
 
 export default function Search() {
     const [cpf, setCpf] = useState<string>("")
@@ -40,16 +41,16 @@ export default function Search() {
     return (
         <SectionWrapper title="Pesquisar Paciente">
             <>
-                <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
-
-                {isLoading ? (
-                    <Spinner className={styles.spinner} />
+                {!patientInfo ? (
+                    <div className={styles.search}>
+                        <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
+                        {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
+                        {isLoading && <Spinner className={styles.spinner} />}
+                    </div>
                 ) : (
                     <>
-                        {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
-                        {patientInfo && (
-                            <PatientCard patient={patientInfo} />
-                        )}
+                        <PatientCard patient={patientInfo} />
+                        <BackBtn onClick={() => setPatientInfo(null)}/>
                     </>
                 )}
             </>

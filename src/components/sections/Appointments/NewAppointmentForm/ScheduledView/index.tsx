@@ -77,12 +77,12 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                     <input onChange={e => setDay(e.target.value)} type="date" value={day} />
                     {isLoading ? (
                         <Spinner className={styles.spinner} />
-                    ) : (
+                    ) : day ? (
                         <ScheduleList
                             selectedSchedule={selectedTime}
                             schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)}
                         />
-                    )}
+                    ) : ""}
                     <div className={styles.boxBtns}>
                         <Button text="Voltar" iconStart={<ArrowLeft />} onClick={e => onBack(e)} />
                         <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!selectedTime} />
