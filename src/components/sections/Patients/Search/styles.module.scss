@@ -29,24 +29,4 @@
     .message {
         margin: auto;
     }
-
-    .info {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin: auto;
-        padding: 20px;
-        border-radius: 10px;
-        background-color: var(--secondary-color);
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        width: 360px;
-
-        p {
-            margin: 0;
-
-            span {
-                font-weight: 600;
-            }
-        }
-    }
 }

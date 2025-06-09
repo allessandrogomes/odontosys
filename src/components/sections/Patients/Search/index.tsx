@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { formatDateISO } from "@/utils/formatDateISO"
-import { formatPhone } from "@/utils/formatPhone"
-import { formatCPF } from "@/utils/formatCPF"
 import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import Spinner from "@/components/ui/Spinner"
 import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import PatientCard from "@/components/cards/PatientCard"
 
 export default function Search() {
     const [cpf, setCpf] = useState<string>("")
@@ -48,13 +46,7 @@ export default function Search() {
                 <>
                     {message && <div className={styles.message}><FeedbackMessage message={message} icon={<UserX />}/></div>}
                     {patientInfo && (
-                        <div className={styles.info}>
-                            <p>Nome: <span>{patientInfo.name}</span></p>
-                            <p>CPF: <span>{formatCPF(patientInfo.cpf)}</span></p>
-                            <p>Email: <span>{patientInfo.email}</span></p>
-                            <p>Telefone: <span>{formatPhone(patientInfo.phone)}</span></p>
-                            <p>Data de Nascimento: <span>{formatDateISO(patientInfo.birthDate)}</span></p>
-                        </div>
+                        <PatientCard patient={patientInfo}/>
                     )}
                 </>
             )}
