@@ -17,6 +17,7 @@ export default function ScheduleList({ schedules, selectedSchedule, onSelectSche
         <div className={styles.schedules}>
             {Array.isArray(schedules) && schedules.map((schedule, index) =>
                 <button
+                    type="button"
                     className={`${selectedSchedule?.start === schedule.start && styles.selected}`}
                     onClick={() => onSelectSchedule(schedule)}
                     key={index}

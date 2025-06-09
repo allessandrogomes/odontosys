@@ -115,7 +115,7 @@ export default function ChangeProcedureAndDentistView({ appointment, onUpdate, o
     return (
         <form onSubmit={handleSubmitPatch} className={styles.changeAppointment}>
             <button type="button" onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
-            <h1>Alterar Procedimento e Dentista</h1>
+            <h2>Alterar Procedimento e Dentista</h2>
             {isLoading ? (
                 <div className={styles.spinnerLoading}><Spinner /></div>
             ) : (

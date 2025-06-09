@@ -15,7 +15,7 @@ export default function SelectChangeView({ onBack, onSelectChange, visible }: IS
     return (
         <div className={`${visible && styles.visible} ${styles.selectChange}`}>
             <button onClick={onBack} className={styles.backBtn}><FaArrowLeft />Voltar</button>
-            <h1>Selecione o que deseja alterar</h1>
+            <h2>Selecione o que deseja alterar</h2>
             <div className={styles.btns}>
                 <button onClick={() => onSelectChange(PROCEDURE_AND_DENTIST)}>Procedimento e Dentista</button>
                 <button onClick={() => onSelectChange(TIME_AND_DAY)}>Dia e Horário</button>

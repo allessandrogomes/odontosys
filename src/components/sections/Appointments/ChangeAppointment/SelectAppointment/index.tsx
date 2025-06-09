@@ -14,7 +14,7 @@ export default function SelectAppointmentView({ onSelectAppointment, onBack, vis
     return (
         <div className={`${visible && styles.visible} ${styles.selectAppointment}`}>
             <BackBtn onClick={onBack} />
-            <h1>Selecione a Consulta</h1>
+            <h2>Selecione a Consulta</h2>
             {appointmentsFound.length > 0 ? (
                 <AppointmentList appointments={appointmentsFound} selectedAppointment={appointment => onSelectAppointment(appointment)} />
             ) : (

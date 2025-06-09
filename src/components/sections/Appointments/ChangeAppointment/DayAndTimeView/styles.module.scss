@@ -3,23 +3,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    .backBtn {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        border: none;
-        text-decoration: underline;
-        cursor: pointer;
-        background-color: transparent;
-        width: max-content;
-        padding: 0;
-        position: absolute;
-        top: 30px;
-        left: 50px;
-        font-weight: 500;
-        color: var(--primary-color);
-    }
+    justify-content: center;
+    gap: 10px;
 
     .day {
         display: flex;
@@ -44,37 +29,5 @@
             color: var(--primary-color);
             border-radius: 50px;
         }
-    }
-
-    .btnSubmit {
-        border: none;
-        width: 100px;
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-        padding: 10px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: 500;
-        align-self: center;
-
-        &:hover {
-            background-color: var(--tertiary-color);
-        }
-    }
-
-    .btnSubmit.disable {
-        cursor: initial;
-        background-color: gray;
-    }
-
-    .spinner {
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        align-self: center;
-    }
-
-    .spinner.loading {
-        margin-bottom: 10px;
     }
 }
