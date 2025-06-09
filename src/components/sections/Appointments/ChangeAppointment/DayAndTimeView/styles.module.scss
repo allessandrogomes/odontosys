@@ -46,27 +46,6 @@
         }
     }
 
-    .timesBtns {
-            width: 565px;            
-            overflow: auto;
-            margin-bottom: 10px;
-            button {
-                width: 100px;
-                border: none;
-                border-radius: 5px;
-                background-color: var(--tertiary-color);
-                color: var(--secondary-color);
-                padding: 5px 0;
-                cursor: pointer;
-                font-size: 0.85rem;
-                margin: 5px;
-            }
-
-            button.selected {
-                background-color: var(--primary-color);
-            }
-        }
-
     .btnSubmit {
         border: none;
         width: 100px;
@@ -97,23 +76,5 @@
 
     .spinner.loading {
         margin-bottom: 10px;
-    }
-}
-
-.timesBtns::-webkit-scrollbar {
-    width: 10px;
-}
-
-.timesBtns::-webkit-scrollbar-track {
-    background: rgb(182, 182, 182);
-    border-radius: 10px;
-}
-
-.timesBtns::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 10px;
-
-    &:hover {
-        background-color: var(--tertiary-color);
     }
 }

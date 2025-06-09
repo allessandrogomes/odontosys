@@ -6,6 +6,7 @@ import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
+import ScheduleList from "@/components/lists/ScheduleList"
 
 interface IScheduledView {
     durationMinutes: number | null
@@ -74,21 +75,14 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                 <div className={styles.scheduled}>
                     <Label text="Escolha o dia e horário" />
                     <input onChange={e => setDay(e.target.value)} type="date" value={day} />
-                    <div className={styles.timesBtns}>
-                        {isLoading ? (
-                            <Spinner className={styles.spinner} />
-                        ) : (
-                            Array.isArray(times) && times.map((time, index) =>
-                                <button
-                                    className={`${selectedTime?.start === time.start && styles.selected}`}
-                                    onClick={() => setSelectedTime(time)}
-                                    key={index}
-                                >
-                                    {formatHour(time.start)} - {formatHour(time.end)}
-                                </button>
-                            )
-                        )}
-                    </div>
+                    {isLoading ? (
+                        <Spinner className={styles.spinner} />
+                    ) : (
+                        <ScheduleList
+                            selectedSchedule={selectedTime}
+                            schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)}
+                        />
+                    )}
                     <div className={styles.boxBtns}>
                         <Button text="Voltar" iconStart={<ArrowLeft />} onClick={e => onBack(e)} />
                         <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!selectedTime} />

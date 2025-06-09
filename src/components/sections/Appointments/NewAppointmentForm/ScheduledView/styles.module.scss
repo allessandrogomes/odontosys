@@ -35,36 +35,6 @@
                 width: 120px;
             }
         }
-
-        .timesBtns {
-            width: 450px;
-            height: 100px;
-            margin: 0 auto;
-            overflow: auto;
-            position: relative;
-
-            .spinner {
-                position: absolute;
-                left: 205px;
-                bottom: 35px;
-            }
-
-            button {
-                width: 100px;
-                border: none;
-                border-radius: 5px;
-                background-color: var(--tertiary-color);
-                color: var(--secondary-color);
-                padding: 5px 0;
-                cursor: pointer;
-                font-size: 0.85rem;
-                margin: 3px;
-            }
-
-            button.selected {
-                background-color: var(--primary-color);
-            }
-        }
     }
 
     .showSchedule {
@@ -96,24 +66,6 @@
                 width: 120px;
             }
         }
-    }
-}
-
-.timesBtns::-webkit-scrollbar {
-    width: 10px;
-}
-
-.timesBtns::-webkit-scrollbar-track {
-    background: rgb(182, 182, 182);
-    border-radius: 10px;
-}
-
-.timesBtns::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 10px;
-
-    &:hover {
-        background-color: var(--tertiary-color);
     }
 }
 
