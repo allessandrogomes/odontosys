@@ -1,0 +1,41 @@
+.schedules {
+    width: 450px;
+    height: 100px;
+    margin: 0 auto;
+    overflow: auto;
+    position: relative;
+
+    button {
+        width: 100px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--tertiary-color);
+        color: var(--secondary-color);
+        padding: 5px 0;
+        cursor: pointer;
+        font-size: 0.85rem;
+        margin: 3px;
+    }
+
+    button.selected {
+        background-color: var(--primary-color);
+    }
+
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgb(182, 182, 182);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 10px;
+
+        &:hover {
+            background-color: var(--tertiary-color);
+        }
+    }
+}

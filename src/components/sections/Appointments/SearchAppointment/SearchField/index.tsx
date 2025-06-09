@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { IMaskInput } from "react-imask"
-import Label from "@/components/ui/Label"
 import Spinner from "@/components/ui/Spinner"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import Button from "@/components/ui/Button"
-import { Search, SearchX } from "lucide-react"
+import { getAppointmentsByCPF } from "@/services/appointments/getAppointmentsByCPF"
+import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import { Info, SearchX } from "lucide-react"
 
 interface ISearchField {
     appointmentsFound: (appointments: IAppointment[]) => void
     visible: boolean
 }
 
+const INITIAL_MESSAGE = "Digite um CPF e clique em Buscar para encontrar consultas..."
+
 export default function SearchField({ appointmentsFound, visible }: ISearchField) {
     const [cpfField, setCpfField] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [message, setMessage] = useState<string | null>(null)
+    const [message, setMessage] = useState<string | null>(INITIAL_MESSAGE)
 
     async function handleSearchAppointmentsByCPF(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -25,10 +26,7 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
         appointmentsFound([])
 
         try {
-            const response = await fetch(`/api/appointment/cpf/${cpfField}`)
-            const data = await response.json()
-
-            if (!response.ok) throw new Error(data.error || "Erro ao buscar as consultas")
+            const data = await getAppointmentsByCPF(cpfField)
 
             if (data.length === 0) setMessage("Nenhuma consulta encontrada")
 
@@ -41,20 +39,16 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
     }
 
     return (
-        <form onSubmit={handleSearchAppointmentsByCPF} className={`${visible && styles.visible} ${styles.searchField}`}>
-            <Label text="Digite o CPF do Paciente:" />
-            <IMaskInput
-                className="imask-input"
-                mask="000.000.000-00"
-                value={cpfField}
-                onAccept={(value) => setCpfField(value)}
-                overwrite
-                minLength={14}
-                required
+        <div className={`${styles.searchField} ${visible && styles.visible}`}>
+            <PatientCPFSearchForm
+                cpf={cpfField} 
+                onCpfChange={setCpfField}
+                isLoading={isLoading}
+                onSubmit={handleSearchAppointmentsByCPF}
+                flexRow
             />
-            <Button type="submit" icon={<Search />} text="Buscar" disabled={isLoading} />
-            {isLoading && <div className={styles.spinner}><Spinner /></div>}
-            {message && <div className={styles.message}><FeedbackMessage icon={<SearchX />} message={message} /></div>}
-        </form>
+            {isLoading && <Spinner className={styles.spinner}/>}
+            {message && <FeedbackMessage className={styles.message} icon={message === INITIAL_MESSAGE ? <Info /> : <SearchX />} message={message} />}
+        </div>
     )
 }

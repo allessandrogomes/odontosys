@@ -2,12 +2,14 @@
     --primary-color: #006A71;
     --secondary-color: #FAFAFA;
     --tertiary-color: #48A6A7;
+    --bg-color: linear-gradient(145deg, #e1e1e1, #ffffff);
     font-family: var(--font-poppins), sans-serif;
     color: var(--primary-color);
 }
 
 .imask-input {
     width: 200px;
+    height: 35px;
     background-color: transparent;
     outline: none;
     border: 1px solid var(--primary-color);

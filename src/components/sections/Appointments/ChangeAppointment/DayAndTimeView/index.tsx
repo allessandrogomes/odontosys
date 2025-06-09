@@ -1,8 +1,8 @@
 import { FaArrowLeft } from "react-icons/fa"
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
-import { formatHour } from "@/utils/formatHour"
 import Spinner from "@/components/ui/Spinner"
+import ScheduleList from "@/components/lists/ScheduleList"
 
 interface ITime {
     start: string,
@@ -85,18 +85,11 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
             {isLoading ? (
                 <div className={`${styles.spinner} ${styles.loading}`}><Spinner /></div>
             ) : (
-                <div className={styles.timesBtns}>
-                    {Array.isArray(times) && times.map((time, index) =>
-                        <button
-                            type="button"
-                            className={`${selectedTime?.start === time.start && styles.selected}`}
-                            onClick={() => setSelectedTime(time)}
-                            key={index}
-                        >
-                            {formatHour(time.start)} - {formatHour(time.end)}
-                        </button>
-                    )}
-                </div>
+                <ScheduleList
+                    selectedSchedule={selectedTime}
+                    schedules={times}
+                    onSelectSchedule={schedule => setSelectedTime(schedule)}
+                />
             )}
             {isSubmiting ? (
                 <div className={styles.spinner}><Spinner /></div>

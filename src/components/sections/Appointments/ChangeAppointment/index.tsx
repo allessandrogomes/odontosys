@@ -1,5 +1,4 @@
- 
-import styles from "./styles.module.scss"
+
 import { useState } from "react"
 import SearchView from "./SearchView"
 import SelectAppointmentView from "./SelectAppointment"
@@ -7,6 +6,7 @@ import SelectChangeView from "./SelectChangeView"
 import ChangeProcedureAndDentistView from "./ChangeProcedureAndDentistView"
 import DayAndTimeView from "./DayAndTimeView"
 import toast, { Toaster } from "react-hot-toast"
+import SectionWrapper from "@/components/layout/SectionWrapper"
 
 const SEARCH_VIEW = "SEARCH_VIEW"
 const SELECT_APPOINTMENT_VIEW = "SELECT_APPOINTMENT_VIEW"
@@ -58,60 +58,62 @@ export default function ChangeAppointment() {
     }
 
     return (
-        <div className={styles.containerChangeAppointment}>
-            {/* Tela de busca das consultas por meio do CPF do Paciente */}
-            <SearchView
-                appointmentsFound={value => {
-                    setAppointmentsFound(value)
-                    if (value.length > 0) handleNextView()
-                }}
-                visible={viewToShow === SEARCH_VIEW}
-            />
+        <SectionWrapper title="Alterar Consulta">
+            <>
+                {/* Tela de busca das consultas por meio do CPF do Paciente */}
+                <SearchView
+                    appointmentsFound={value => {
+                        setAppointmentsFound(value)
+                        if (value.length > 0) handleNextView()
+                    }}
+                    visible={viewToShow === SEARCH_VIEW}
+                />
 
-            {/* Tela para escolher a consulta a editar */}
-            <SelectAppointmentView
-                appointmentsFound={appointmentsFound}
-                onSelectAppointment={value => {
-                    setSelectedAppointment(value)
-                    handleNextView()
-                }}
-                onBack={handleBackView}
-                visible={viewToShow === SELECT_APPOINTMENT_VIEW}
-            />
-
-            {/* Tela para escolher qual informação alterar */}
-            <SelectChangeView
-                onSelectChange={value => setViewToShow(value)}
-                onBack={handleBackView}
-                visible={viewToShow === SELECT_CHANGE_VIEW}
-            />
-
-            {/* Tela para alterar o Procedimento e Dentista */}
-            {viewToShow === PROCEDURE_AND_DENTIST && (
-                <ChangeProcedureAndDentistView
-                    appointment={appointmentSelected!}
-                    onUpdate={appointmentUpdated => {
-                        setSelectedAppointment(appointmentUpdated)
-                        updateFoundAppointments()
+                {/* Tela para escolher a consulta a editar */}
+                <SelectAppointmentView
+                    appointmentsFound={appointmentsFound}
+                    onSelectAppointment={value => {
+                        setSelectedAppointment(value)
+                        handleNextView()
                     }}
                     onBack={handleBackView}
+                    visible={viewToShow === SELECT_APPOINTMENT_VIEW}
                 />
-            )}
 
-            {/* Tela para alterar o Dia e Horário */}
-            {viewToShow === TIME_AND_DAY && (
-                <DayAndTimeView
-                    appointment={appointmentSelected!}
-                    onUpdate={appointment => {
-                        setSelectedAppointment(appointment)
-                        handleBackView()
-                        toast.success("Informações alteradas com sucesso!")
-                        updateFoundAppointments()
-                    }}
+                {/* Tela para escolher qual informação alterar */}
+                <SelectChangeView
+                    onSelectChange={value => setViewToShow(value)}
                     onBack={handleBackView}
+                    visible={viewToShow === SELECT_CHANGE_VIEW}
                 />
-            )}
-            <Toaster />
-        </div>
+
+                {/* Tela para alterar o Procedimento e Dentista */}
+                {viewToShow === PROCEDURE_AND_DENTIST && (
+                    <ChangeProcedureAndDentistView
+                        appointment={appointmentSelected!}
+                        onUpdate={appointmentUpdated => {
+                            setSelectedAppointment(appointmentUpdated)
+                            updateFoundAppointments()
+                        }}
+                        onBack={handleBackView}
+                    />
+                )}
+
+                {/* Tela para alterar o Dia e Horário */}
+                {viewToShow === TIME_AND_DAY && (
+                    <DayAndTimeView
+                        appointment={appointmentSelected!}
+                        onUpdate={appointment => {
+                            setSelectedAppointment(appointment)
+                            handleBackView()
+                            toast.success("Informações alteradas com sucesso!")
+                            updateFoundAppointments()
+                        }}
+                        onBack={handleBackView}
+                    />
+                )}
+                <Toaster />
+            </>
+        </SectionWrapper>
     )
 }

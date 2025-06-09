@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         const { date, durationMinutes, dentistId } = await request.json()
 
         // 1. Buscar todos os horários ocupados
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
+        const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : process.env.NEXT_PUBLIC_API_BASE_URL!
         const resp = await fetch(`${baseUrl}/api/busy-schedules`)
         if (!resp.ok) throw new Error('Erro ao buscar horários ocupados')
         const allBusy: BusySchedule[] = await resp.json()

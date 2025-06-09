@@ -1,0 +1,45 @@
+.patientInformationForm {
+    width: 450px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    div {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            position: relative;
+            left: 5px;
+        }
+
+        input {
+            width: 200px;
+            background-color: var(--secondary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            color: var(--primary-color);
+            box-sizing: border-box;
+            padding: 10px;
+            outline: none;
+        }
+
+        &:first-of-type input {
+            text-transform: capitalize;
+        }
+    }
+
+    .spinner {
+        position: relative;
+        top: 10px;
+        width: 130px;
+        height: 45px;
+    }
+
+    .submitBtn {
+        position: relative;
+        top: 10px;
+    }
+}

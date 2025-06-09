@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
 import { useState } from "react"
-import { Loader, Search, UserX } from "lucide-react"
-import Button from "@/components/ui/Button"
-import Label from "@/components/ui/Label"
+import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
+import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import Spinner from "@/components/ui/Spinner"
 
 interface ISearchForm {
     visible: boolean
@@ -27,7 +26,7 @@ export default function SearchForm({ visible, patient }: ISearchForm) {
             const data = await response.json()
 
             if (!response.ok) throw new Error(data.error || "Erro interno no servidor")
-            
+
             if (!data) return setMessage("Nenhum paciente encontrado")
 
             patient(data)
@@ -36,28 +35,13 @@ export default function SearchForm({ visible, patient }: ISearchForm) {
         } finally {
             setIsLoading(false)
         }
-    } 
+    }
 
     return (
-        <form onSubmit={handleSearchPatient} className={`${visible && styles.visible} ${styles.searchForm}`}>
-            <div>
-                <Label text="Digite o CPF do Paciente"/>
-                <IMaskInput
-                    className="imask-input"
-                    mask="000.000.000-00"
-                    value={cpf}
-                    onAccept={(value) => setCpf(value)}
-                    overwrite
-                    minLength={14}
-                    required
-                />
-            </div>
-            {isLoading ? (
-                <Loader className={styles.spinner}/>
-            ) : (
-                <Button type="submit" icon={<Search />} text="Buscar"/>
-            )}
-            {message && <div className={styles.message}><FeedbackMessage message={message} icon={<UserX />}/></div>}
-        </form>
+        <div className={`${visible && styles.visible} ${styles.searchForm}`}>
+            <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
+            {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
+            {isLoading && <Spinner className={styles.spinner}/>}
+        </div>
     )
 }

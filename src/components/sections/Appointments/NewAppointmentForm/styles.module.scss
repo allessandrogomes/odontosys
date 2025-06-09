@@ -1,129 +1,93 @@
-.form {
-    display: flex;
-    flex-direction: column;
-    width: 500px;
-    height: 500px;
-    box-sizing: border-box;
-    padding: 30px;
-    margin: 40px 0;
+.btn {
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 10px;
     border-radius: 50px;
-    background: linear-gradient(145deg, #e1e1e1, #ffffff);
-    box-shadow: 25px 25px 15px #d5d5d5,
-        -25px -25px 15px #ffffff;
+    cursor: pointer;
+    width: 100px;
+    align-self: end;
+    margin: auto 0 0 0;
+}
 
-    .title {
-        font-size: 2rem;
-        text-align: center;
+.btnsProcedure {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: auto 0 0 0;
+
+    button:first-child {
+        align-self: left;
+    }
+}
+
+.confirmAppointmentView {
+    display: none;
+    width: 500px;
+    height: 300px;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    p {
         margin: 0;
-        margin-top: 20px;
+
+        span {
+            font-weight: 600;
+        }
     }
 
-    .btn {
+    .boxBtns {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+
+        .spinner {
+            position: absolute;
+            left: 225px;
+        }
+
+        button {
+            width: 120px;
+        }
+    }
+}
+
+.confirmAppointmentView.active {
+    display: flex;
+}
+
+.success {
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 600;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+
+    button {
         border: none;
         background-color: var(--primary-color);
         color: var(--secondary-color);
         padding: 10px;
         border-radius: 50px;
+        font-weight: 600;
+        width: 80px;
         cursor: pointer;
-        width: 100px;
-        align-self: end;
-        margin: auto 0 0 0;
     }
+}
 
-    .btnsProcedure {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        margin: auto 0 0 0;
-
-        button:first-child {
-            align-self: left;
-        }
-    }
-
-    .confirmAppointmentView {
-        display: none;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        position: relative;
-
-        label {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        p {
-            margin: 0;
-
-            span {
-                font-weight: 600;
-            }
-        }
-
-        .boxBtns {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            position: absolute;
-            bottom: 0;
-
-            button {
-                border: none;
-                color: var(--secondary-color);
-                border-radius: 50px;
-                padding: 10px;
-                width: 100px;
-                cursor: pointer;
-            }
-
-            .nextBtn {
-                background-color: var(--primary-color);
-            }
-
-            .backBtn {
-                background-color: var(--tertiary-color);
-            }
-        }
-    }
-
-    .confirmAppointmentView.active {
-        display: flex;
-    }
-
-    .success {
-        width: 100%;
-        height: 100%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        h2 {
-            text-align: center;
-            font-size: 1.5rem;
-            margin: 0;
-            font-weight: 600;
-            margin-top: 30px;
-            margin-bottom: 50px;
-        }
-
-        button {
-            border: none;
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 10px;
-            border-radius: 50px;
-            font-weight: 600;
-            width: 80px;
-            cursor: pointer;
-        }
-    }
-
-    .success.active {
-        display: flex;
-    }
+.success.active {
+    display: flex;
 }

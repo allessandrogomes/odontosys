@@ -2,12 +2,18 @@
 'use client'
 
 import { useState } from "react"
-import styles from "./styles.module.scss"
-import { IMaskInput } from "react-imask"
 import toast, { Toaster } from "react-hot-toast"
+import PatientInformationForm from "@/components/forms/PatientInformationForm"
 import { UserPlus } from "lucide-react"
-import Button from "@/components/ui/Button"
-import Spinner from "@/components/ui/Spinner"
+import SectionWrapper from "@/components/layout/SectionWrapper"
+
+interface IFormData {
+    name: string,
+    email: string,
+    phone: string,
+    cpf: string,
+    birthDate: string
+}
 
 export default function RegisterPatient() {
     const [formData, setFormData] = useState({
@@ -37,10 +43,17 @@ export default function RegisterPatient() {
         }))
     }
 
+    function handleMaskedChange(name: keyof IFormData, value: string) {
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setIsLoading(true)
-        
+
         try {
             const response = await fetch("/api/patient", {
                 method: "POST",
@@ -70,57 +83,19 @@ export default function RegisterPatient() {
     }
 
     return (
-        <div className={styles.registerPatient}>
-            <h2>Cadastro de Paciente</h2>
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <div>
-                    <label>Nome Completo</label>
-                    <IMaskInput
-                        mask={/^[A-Za-zÀ-ÿ\s]*$/}
-                        value={formData.name}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, name: value }))}
-                        overwrite
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Telefone</label>
-                    <IMaskInput
-                        mask="(00) 00000-0000"
-                        value={formData.phone}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, phone: value }))}
-                        overwrite
-                        minLength={15}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>CPF</label>
-                    <IMaskInput
-                        mask="000.000.000-00"
-                        value={formData.cpf}
-                        onAccept={(value) => setFormData(prev => ({ ...prev, cpf: value }))}
-                        overwrite
-                        minLength={14}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Data de Nascimento</label>
-                    <input type="date" name="birthDate" value={formData.birthDate ? formData.birthDate.substring(0, 10) : ""} onChange={handleChange} />
-                </div>
-
-                {isLoading ? (
-                    <div className={styles.spinner}><Spinner /></div>
-                ) : (
-                    <Button type="submit" icon={<UserPlus />} text="Cadastrar"/>
-                )}
-            </form>
-            <Toaster />
-        </div>
+        <SectionWrapper title="Cadastro de Paciente">
+            <>
+                <PatientInformationForm
+                    formData={formData}
+                    isLoading={isLoading}
+                    onSubmit={handleSubmit}
+                    onChange={handleChange}
+                    onMaskInputChange={handleMaskedChange}
+                    submitBtnIcon={<UserPlus />}
+                    submitBtnText="Cadastrar"
+                />
+                <Toaster />
+            </>
+        </SectionWrapper>
     )
 }

@@ -5,23 +5,6 @@
     flex-direction: column;
     align-items: center;
 
-    .backBtn {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        border: none;
-        text-decoration: underline;
-        cursor: pointer;
-        background-color: transparent;
-        width: max-content;
-        padding: 0;
-        position: absolute;
-        top: 30px;
-        left: 50px;
-        font-weight: 500;
-        color: var(--primary-color);
-    }
-
     .form {
         width: 70%;
         height: 100%;

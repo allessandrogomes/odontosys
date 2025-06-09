@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import styles from "./styles.module.scss"
-import { IMaskInput } from "react-imask"
-import { formatDateISO } from "@/utils/formatDateISO"
-import { formatPhone } from "@/utils/formatPhone"
-import { formatCPF } from "@/utils/formatCPF"
-import { SearchIcon, UserX } from "lucide-react"
-import Button from "@/components/ui/Button"
-import Label from "@/components/ui/Label"
+import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import Spinner from "@/components/ui/Spinner"
+import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import PatientCard from "@/components/cards/PatientCard"
+import SectionWrapper from "@/components/layout/SectionWrapper"
 
 export default function Search() {
     const [cpf, setCpf] = useState<string>("")
@@ -41,37 +38,21 @@ export default function Search() {
     }
 
     return (
-        <div className={styles.search}>
-            <form onSubmit={handleSearchPatient}>
-                <Label text="Digite o CPF do Paciente"/>
-                <IMaskInput
-                    className="imask-input"
-                    mask="000.000.000-00"
-                    value={cpf}
-                    onAccept={(value) => setCpf(value)}
-                    overwrite
-                    minLength={14}
-                    required
-                />
-                <Button type="submit" icon={<SearchIcon />} text="Buscar" disabled={isLoading}/>
-            </form>
+        <SectionWrapper title="Pesquisar Paciente">
+            <>
+                <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
 
-            {isLoading ? (
-                <div className={styles.spinner}><Spinner /></div>
-            ) : (
-                <>
-                    {message && <div className={styles.message}><FeedbackMessage message={message} icon={<UserX />}/></div>}
-                    {patientInfo && (
-                        <div className={styles.info}>
-                            <p>Nome: <span>{patientInfo.name}</span></p>
-                            <p>CPF: <span>{formatCPF(patientInfo.cpf)}</span></p>
-                            <p>Email: <span>{patientInfo.email}</span></p>
-                            <p>Telefone: <span>{formatPhone(patientInfo.phone)}</span></p>
-                            <p>Data de Nascimento: <span>{formatDateISO(patientInfo.birthDate)}</span></p>
-                        </div>
-                    )}
-                </>
-            )}
-        </div>
+                {isLoading ? (
+                    <Spinner className={styles.spinner} />
+                ) : (
+                    <>
+                        {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
+                        {patientInfo && (
+                            <PatientCard patient={patientInfo} />
+                        )}
+                    </>
+                )}
+            </>
+        </SectionWrapper>
     )
 }

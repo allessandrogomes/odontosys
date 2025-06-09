@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react"
 import styles from "./styles.module.scss"
+import Label from "@/components/ui/Label"
+import Button from "@/components/ui/Button"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+import Spinner from "@/components/ui/Spinner"
 
 interface IDentistView {
     procedure: string | null,
     dentistId: (id: number | null) => void
     dentistName: (dentistName: string | null) => void
-    active: boolean
+    visible: boolean
     onBack: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
     onNext: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -13,10 +17,11 @@ interface IDentistView {
 const SELECT_VIEW = "SELECT_VIEW"
 const SHOW_SELECTED_VIEW = "SHOW_SELECTED_VIEW"
 
-export default function DentistView({ procedure, dentistId, dentistName, active, onBack, onNext }: IDentistView) {
+export default function DentistView({ procedure, dentistId, dentistName, visible, onBack, onNext }: IDentistView) {
     const [dentists, setDentists] = useState<IDentist[]>([])
     const [selectedDentist, setSelectedDentist] = useState<IDentist | null>(null)
     const [currentView, setCurrentView] = useState<string>(SELECT_VIEW)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     function handleNext() {
         dentistId(selectedDentist!.id)
@@ -33,6 +38,7 @@ export default function DentistView({ procedure, dentistId, dentistName, active,
 
     useEffect(() => {
         async function fetchDentists() {
+            setIsLoading(true)
             try {
                 const response = await fetch("/api/dentist")
                 const data = await response.json()
@@ -40,6 +46,8 @@ export default function DentistView({ procedure, dentistId, dentistName, active,
                 setDentists(filteredDentists)
             } catch (error) {
                 alert(JSON.stringify(error))
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -48,28 +56,31 @@ export default function DentistView({ procedure, dentistId, dentistName, active,
         }
     }, [procedure])
     return (
-        <div className={`${styles.container} ${active && styles.active}`}>
+        <div className={`${styles.box} ${visible && styles.visible}`}>
 
             {/* Seleciona o Dentista */}
             {currentView === SELECT_VIEW && (
                 <div className={styles.selectView}>
-                    <label>Escolha o Dentista</label>
-                    <div className={styles.containerDentists}>
-                        {dentists && dentists.map(dentist => (
-                            <div className={`${styles.dentist} ${selectedDentist?.id === dentist.id ? styles.selected : ""}`} onClick={() => setSelectedDentist(dentist)} key={dentist.id}>
-                                <p>Dr. {dentist.name}</p>
+                    <Label text="Escolha o Dentista" />
+                    {isLoading ?
+                        <Spinner /> :
+                        (
+                            <div className={styles.containerDentists}>
+                                {dentists && dentists.map(dentist => (
+                                    <div className={`${styles.dentist} ${selectedDentist?.id === dentist.id ? styles.selected : ""}`} onClick={() => setSelectedDentist(dentist)} key={dentist.id}>
+                                        <p>Dr. {dentist.name}</p>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        )}
                     <div className={styles.boxBtns}>
-                        <button onClick={e => onBack(e)} className={styles.backBtn}>Voltar</button>
-                        <button
+                        <Button onClick={e => onBack(e)} text="Voltar" iconStart={<ArrowLeft />} />
+                        <Button
+                            text="Próximo"
                             disabled={!selectedDentist}
-                            className={`${styles.nextBtn} ${selectedDentist && styles.active}`}
                             onClick={handleNext}
-                        >
-                            Próximo
-                        </button>
+                            iconEnd={<ArrowRight />}
+                        />
                     </div>
                 </div>
             )}
@@ -77,10 +88,10 @@ export default function DentistView({ procedure, dentistId, dentistName, active,
             {/* Mostra o Dentista selecionado */}
             {currentView === SHOW_SELECTED_VIEW && (
                 <div className={styles.showSelectedView}>
-                    <p>Dentista selecionado: <br/><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
+                    <p>Dentista selecionado: <br /><span className={styles.span}>Dr. {selectedDentist!.name}</span></p>
                     <div className={styles.boxBtns}>
-                        <button onClick={handleBack} className={styles.backBtn}>Voltar</button>
-                        <button onClick={e => onNext(e)} className={styles.nextBtn}>Próximo</button>
+                        <Button text="Voltar" iconStart={<ArrowLeft />} onClick={handleBack} />
+                        <Button text="Próximo" iconEnd={<ArrowRight />} onClick={e => onNext(e)} />
                     </div>
                 </div>
             )}
