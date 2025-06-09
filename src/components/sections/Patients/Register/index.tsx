@@ -2,10 +2,10 @@
 'use client'
 
 import { useState } from "react"
-import styles from "./styles.module.scss"
 import toast, { Toaster } from "react-hot-toast"
 import PatientInformationForm from "@/components/forms/PatientInformationForm"
 import { UserPlus } from "lucide-react"
+import SectionWrapper from "@/components/layout/SectionWrapper"
 
 interface IFormData {
     name: string,
@@ -83,18 +83,19 @@ export default function RegisterPatient() {
     }
 
     return (
-        <div className={styles.registerPatient}>
-            <h2>Cadastro de Paciente</h2>
-            <PatientInformationForm
-                formData={formData}
-                isLoading={isLoading}
-                onSubmit={handleSubmit}
-                onChange={handleChange}
-                onMaskInputChange={handleMaskedChange}
-                submitBtnIcon={<UserPlus />}
-                submitBtnText="Cadastrar"
-            />
-            <Toaster />
-        </div>
+        <SectionWrapper title="Cadastro de Paciente">
+            <>
+                <PatientInformationForm
+                    formData={formData}
+                    isLoading={isLoading}
+                    onSubmit={handleSubmit}
+                    onChange={handleChange}
+                    onMaskInputChange={handleMaskedChange}
+                    submitBtnIcon={<UserPlus />}
+                    submitBtnText="Cadastrar"
+                />
+                <Toaster />
+            </>
+        </SectionWrapper>
     )
 }
