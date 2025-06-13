@@ -6,11 +6,17 @@ import { TbReportAnalytics } from "react-icons/tb"
 import { useState } from "react"
 import Image from "next/image"
 
-const sidebarBtns = [
-    { icon: <IoMdHome className={styles.icon} />, title: "Início", childrens: ["Resumo"] },
-    { icon: <FaCalendarAlt className={styles.icon} />, title: "Agendamentos", childrens: ["Buscar Consulta", "Nova Consulta", "Alterar Consulta"] },
-    { icon: <FaRegUser className={styles.icon} />, title: "Pacientes", childrens: ["Pesquisar", "Cadastrar", "Editar informações"] },
-    { icon: <TbReportAnalytics className={styles.icon} />, title: "Relatórios" }
+type SidebarButton = {
+    icon: React.ReactElement
+    type: string
+    component?: DashboardComponent[]
+}
+
+const sidebarBtns: SidebarButton[] = [
+    { icon: <IoMdHome className={styles.icon} />, type: "Início", component: ["Resumo"] },
+    { icon: <FaCalendarAlt className={styles.icon} />, type: "Agendamentos", component: ["Buscar Consulta", "Nova Consulta", "Alterar Consulta"] },
+    { icon: <FaRegUser className={styles.icon} />, type: "Pacientes", component: ["Pesquisar", "Cadastrar", "Editar Informações"] },
+    { icon: <TbReportAnalytics className={styles.icon} />, type: "Relatórios" }
 ]
 
 const selectedStyle = {
@@ -18,18 +24,31 @@ const selectedStyle = {
     color: "var(--secondary-color)"
 }
 
-export default function SideBar({ dashboardSelected }: { dashboardSelected: (child: string) => void }) {
+type DashboardComponent =
+    | "Resumo"
+    | "Nova Consulta"
+    | "Alterar Consulta"
+    | "Buscar Consulta"
+    | "Pesquisar"
+    | "Cadastrar"
+    | "Editar Informações"
+
+interface ISideBar {
+    dashboardSelected: (selected: { type: string, component: DashboardComponent }) => void
+}
+
+export default function SideBar({ dashboardSelected }: ISideBar) {
     const [openMenu, setOpenMenu] = useState<string | null>("Início")
     const [menuItemSelected, setMenuItemSelected] = useState<string | null>("Início")
     const [submenuItemSelected, setSubmenuItemSelected] = useState<string | null>("Resumo")
 
-    function toggleMenu(title: string) {
-        setOpenMenu(prev => (prev === title ? null : title))
+    function toggleMenu(type: string) {
+        setOpenMenu(prev => (prev === type ? null : type))
     }
 
-    function handleSelect(child: string) {
-        setSubmenuItemSelected(child)
-        dashboardSelected(child)
+    function handleSelect(component: DashboardComponent, type: string) {
+        setSubmenuItemSelected(component)
+        dashboardSelected({ type, component })
     }
 
     return (
@@ -40,18 +59,18 @@ export default function SideBar({ dashboardSelected }: { dashboardSelected: (chi
             <nav>
                 <ul>
                     {sidebarBtns.map(btn => (
-                        <li onClick={() => setMenuItemSelected(btn.title)} key={btn.title} className={styles.menu}>
-                            <div style={menuItemSelected === btn.title ? selectedStyle : {}} className={styles.menuItem} onClick={() => toggleMenu(btn.title)}>
+                        <li onClick={() => setMenuItemSelected(btn.type)} key={btn.type} className={styles.menu}>
+                            <div style={menuItemSelected === btn.type ? selectedStyle : {}} className={styles.menuItem} onClick={() => toggleMenu(btn.type)}>
                                 {btn.icon}
-                                <h3>{btn.title}</h3>
+                                <h3>{btn.type}</h3>
                             </div>
 
                             {/* Se tiver filhos e o menu estiver aberto */}
-                            {btn.childrens && openMenu === btn.title && (
+                            {btn.component && openMenu === btn.type && (
                                 <ul className={styles.submenu}>
-                                    {btn.childrens.map((child, index) => (
-                                        <li onClick={() => handleSelect(child)} style={submenuItemSelected === child ? selectedStyle : {}} key={index} className={styles.submenuItem}>
-                                            {child}
+                                    {btn.component.map((component, index) => (
+                                        <li onClick={() => handleSelect(component, btn.type)} style={submenuItemSelected === component ? selectedStyle : {}} key={index} className={styles.submenuItem}>
+                                            {component}
                                         </li>
                                     ))}
                                 </ul>
