@@ -30,6 +30,7 @@ type DashboardState = {
 }
 
 export default function ReceptionistDashboard() {
+    const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false)
     const [user, setUser] = useState<IReceptionist | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -53,6 +54,9 @@ export default function ReceptionistDashboard() {
 
     const handleLogout = async () => {
         try {
+            setIsLoggingOut(true)
+            setError(null)
+
             // Chama a API de logout
             const res = await fetch("/api/logout", {
                 method: "POST",
@@ -67,6 +71,7 @@ export default function ReceptionistDashboard() {
             // Limpa o estado
             setUser(null)
         } catch (err) {
+            setIsLoggingOut(false)
             setError(err instanceof Error ? err.message : "Erro ao sair")
         }
     }
@@ -91,9 +96,10 @@ export default function ReceptionistDashboard() {
         fetchUser()
     }, [])
 
+    if (isLoggingOut) return <div className={styles.feedbackMessage}><p><Spinner /> Saindo...</p></div>
     if (isLoading) return <div className={styles.feedbackMessage}><p><Spinner /> Carregando...</p></div>
-    if (error) return <div className={styles.feedabackMessage}><p>Erro: {error}</p></div>
-    if (!user) return <div className={styles.feedabackMessage}><p>Não foi possível carregar os dados do usuário</p></div>
+    if (error) return <div className={styles.feedbackMessage}><p>Erro: {error}</p></div>
+    if (!user) return <div className={styles.feedbackMessage}><p>Não foi possível carregar os dados do usuário</p></div>
 
     return (
         <div className={styles.dashboard}>
