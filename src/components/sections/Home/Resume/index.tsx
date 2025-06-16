@@ -75,7 +75,20 @@ export default function Resume() {
             if (!response.ok) throw new Error(`Falha ao ${action === FINISH ? "finalizar" : "cancelar"} consulta`)
 
             toast.success(`Consulta ${action === FINISH ? "finalizada" : "cancelada"} com sucesso!`)
-            await fetchAppointments()
+            
+            setTodaysAppointments(prev => {
+                if (!prev) return null
+
+                // Filtra os dentistas mantendo apenas os que tem consultas
+                const updatedAppointments = prev
+                    .map(dentist => ({
+                        ...dentist,
+                        appointments: dentist.appointments.filter(app => app.id !== id)
+                    }))
+                    .filter(dentist => dentist.appointments.length > 0) // Remove dentistas sem consultas
+
+                return updatedAppointments.length > 0 ? updatedAppointments : null
+            })
         } catch (error: any) {
             toast.error(error.message)
         } finally {
