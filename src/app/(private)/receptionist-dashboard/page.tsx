@@ -14,6 +14,7 @@ import EditInformations from "@/components/sections/Patients/EditInformations"
 import MainLayout from "@/components/layout/MainLayout"
 import Header from "@/components/layout/Header"
 import Spinner from "@/components/ui/Spinner"
+import useSWR from "swr"
 
 type DashboardComponent =
     | "Resumo"
@@ -29,11 +30,21 @@ type DashboardState = {
     component: DashboardComponent
 }
 
+const fetcher = async (url: string) => {
+    const res = await fetch(url, { credentials: "include" })
+    const data = await res.json()
+
+    if (!res.ok) throw new Error(data.error || "Falha ao buscar usuário")
+
+    return data.user
+}
+
 export default function ReceptionistDashboard() {
+    const { data: user, error, isLoading } = useSWR("/api/me", fetcher, {
+        revalidateOnFocus: false
+    })
     const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false)
-    const [user, setUser] = useState<IReceptionist | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+    const [logoutError, setLogoutError] = useState<string | null>(null)
     const [dashboard, setDashboard] = useState<DashboardState>({
         type: "Início",
         component: "Resumo"
@@ -55,7 +66,7 @@ export default function ReceptionistDashboard() {
     const handleLogout = async () => {
         try {
             setIsLoggingOut(true)
-            setError(null)
+            setLogoutError(null)
 
             // Chama a API de logout
             const res = await fetch("/api/logout", {
@@ -67,38 +78,21 @@ export default function ReceptionistDashboard() {
 
             // Redireciona para a página de login
             router.push("/")
-
-            // Limpa o estado
-            setUser(null)
         } catch (err) {
             setIsLoggingOut(false)
-            setError(err instanceof Error ? err.message : "Erro ao sair")
+            setLogoutError(err instanceof Error ? err.message : "Erro ao sair")
         }
     }
 
     useEffect(() => {
-        async function fetchUser() {
-            try {
-                const res = await fetch("/api/me", { credentials: "include" })
-                const data = await res.json()
-
-                if (!res.ok) throw new Error(data.error || "Falha ao buscar usuário")
-
-                setUser(data.user)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Erro desconhecido")
-                // Redireciona ou mostra mensagem de erro
-            } finally {
-                setIsLoading(false)
-            }
+        if (error) {
+            router.push("/")
         }
-
-        fetchUser()
-    }, [])
+    }, [error, router])
 
     if (isLoggingOut) return <div className={styles.feedbackMessage}><p><Spinner /> Saindo...</p></div>
+    if (logoutError) return <div className={styles.feedbackMessage}><p>Erro ao sair: {logoutError}</p></div>
     if (isLoading) return <div className={styles.feedbackMessage}><p><Spinner /> Carregando...</p></div>
-    if (error) return <div className={styles.feedbackMessage}><p>Erro: {error}</p></div>
     if (!user) return <div className={styles.feedbackMessage}><p>Não foi possível carregar os dados do usuário</p></div>
 
     return (
