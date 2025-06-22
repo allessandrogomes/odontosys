@@ -159,9 +159,14 @@ export default function Resume() {
 
             {/* Modal de confirmação */}
             {modal.isOpen && modal.content && (
-                <div className={styles.modalOverlay}>
+                <div 
+                    className={styles.modalOverlay}
+                    role="dialog"
+                    aria-modal
+                    aria-labelledby="modal-title"
+                >
                     <div className={styles.modalContent}>
-                        <h2>Deseja {modal.type} essa consulta?</h2>
+                        <h2 id="modal-title">Deseja {modal.type} essa consulta?</h2>
                         <p>Paciente: <span>{modal.content.patient.name}</span></p>
                         <p>Procedimento: <span>{modal.content.procedure}</span></p>
                         <p>Horário: <span>{formatHour(modal.content.scheduledAt)} - {formatHour(modal.content.endsAt)}</span></p>
