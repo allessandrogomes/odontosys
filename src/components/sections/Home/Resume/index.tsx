@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import AppointmentCard from "./AppointmentCard"
 import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
-import { formatHour } from "@/utils/formatHour"
 import { Toaster, toast } from "react-hot-toast"
-import { FaCheck } from "react-icons/fa"
-import { FaXmark } from "react-icons/fa6"
 import Spinner from "@/components/ui/Spinner"
 import { RefreshCw } from "lucide-react"
+import ModalConfirmation from "./ModalConfirmation"
+
+const FINISH = "FINISH"
+const CANCEL = "CANCEL"
 
 interface ITodayAppointment {
     id: number
@@ -26,83 +27,76 @@ interface ITodaysAppointments {
     appointments: ITodayAppointment[]
 }
 
+type ModalAction = typeof FINISH | typeof CANCEL
+
+interface IModal {
+    isOpen: boolean,
+    type: ModalAction | null
+    content: ITodayAppointment | null
+}
+
 export default function Resume() {
     const [todaysAppointments, setTodaysAppointments] = useState<ITodaysAppointments[] | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-    const [typeModal, setTypeModal] = useState<string | null>(null)
-    const [contentModal, setContentModal] = useState<ITodayAppointment | null>(null)
+    const [modal, setModal] = useState<IModal>({
+        isOpen: false,
+        type: null,
+        content: null
+    })
 
-    function handleOpenModal(appointment: ITodayAppointment, typeClick: string) {
-        if (typeClick === "finish") {
-            setTypeModal("Finalizar")
-        } else if (typeClick === "cancel") {
-            setTypeModal("Cancelar")
-        }
-        setContentModal(appointment)
-        setModalIsOpen(true)
-    }
-
-    function handleModalAction(action: string | null) {
-        if (action === "Finalizar" && contentModal) {
-            completeAppointemnt(contentModal.id)
-        } else if (action === "Cancelar" && contentModal) {
-            cancellAppointemnt(contentModal.id)
-        }
-        handleCloseModal()
+    function handleOpenModal(appointment: ITodayAppointment, typeClick: ModalAction) {
+        setModal({ content: appointment, isOpen: true, type: typeClick })
     }
 
     function handleCloseModal() {
-        setContentModal(null)
-        setTypeModal(null)
-        setModalIsOpen(false)
+        setModal(({ isOpen: false, type: null, content: null }))
     }
 
-    async function completeAppointemnt(id: number) {
+    function handleModalAction(action: ModalAction) {
+        if (modal.content) handleAppointmentAction(action, modal.content.id)
+        handleCloseModal()
+    }
+
+    async function handleAppointmentAction(action: ModalAction, id: number) {
         setIsLoading(true)
 
         try {
-            const response = await fetch("/api/completed-appointment", {
+            const endpoint = action === FINISH ? "/api/completed-appointment" : "/api/cancelled-appointment"
+
+            const response = await fetch(endpoint, {
                 method: "POST",
-                body: JSON.stringify({
-                    id: id
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
             })
 
-            if (!response.ok) throw new Error("Consulta não finalizada, tente novamente")
+            if (!response.ok) throw new Error(`Falha ao ${action === FINISH ? "finalizar" : "cancelar"} consulta`)
 
-            toast.success("Consulta finalizada com sucesso!")
+            toast.success(`Consulta ${action === FINISH ? "finalizada" : "cancelada"} com sucesso!`)
+
+            setTodaysAppointments(prev => {
+                if (!prev) return null
+
+                // Filtra os dentistas mantendo apenas os que tem consultas
+                const updatedAppointments = prev
+                    .map(dentist => ({
+                        ...dentist,
+                        appointments: dentist.appointments.filter(app => app.id !== id)
+                    }))
+                    .filter(dentist => dentist.appointments.length > 0) // Remove dentistas sem consultas
+
+                return updatedAppointments.length > 0 ? updatedAppointments : null
+            })
         } catch (error: any) {
-            toast.error(error)
+            toast.error(error.message)
         } finally {
-            await fetchAppointments()
+            setIsLoading(false)
         }
     }
 
-    async function cancellAppointemnt(id: number) {
+    const fetchAppointments = useCallback(async () => {
         setIsLoading(true)
 
-        try {
-            const response = await fetch("/api/cancelled-appointment", {
-                method: "POST",
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-
-            if (!response.ok) throw new Error("Consulta não cancelada, tente novamente")
-
-            toast.success("Consulta cancelada com sucesso!")
-        } catch (error: any) {
-            toast.error(error)
-        } finally {
-            await fetchAppointments()
-        }
-    }
-
-    async function fetchAppointments() {
-        setIsLoading(true)
         try {
             const response = await fetch("/api/todays-appointments", {
                 method: "GET"
@@ -118,11 +112,11 @@ export default function Resume() {
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
         fetchAppointments()
-    }, [])
+    }, [fetchAppointments])
 
     return (
         <section className={styles.content}>
@@ -131,7 +125,7 @@ export default function Resume() {
             <div className={styles.header}>
                 <h3>Dentista</h3>
                 <h3 className={styles.appointments}>Consultas</h3>
-                <button onClick={fetchAppointments}><RefreshCw className={`${isLoading && styles.rotateSpinner}`}/> Atualizar</button>
+                <button onClick={fetchAppointments}><RefreshCw className={`${isLoading && styles.rotateSpinner}`} /> Atualizar</button>
             </div>
 
             {/* Consultas de hoje */}
@@ -151,9 +145,9 @@ export default function Resume() {
                                                     procedure={appointment.procedure}
                                                     start={appointment.scheduledAt}
                                                     end={appointment.endsAt}
-                                                    onClickFinish={() => handleOpenModal(appointment, "finish")}
-                                                    onClickCancel={() => handleOpenModal(appointment, "cancel")}
-                                                    isLast={index === array.length -1}
+                                                    onClickFinish={() => handleOpenModal(appointment, FINISH)}
+                                                    onClickCancel={() => handleOpenModal(appointment, CANCEL)}
+                                                    isLast={index === array.length - 1}
                                                 />
                                             )}
                                         </div>
@@ -163,19 +157,13 @@ export default function Resume() {
             </div>
 
             {/* Modal de confirmação */}
-            {modalIsOpen && contentModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h2>Deseja {typeModal} essa consulta?</h2>
-                        <p>Paciente: <span>{contentModal.patient.name}</span></p>
-                        <p>Procedimento: <span>{contentModal.procedure}</span></p>
-                        <p>Horário: <span>{formatHour(contentModal.scheduledAt)} - {formatHour(contentModal.endsAt)}</span></p>
-                        <div className={styles.btns}>
-                            <button className={`${typeModal === "Finalizar" ? styles.finishBtn : styles.cancelBtn}`} onClick={() => handleModalAction(typeModal)}>{typeModal === "Finalizar" ? <FaCheck className={styles.finishIcon}/> : <FaXmark className={styles.cancelIcon}/>} {typeModal}</button>
-                            <button className={styles.backBtn} onClick={handleCloseModal}>Voltar</button>
-                        </div>
-                    </div>
-                </div>
+            {modal.isOpen && modal.content && (
+                <ModalConfirmation 
+                    appointment={modal.content} 
+                    onCancel={handleCloseModal} 
+                    onConfirm={type => handleModalAction(type)}
+                    type={modal.type!}
+                />
             )}
 
             {/* Mensagens de notificação */}

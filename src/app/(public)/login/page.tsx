@@ -3,24 +3,31 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Loader } from "lucide-react"
 import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
 import Image from "next/image"
+import Spinner from "@/components/ui/Spinner"
+
+interface IFormData {
+  login: string
+  password: string
+}
 
 export default function Login() {
   const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [formData, setFormData] = useState({
-    login: "",
-    password: ""
-  })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [formData, setFormData] = useState<IFormData>({ login: "", password: "" })
+  const [loginAttempts, setLoginAttempts] = useState<number>(0)
 
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
+    if (loginAttempts >= 3) {
+      setError("Muitas tentativas. Tente mais tarde.")
+      return
+    }
+    setIsLoading(true)
     setError(null)
 
     try {
@@ -45,21 +52,25 @@ export default function Login() {
         router.push("/receptionist-dashboard")
       }
     } catch (error: any) {
+      setLoginAttempts(prev => prev + 1)
       setError(error.message)
       setFormData({ login: "", password: "" })
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className={styles.loginPage}>
-      <form onSubmit={handleSubmit} className={styles.login}>
-        <Image className={styles.logo} src="/images/logo.webp" width={500} height={500} alt="Logo OdontoSys" />
+    <div className={styles.login}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <Image className={styles.logo} src="/images/logo.webp" width={500} height={500} alt="Logo OdontoSys" priority/>
+
         <h1>Faça seu login</h1>
+
         <div className={styles.fields}>
           <div className={styles.labelInput}>
-            <label>CPF</label>
+            <label htmlFor="cpfInput">CPF</label>
             <IMaskInput
+              id="cpfInput"
               mask="000.000.000-00"
               value={formData.login}
               onAccept={(value) => setFormData({ ...formData, login: value })}
@@ -69,11 +80,12 @@ export default function Login() {
             />
           </div>
           <div className={styles.labelInput}>
-            <label>Senha</label>
-            <input type="password" onChange={e => setFormData({ ...formData, password: e.target.value })} value={formData.password} required />
+            <label htmlFor="passwordInput">Senha</label>
+            <input id="passwordInput" type="password" onChange={e => setFormData({ ...formData, password: e.target.value })} value={formData.password} required />
           </div>
         </div>
-        {!loading ? <button disabled={loading} type="submit">Entrar</button> : <Loader className={styles.spinner} />}
+
+        {!isLoading ? <button disabled={isLoading} type="submit">Entrar</button> : <Spinner className={styles.spinner} />}
         {error && <span>{error}</span>}
       </form>
       <div className={styles.infosLogin}>

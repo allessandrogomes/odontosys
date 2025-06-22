@@ -1,0 +1,86 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .modalContent {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        width: 300px;
+        max-width: 90%;
+        text-align: center;
+
+        p {
+            span {
+                font-weight: 600;
+            }
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 0 auto;
+
+            button {
+                height: 40px;
+                width: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: none;
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                padding: 10px;
+                border-radius: 50px;
+                cursor: pointer;
+                box-sizing: border-box;
+
+                .finishIcon {
+                    margin-right: 7px;
+                }
+
+                .cancelIcon {
+                    font-size: 20px;
+                    margin-right: 3px;
+                }
+            }
+
+            .cancelBtn {
+                background-color: red;
+
+                &:hover {
+                    background-color: rgba(255, 0, 0, 0.5);
+                }
+            }
+
+            .finishBtn {
+                background-color: green;
+
+                &:hover {
+                    background-color: rgba(0, 128, 0, 0.5);
+                }
+            }
+
+            .backBtn {
+                &:hover {
+                    background-color: var(--tertiary-color);
+                }
+            }
+        }
+
+    }
+}

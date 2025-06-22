@@ -1,4 +1,4 @@
-.loginPage {
+.login {
     width: 100vw;
     height: 100vh;
     background-image: url("/images/bg.webp");
@@ -8,7 +8,7 @@
     align-items: center;
     justify-content: center;
 
-    .login {
+    .form {
         position: relative;
         box-sizing: border-box;
         width: 350px;
@@ -85,7 +85,6 @@
         .spinner {
             width: 50px;
             height: 50px;
-            animation: spin 1s linear infinite;
         }
     }
 
@@ -99,9 +98,3 @@
         left: 10px;
     }
 }
-
-@keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
