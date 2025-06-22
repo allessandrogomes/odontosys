@@ -5,12 +5,10 @@ import { useCallback, useEffect, useState } from "react"
 import AppointmentCard from "./AppointmentCard"
 import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
-import { formatHour } from "@/utils/formatHour"
 import { Toaster, toast } from "react-hot-toast"
-import { FaCheck } from "react-icons/fa"
-import { FaXmark } from "react-icons/fa6"
 import Spinner from "@/components/ui/Spinner"
 import { RefreshCw } from "lucide-react"
+import ModalConfirmation from "./ModalConfirmation"
 
 const FINISH = "FINISH"
 const CANCEL = "CANCEL"
@@ -160,29 +158,12 @@ export default function Resume() {
 
             {/* Modal de confirmação */}
             {modal.isOpen && modal.content && (
-                <div
-                    className={styles.modalOverlay}
-                    role="dialog"
-                    aria-modal
-                    aria-labelledby="modal-title"
-                >
-                    <div className={styles.modalContent}>
-                        <h2 id="modal-title">Deseja {modal.type} essa consulta?</h2>
-                        <p>Paciente: <span>{modal.content.patient.name}</span></p>
-                        <p>Procedimento: <span>{modal.content.procedure}</span></p>
-                        <p>Horário: <span>{formatHour(modal.content.scheduledAt)} - {formatHour(modal.content.endsAt)}</span></p>
-                        <div className={styles.btns}>
-                            <button
-                                className={`${modal.type === FINISH ? styles.finishBtn : styles.cancelBtn}`}
-                                onClick={() => handleModalAction(modal.type!)}
-                            >
-                                {modal.type === FINISH ? <FaCheck className={styles.finishIcon} /> : <FaXmark className={styles.cancelIcon} />}
-                                {modal.type === FINISH ? "Finalizar" : "Cancelar"}
-                            </button>
-                            <button className={styles.backBtn} onClick={handleCloseModal}>Voltar</button>
-                        </div>
-                    </div>
-                </div>
+                <ModalConfirmation 
+                    appointment={modal.content} 
+                    onCancel={handleCloseModal} 
+                    onConfirm={type => handleModalAction(type)}
+                    type={modal.type!}
+                />
             )}
 
             {/* Mensagens de notificação */}
