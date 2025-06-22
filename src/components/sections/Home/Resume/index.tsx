@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import AppointmentCard from "./AppointmentCard"
 import DentistCard from "./DentistCard"
 import styles from "./styles.module.scss"
@@ -75,7 +75,7 @@ export default function Resume() {
             if (!response.ok) throw new Error(`Falha ao ${action === FINISH ? "finalizar" : "cancelar"} consulta`)
 
             toast.success(`Consulta ${action === FINISH ? "finalizada" : "cancelada"} com sucesso!`)
-            
+
             setTodaysAppointments(prev => {
                 if (!prev) return null
 
@@ -96,8 +96,9 @@ export default function Resume() {
         }
     }
 
-    async function fetchAppointments() {
+    const fetchAppointments = useCallback(async () => {
         setIsLoading(true)
+
         try {
             const response = await fetch("/api/todays-appointments", {
                 method: "GET"
@@ -113,11 +114,11 @@ export default function Resume() {
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
         fetchAppointments()
-    }, [])
+    }, [fetchAppointments])
 
     return (
         <section className={styles.content}>
@@ -159,7 +160,7 @@ export default function Resume() {
 
             {/* Modal de confirmação */}
             {modal.isOpen && modal.content && (
-                <div 
+                <div
                     className={styles.modalOverlay}
                     role="dialog"
                     aria-modal
