@@ -39,7 +39,11 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
     }
 
     return (
-        <div className={`${styles.searchField} ${visible && styles.visible}`}>
+        <div 
+            className={`${styles.searchField} ${visible && styles.visible}`}
+            aria-live="polite"
+            aria-atomic="true"
+        >
             <PatientCPFSearchForm
                 cpf={cpfField} 
                 onCpfChange={setCpfField}
