@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import styles from "./styles.module.scss"
 import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
 import { ArrowLeft, ArrowRight, OctagonX } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
+import useSWR from "swr"
+import fetcher from "@/services/fetcher"
 
 interface IProcedure {
     id: number | null
@@ -20,14 +22,14 @@ interface IProcedureViewProps {
 }
 
 export default function ProcedureView({ onSelectProcedure, onNext, onBack, active }: IProcedureViewProps) {
-    const [procedures, setProcedures] = useState<IProcedure[]>([])
+    const { data: procedures, error, isLoading } = useSWR("/api/procedure", fetcher, {
+        revalidateOnFocus: false
+    })
     const [selectedProcedure, setSelectedProcedure] = useState<IProcedure | null>(null)
-    const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         const selectId = Number(e.target.value)
-        const procedure = procedures.find(p => p.id === selectId) || null
+        const procedure = procedures.find((p: IProcedure) => p.id === selectId) || null
         if (procedure) {
             onSelectProcedure(procedure)
             setSelectedProcedure(procedure)
@@ -41,25 +43,6 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
         }
     }
 
-    useEffect(() => {
-        async function fetchProcedures() {
-            setIsLoading(true)
-
-            try {
-                const response = await fetch("/api/procedure")
-                const data = await response.json()
-                setProcedures(data)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (error: any) {
-                setError(error.message || "Erro ao carregar procedimentos. Tente novamente.")
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchProcedures()
-    }, [])
-
     return (
         <div className={`${styles.box} ${active && styles.active}`}>
             {isLoading ? (
@@ -71,7 +54,7 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
                     <Label htmlFor="procedure-select" text="Escolha o Procedimento" />
                     <select id="procedure-select" onChange={handleChange} value={selectedProcedure?.id || ""}>
                         <option disabled value="">Selecione um procedimento</option>
-                        {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
+                        {procedures.map((item: IProcedure) => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
                     </select>
                 </>
             )}
