@@ -55,7 +55,7 @@ export default function PatientCPFView({ patient, onNext, visible }: IPatientCPF
     }
 
     return (
-        <div className={`${styles.box} ${visible && styles.visible}`}>
+        <div className={`${styles.box} ${visible && styles.visible}`} aria-live="polite" aria-atomic="true">
             {!patientSelected ? (
                 // Campo para buscar paciente pelo CPF
                 <div className={styles.searchView}>
