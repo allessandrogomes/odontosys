@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import styles from "./styles.module.scss"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
@@ -20,6 +20,12 @@ export default function PatientCPFView({ patient, onNext, visible }: IPatientCPF
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [lastSearchCpf, setLastSearchCpf] = useState<string | null>(null)
 
+    const handleClearSelection = useCallback(() => {
+        setPatientSelected(null)
+        patient(null)
+        setFeedbackMessage(null)
+    }, [patient])
+
     async function handleSearchPatient(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
@@ -30,10 +36,9 @@ export default function PatientCPFView({ patient, onNext, visible }: IPatientCPF
             setLastSearchCpf(cpf)
         }
 
-        setFeedbackMessage(null)
+        handleClearSelection()
+
         setIsLoading(true)
-        setPatientSelected(null)
-        patient(null)
 
         try {
             const response = await fetch(`/api/patient/cpf/${cpf}`)
@@ -76,7 +81,7 @@ export default function PatientCPFView({ patient, onNext, visible }: IPatientCPF
                                 patient(null)
                             }}
                         />
-                        <Button text="Próximo" iconEnd={<ArrowRight />} onClick={e => onNext(e)}/>
+                        <Button text="Próximo" iconEnd={<ArrowRight />} onClick={e => onNext(e)} />
                     </div>
                 </div>
             )}
