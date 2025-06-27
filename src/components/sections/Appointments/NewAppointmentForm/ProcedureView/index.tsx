@@ -20,6 +20,8 @@ interface IProcedureViewProps {
 export default function ProcedureView({ onSelectProcedure, onNext, onBack, active }: IProcedureViewProps) {
     const [procedures, setProcedures] = useState<IProcedure[]>([])
     const [selectedProcedure, setSelectedProcedure] = useState<IProcedure | null>(null)
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         const selectId = Number(e.target.value)
@@ -39,12 +41,17 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
 
     useEffect(() => {
         async function fetchProcedures() {
+            setIsLoading(true)
+            
             try {
                 const response = await fetch("/api/procedure")
                 const data = await response.json()
                 setProcedures(data)
-            } catch (error) {
-                alert(JSON.stringify(error))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                setError(error.message || "Erro ao carregar procedimentos. Tente novamente.")
+            } finally {
+                setIsLoading(false)
             }
         }
 
