@@ -18,9 +18,18 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
     const [cpfField, setCpfField] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [message, setMessage] = useState<string | null>(INITIAL_MESSAGE)
+    const [lastSearchCpf, setLastSearchCpf] = useState<string | null>(null)
 
     async function handleSearchAppointmentsByCPF(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+
+        // Caso o mesmo CPF seja enviado mais de uma vez, evita fetch desnecessário
+        if (lastSearchCpf === cpfField) {
+            return
+        } else {
+            setLastSearchCpf(cpfField)
+        }
+
         setMessage(null)
         setIsLoading(true)
         appointmentsFound([])
