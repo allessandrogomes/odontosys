@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react"
 import styles from "./styles.module.scss"
 import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, OctagonX } from "lucide-react"
+import Spinner from "@/components/ui/Spinner"
+import FeedbackMessage from "@/components/ui/FeedbackMessage"
 
 interface IProcedure {
     id: number | null
@@ -42,12 +44,12 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
     useEffect(() => {
         async function fetchProcedures() {
             setIsLoading(true)
-            
+
             try {
                 const response = await fetch("/api/procedure")
                 const data = await response.json()
                 setProcedures(data)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 setError(error.message || "Erro ao carregar procedimentos. Tente novamente.")
             } finally {
@@ -60,11 +62,19 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
 
     return (
         <div className={`${styles.box} ${active && styles.active}`}>
-            <Label text="Escolha o Procedimento"/>
-            <select onChange={handleChange} value={selectedProcedure ? selectedProcedure.id! : ""}>
-                <option disabled value="">Selecione</option>
-                {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
-            </select>
+            {isLoading ? (
+                <div><Spinner /></div>
+            ) : error ? (
+                <FeedbackMessage message={error} icon={<OctagonX />}/>
+            ) : (
+                <>
+                    <Label text="Escolha o Procedimento" />
+                    <select onChange={handleChange} value={selectedProcedure ? selectedProcedure.id! : ""}>
+                        <option disabled value="">Selecione</option>
+                        {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
+                    </select>
+                </>
+            )}
             <div className={styles.boxBtns}>
                 <Button text="Voltar" iconStart={<ArrowLeft />} onClick={e => onBack(e)} />
                 <Button
