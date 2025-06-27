@@ -4,7 +4,11 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
     try {
-        const procedures = await prisma.procedure.findMany()
+        const procedures = await prisma.procedure.findMany({
+            orderBy: {
+                procedure: "asc" // ordem alfabética crescente
+            }
+        })
 
         if (procedures.length === 0) {
             return NextResponse.json([], { status: 200 })
