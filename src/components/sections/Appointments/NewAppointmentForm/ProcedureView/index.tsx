@@ -68,8 +68,8 @@ export default function ProcedureView({ onSelectProcedure, onNext, onBack, activ
                 <FeedbackMessage message={error} icon={<OctagonX />}/>
             ) : (
                 <>
-                    <Label text="Escolha o Procedimento" />
-                    <select onChange={handleChange} value={selectedProcedure ? selectedProcedure.id! : ""}>
+                    <Label htmlFor="procedure-select" text="Escolha o Procedimento" />
+                    <select id="procedure-select" onChange={handleChange} value={selectedProcedure ? selectedProcedure.id! : ""}>
                         <option disabled value="">Selecione</option>
                         {procedures.map(item => <option key={item.id} value={item.id!}>{item.procedure}</option>)}
                     </select>
