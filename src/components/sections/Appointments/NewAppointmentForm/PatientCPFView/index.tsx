@@ -18,10 +18,18 @@ export default function PatientCPFView({ patient, onNext, visible }: IPatientCPF
     const [patientSelected, setPatientSelected] = useState<IPatient | null>(null)
     const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
-
+    const [lastSearchCpf, setLastSearchCpf] = useState<string | null>(null)
 
     async function handleSearchPatient(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+
+        // Bloqueia buscas consecutivas iguais
+        if (lastSearchCpf === cpf) {
+            return
+        } else {
+            setLastSearchCpf(cpf)
+        }
+
         setFeedbackMessage(null)
         setIsLoading(true)
         setPatientSelected(null)
