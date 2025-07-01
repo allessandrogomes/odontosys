@@ -78,11 +78,18 @@ export default function DentistView({ procedure, dentistId, dentistName, visible
             {currentView === SELECT_VIEW && (
                 <div className={styles.selectView}>
                     <Label text="Escolha o Dentista" />
-                    {isLoading ? <Spinner /> : error ? <FeedbackMessage message={error} icon={<OctagonX />}/> :
+                    {isLoading ? <Spinner /> : error ? <FeedbackMessage message={error} icon={<OctagonX />} /> :
                         (
                             <div className={styles.containerDentists}>
                                 {dentists && dentists.map((dentist: IDentist) => (
-                                    <div className={`${styles.dentist} ${selectedDentist?.id === dentist.id ? styles.selected : ""}`} onClick={() => setSelectedDentist(dentist)} key={dentist.id}>
+                                    <div
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-label={`Selecionar dentista ${dentist.name}`}
+                                        className={`${styles.dentist} ${selectedDentist?.id === dentist.id ? styles.selected : ""}`}
+                                        onClick={() => setSelectedDentist(dentist)}
+                                        key={dentist.id}
+                                    >
                                         <p>Dr. {dentist.name}</p>
                                     </div>
                                 ))}
