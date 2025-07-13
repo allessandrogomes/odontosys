@@ -29,7 +29,7 @@ const SHOW_SELECTED_DAY_AND_TIME_VIEW = "SHOW_SELECTED_DAY_AND_TIME_VIEW"
 
 export default function ScheduledView({ durationMinutes, dentistId, active, scheduledAt, endsAt, onBack, onNext }: IScheduledView) {
     const [day, setDay] = useState<string>("")
-    const [times, setTimes] = useState<ITime[] | []>([])
+    const [times, setTimes] = useState<ITime[] | [] | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [selectedTime, setSelectedTime] = useState<ITime | null>(null)
@@ -84,8 +84,9 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
 
                     {isLoading ? <Spinner className={styles.spinner} />
                         : error ? <FeedbackMessage message={error} />
-                            : times.length > 0 ? <ScheduleList selectedSchedule={selectedTime} schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)} />
-                                : <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />}/>
+                            : times && times.length > 0 ? <ScheduleList selectedSchedule={selectedTime} schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)} />
+                                : times && times.length === 0 ? <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />} />
+                                    : <></>
                     }
 
                     <div className={styles.boxBtns}>
