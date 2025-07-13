@@ -5,6 +5,7 @@ import ScheduleList from "@/components/lists/ScheduleList"
 import Label from "@/components/ui/Label"
 import BackBtn from "@/components/ui/BackBtn"
 import Button from "@/components/ui/Button"
+import toast, { Toaster } from "react-hot-toast"
 
 interface ITime {
     start: string,
@@ -41,8 +42,9 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
 
             if (!response.ok) throw new Error(data.error || "Erro ao atualizar os dados")
             onUpdate(data)
-        } catch (error) {
-            alert(JSON.stringify(error))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message || "Erro ao atualizar os dados")
         } finally {
             setIsSubmiting(false)
         }
@@ -64,8 +66,9 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
 
                 const data = await response.json()
                 setTimes(data)
-            } catch (error) {
-                alert(JSON.stringify(error))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                toast.error(error.message || "Erro ao buscar os horários disponíveis")
             } finally {
                 setIsLoading(false)
             }
@@ -99,6 +102,7 @@ export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAn
             ) : (
                 <Button type="submit" text="Concluir" disabled={!selectedTime} />
             )}
+            <Toaster />
         </form>
     )
 }
