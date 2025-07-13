@@ -4,9 +4,10 @@ import { formatHour } from "@/utils/formatHour"
 import { formatDate } from "@/utils/formatDate"
 import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, TimerOff } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
 import ScheduleList from "@/components/lists/ScheduleList"
+import FeedbackMessage from "@/components/ui/FeedbackMessage"
 
 interface IScheduledView {
     durationMinutes: number | null
@@ -29,9 +30,10 @@ const SHOW_SELECTED_DAY_AND_TIME_VIEW = "SHOW_SELECTED_DAY_AND_TIME_VIEW"
 export default function ScheduledView({ durationMinutes, dentistId, active, scheduledAt, endsAt, onBack, onNext }: IScheduledView) {
     const [day, setDay] = useState<string>("")
     const [times, setTimes] = useState<ITime[] | []>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
     const [selectedTime, setSelectedTime] = useState<ITime | null>(null)
     const [currentView, setCurrentView] = useState<string>(SELECT_DAY_AND_TIME_VIEW)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     function handleNext() {
         if (selectedTime) {
@@ -56,9 +58,13 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                 })
 
                 const data = await response.json()
+
+                if (!response.ok) throw new Error(data.error || "Erro ao buscar os horários disponíveis")
+
                 setTimes(data)
-            } catch (error) {
-                alert(JSON.stringify(error))
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                setError(error.message)
             } finally {
                 setIsLoading(false)
             }
@@ -75,14 +81,13 @@ export default function ScheduledView({ durationMinutes, dentistId, active, sche
                 <div className={styles.scheduled}>
                     <Label text="Escolha o dia e horário" />
                     <input onChange={e => setDay(e.target.value)} type="date" value={day} />
-                    {isLoading ? (
-                        <Spinner className={styles.spinner} />
-                    ) : day ? (
-                        <ScheduleList
-                            selectedSchedule={selectedTime}
-                            schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)}
-                        />
-                    ) : ""}
+
+                    {isLoading ? <Spinner className={styles.spinner} />
+                        : error ? <FeedbackMessage message={error} />
+                            : times.length > 0 ? <ScheduleList selectedSchedule={selectedTime} schedules={times} onSelectSchedule={schedule => setSelectedTime(schedule)} />
+                                : <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />}/>
+                    }
+
                     <div className={styles.boxBtns}>
                         <Button text="Voltar" iconStart={<ArrowLeft />} onClick={e => onBack(e)} />
                         <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!selectedTime} />
