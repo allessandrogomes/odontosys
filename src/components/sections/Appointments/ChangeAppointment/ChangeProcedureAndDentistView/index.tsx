@@ -4,6 +4,8 @@ import styles from "./styles.module.scss"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import Spinner from "@/components/ui/Spinner"
+import useSWR from "swr"
+import fetcher from "@/services/fetcher"
 
 interface IChangeAppointmentView {
     appointment: IAppointment
@@ -19,9 +21,10 @@ interface IDataToPatch {
 }
 
 export default function ChangeProcedureAndDentistView({ appointment, onUpdate, onBack }: IChangeAppointmentView) {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const { data: procedures = [], isLoading } = useSWR<IProcedure[]>("/api/procedure", fetcher, {
+        revalidateOnFocus: false
+    })
     const [isSubmiting, setIsSubmiting] = useState<boolean>(false)
-    const [procedures, setProcedures] = useState<IProcedure[]>([])
     const [dentists, setDentists] = useState<IDentist[]>([])
     const [dataToPatch, setDataToPatch] = useState<IDataToPatch>({
         dentistId: appointment.dentistId,
@@ -71,26 +74,12 @@ export default function ChangeProcedureAndDentistView({ appointment, onUpdate, o
             setIsSubmiting(false)
             onUpdate(data)
             toast.success("Informações alteradas com sucesso!")
-        } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             setIsSubmiting(false)
-            alert(JSON.stringify(error))
+            toast.error(error.message || "Erro ao buscar os procedimentos")
         }
     }
-
-    useEffect(() => {
-        setIsLoading(true)
-        async function fetchProcedures() {
-            try {
-                const response = await fetch("/api/procedure")
-                const data = await response.json()
-                setProcedures(data)
-            } catch (error) {
-                alert(JSON.stringify(error))
-            }
-        }
-
-        fetchProcedures()
-    }, [])
 
     useEffect(() => {
         async function fetchDentists() {
@@ -99,17 +88,17 @@ export default function ChangeProcedureAndDentistView({ appointment, onUpdate, o
                 const data = await response.json()
                 const filteredDentists = data.filter((dentist: IDentist) => dentist.specialty.includes(dataToPatch.procedure!))
                 setDentists(filteredDentists)
-                
-            } catch (error) {
-                alert(JSON.stringify(error))
-            } finally {
-                setIsLoading(false)
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                toast.error(error.message || "Erro ao buscar os dentistas")
             }
         }
 
         if (dataToPatch.procedure) {
             fetchDentists()
         }
+     
     }, [dataToPatch.procedure])
 
     return (
