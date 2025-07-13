@@ -7,6 +7,9 @@ import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
 import Image from "next/image"
 import Spinner from "@/components/ui/Spinner"
+import { lastUpdate } from "@/lastUpdate"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale/pt-BR"
 
 interface IFormData {
   login: string
@@ -59,6 +62,8 @@ export default function Login() {
     }
   }
 
+  const formatted = format(new Date(lastUpdate), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+
   return (
     <div className={styles.login}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -92,6 +97,7 @@ export default function Login() {
         <span>Informações de Login para teste</span>
         <span>Login: 87590814333</span>
         <span>Senha: Teste123*</span>
+        <span>Última atualização: {formatted}</span>
       </div>
     </div>
   )
