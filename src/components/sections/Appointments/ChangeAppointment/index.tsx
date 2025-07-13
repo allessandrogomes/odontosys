@@ -39,21 +39,15 @@ export default function ChangeAppointment() {
 
     async function updateFoundAppointments() {
         try {
-            const response = await fetch(`/api/appointment/cpf/${appointmentSelected?.patient.cpf}`, {
-                method: "GET"
-            })
+            const response = await fetch(`/api/appointment/cpf/${appointmentSelected?.patient.cpf}`, { credentials: "include" })
             const data = await response.json()
 
             if (!response.ok) throw new Error(data.error || "Erro ao buscar as consultas")
 
-            if (data.length === 0) {
-                setAppointmentsFound([])
-                throw new Error("Nenhuma consulta encontrada")
-            }
-
             setAppointmentsFound(data)
-        } catch (error) {
-            alert(JSON.stringify(error))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message)
         }
     }
 
