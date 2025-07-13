@@ -11,18 +11,25 @@ interface ISearchView {
     visible: boolean
 }
 
+type State = {
+    cpf: string
+    isLoading: boolean
+    error: string | null
+}
+
 export default function SearchView({ appointmentsFound, visible }: ISearchView) {
-    const [cpf, setCpf] = useState<string>("")
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [state, setState] = useState<State>({
+        cpf: "",
+        isLoading: false,
+        error: null
+    })
 
     async function fetchAppointments(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        setError(undefined)
-        setIsLoading(true)
+        setState(prev => ({ ...prev, error: null, isLoading: true }))
 
         try {
-            const response = await fetch(`/api/appointment/cpf/${cpf}`, {
+            const response = await fetch(`/api/appointment/cpf/${state.cpf}`, {
                 method: "GET"
             })
             const data = await response.json()
@@ -36,17 +43,22 @@ export default function SearchView({ appointmentsFound, visible }: ISearchView) 
 
             appointmentsFound(data)
         } catch (error: any) {
-            setError(error.message)
+            setState(prev => ({ ...prev, error: error.message }))
         } finally {
-            setIsLoading(false)
+            setState(prev => ({ ...prev, isLoading: false }))
         }
     }
 
     return (
         <div className={`${visible && styles.visible} ${styles.form}`}>
-            <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onSubmit={fetchAppointments} onCpfChange={setCpf} />
-            {error && <FeedbackMessage className={styles.message} message={error} icon={<SearchX />} />}
-            {isLoading && <Spinner className={styles.spinner} />}
+            <PatientCPFSearchForm 
+                cpf={state.cpf} 
+                isLoading={state.isLoading} 
+                onSubmit={fetchAppointments} 
+                onCpfChange={(newCpf) => setState(prev => ({ ...prev, cpf: newCpf }))}
+            />
+            {state.error && <FeedbackMessage className={styles.message} message={state.error} icon={<SearchX />} />}
+            {state.isLoading && <Spinner className={styles.spinner} />}
         </div>
     )
 }
