@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "postbuild": "node scripts/update-timestamp.js",
     "start": "next start",
     "lint": "next lint"
   },
