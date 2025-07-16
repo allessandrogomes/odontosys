@@ -1,12 +1,23 @@
 .searchForm {
+    min-width: 300px;
     display: none;
     flex-direction: column;
     align-items: center;
     margin: auto;
-    
-    .spinner, .message {
+    position: relative;
+
+    .spinner,
+    .message {
         position: absolute;
-        bottom: 30px;
+
+    }
+
+    .spinner {
+        bottom: -50px;
+    }
+
+    .message {
+        bottom: -35px;
     }
 
     &.visible {
