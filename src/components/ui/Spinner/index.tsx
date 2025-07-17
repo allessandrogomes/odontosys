@@ -7,6 +7,6 @@ interface ISpinner {
 
 export default function Spinner({ className }: ISpinner) {
     return (
-        <Loader className={`${styles.spinner} ${className ?? ""}`} />
+        <Loader data-testid="spinner" className={`${styles.spinner} ${className ?? ""}`} />
     )
 }
