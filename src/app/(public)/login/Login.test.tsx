@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import Login from "./page"
 import "@testing-library/jest-dom"
 import userEvent from "@testing-library/user-event"
@@ -78,5 +78,37 @@ describe("Login Page", () => {
         // O botão desaparece e o Spinner é exibido
         expect(screen.queryByRole("button", { name: /entrar/i })).not.toBeInTheDocument()
         expect(screen.getByTestId("spinner")).toBeInTheDocument()
+    })
+
+    //Testes de envio de formulário
+    it("deve chamar a API /api/login com os dados corretos ao submeter", async () => {
+        const mockFetch = jest.fn(() => 
+            Promise.resolve({
+                ok: true,
+                json: async () => ({ user: { role: "RECEPCIONISTA" } })
+            })
+        )
+        global.fetch = mockFetch as jest.Mock
+
+        render(<Login />)
+
+        const cpfInput = screen.getByLabelText(/cpf/i)
+        const passwordInput = screen.getByLabelText(/senha/i)
+        const submitButton = screen.getByRole("button", { name: /entrar/i })
+
+        await userEvent.type(cpfInput, "87590814333")
+        await userEvent.type(passwordInput, "Teste123*")
+        await userEvent.click(submitButton)
+
+        await waitFor(() => {
+            expect(mockFetch).toHaveBeenCalledWith("/api/login", expect.objectContaining({
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    cpf: "875.908.143-33",
+                    password: "Teste123*"
+                })
+            }))
+        })
     })
 })
