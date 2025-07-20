@@ -3,10 +3,12 @@ import Login from "./page"
 import "@testing-library/jest-dom"
 import userEvent from "@testing-library/user-event"
 
+const mockPush = jest.fn()
+
 // Mocka o useRouter da App Router
 jest.mock("next/navigation", () => ({
     useRouter: () => ({
-        push: jest.fn()
+        push: mockPush
     })
 }))
 
@@ -109,6 +111,44 @@ describe("Login Page", () => {
                     password: "Teste123*"
                 })
             }))
+        })
+    })
+
+    it("deve redirecionar para /dentist-dashboard se a role for DENTISTA", async () => {
+        global.fetch = jest.fn(() => 
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ user: { role: "DENTISTA" } })
+            })
+        ) as jest.Mock
+
+        render(<Login />)
+
+        await userEvent.type(screen.getByLabelText(/cpf/i), "87590814333")
+        await userEvent.type(screen.getByLabelText(/senha/i), "Teste123*")
+        await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+
+        await waitFor(() => {
+            expect(mockPush).toHaveBeenCalledWith("/dentist-dashboard")
+        })
+    })
+
+    it("deve redirecionar para /receptionist-dashboard se a role for RECEPCIONISTA", async () => {
+        global.fetch = jest.fn(() => 
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ user: { role: "RECEPCIONISTA" } })
+            })
+        ) as jest.Mock
+
+        render(<Login />)
+
+        await userEvent.type(screen.getByLabelText(/cpf/i), "87590814333'")
+        await userEvent.type(screen.getByLabelText(/senha/i), "Teste123*")
+        await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+
+        await waitFor(() => {
+            expect(mockPush).toHaveBeenCalledWith("/receptionist-dashboard")
         })
     })
 })
