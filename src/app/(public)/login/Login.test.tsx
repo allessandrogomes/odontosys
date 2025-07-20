@@ -170,4 +170,27 @@ describe("Login Page", () => {
             expect(screen.getByText(/credenciais inválidas/i)).toBeInTheDocument()
         })
     })
+
+    it("deve limpar os campos após falha no login", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve({ error: "Credenciais inválidas" })
+            })
+        ) as jest.Mock
+
+        render(<Login />)
+
+        const cpfInput = screen.getByLabelText(/cpf/i)
+        const passwordInput = screen.getByLabelText(/senha/i) 
+
+        await userEvent.type(cpfInput, "87590814333")
+        await userEvent.type(passwordInput, "Teste123*")
+        await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+
+        await waitFor(() => {
+            expect(cpfInput).toHaveValue("")
+            expect(passwordInput).toHaveValue("")
+        })
+    })
 })
