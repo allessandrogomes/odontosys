@@ -151,4 +151,23 @@ describe("Login Page", () => {
             expect(mockPush).toHaveBeenCalledWith("/receptionist-dashboard")
         })
     })
+
+    it("deve exibir mensagem de erro se a API retornar erro", async () => {
+        global.fetch = jest.fn(() => 
+            Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve({ error: "Credenciais inválidas" })
+            })
+        ) as jest.Mock
+
+        render (<Login />)
+
+        await userEvent.type(screen.getByLabelText(/cpf/i), "87590814333")
+        await userEvent.type(screen.getByLabelText(/senha/i), "Teste123*")
+        await userEvent.click(screen.getByRole("button", { name: /entrar/i }))
+
+        await waitFor(() => {
+            expect(screen.getByText(/credenciais inválidas/i)).toBeInTheDocument()
+        })
+    })
 })
