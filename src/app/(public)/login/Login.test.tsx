@@ -193,4 +193,33 @@ describe("Login Page", () => {
             expect(passwordInput).toHaveValue("")
         })
     })
+
+    // Testes de conteúdo condicional
+    it("deve exibir a mensagem de erro somente quando error estiver presente", async () => {
+        render(<Login />)
+
+        // Mensagem de erro **não deve** estar visível inicialmente
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+
+        // Simula erro manualmente
+        const cpfInput = screen.getByLabelText(/cpf/i)
+        const passwordInput = screen.getByLabelText(/senha/i)
+        const submitButton = screen.getByRole("button", { name: /entrar/i })
+
+        global.fetch = jest.fn(() => 
+            Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve({ error: "Credenciais inválidas" })
+            })
+        ) as jest.Mock
+
+        await userEvent.type(cpfInput, "87590814333")
+        await userEvent.type(passwordInput, "Teste123*")
+        await userEvent.click(submitButton)
+
+        // Aguardamos aparecer a mensagem de erro
+        await waitFor(() => {
+            expect(screen.getByRole("alert")).toHaveTextContent("Credenciais inválidas")
+        })
+    })
 })
