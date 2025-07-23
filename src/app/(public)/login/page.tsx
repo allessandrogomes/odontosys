@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState } from "react"
+import {  useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
@@ -20,16 +20,18 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<IFormData>({ login: "", password: "" })
-  const [loginAttempts, setLoginAttempts] = useState<number>(0)
+  const loginAttemptsRef = useRef(0)
 
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (loginAttempts >= 3) {
+
+    if (loginAttemptsRef.current >= 3) {
       setError("Muitas tentativas. Tente mais tarde.")
       return
     }
+
     setIsLoading(true)
     setError(null)
 
@@ -46,8 +48,10 @@ export default function Login() {
       })
 
       const data = await response.json()
-
       if (!response.ok) throw new Error(data.error || "Erro inesperado no login")
+
+      // Reset das tentativas após sucesso
+      loginAttemptsRef.current = 0
 
       if (data.user.role === "DENTISTA") {
         router.push("/dentist-dashboard")
@@ -55,7 +59,7 @@ export default function Login() {
         router.push("/receptionist-dashboard")
       }
     } catch (error: any) {
-      setLoginAttempts(prev => prev + 1)
+      loginAttemptsRef.current += 1 // Incrementa o contador
       setError(error.message)
       setFormData({ login: "", password: "" })
       setIsLoading(false)
@@ -67,7 +71,7 @@ export default function Login() {
   return (
     <div className={styles.login}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <Image className={styles.logo} src="/images/logo.webp" width={500} height={500} alt="Logo OdontoSys" priority/>
+        <Image className={styles.logo} src="/images/logo.webp" width={500} height={500} alt="Logo OdontoSys" priority />
 
         <h1>Faça seu login</h1>
 
@@ -91,7 +95,7 @@ export default function Login() {
         </div>
 
         {!isLoading ? <button disabled={isLoading} type="submit">Entrar</button> : <Spinner className={styles.spinner} />}
-        {error && <span>{error}</span>}
+        {error && <span role="alert">{error}</span>}
       </form>
       <div className={styles.infosLogin}>
         <span>Informações de Login para teste</span>
