@@ -50,4 +50,19 @@ describe("Dashboard do Recepcionista - Resume", () => {
             expect(screen.getByText(/Erro: Erro ao buscar dados/i)).toBeInTheDocument()
         })
     })
+
+    it("deve exibir 'Não foi possível encontrar os dados das Consultas' quando todaysAppointments for null e não houver erro", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(null)
+            })
+        ) as jest.Mock
+
+        render(<Resume />)
+
+        await waitFor(() => {
+            expect(screen.getByText(/Não foi possível encontrar os dados das Consultas/i)).toBeInTheDocument()
+        })
+    })
 })
