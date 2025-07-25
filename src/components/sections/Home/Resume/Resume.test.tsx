@@ -25,7 +25,6 @@ describe("Dashboard do Recepcionista - Resume", () => {
         })
     })
 
-    // Testes de Estados Iniciais
     it("deve mostrar o texto 'Carregando' e o spinner enquanto isLoading for true", async () => {
         // Simula fetch pendente para manter o isLoading
         global.fetch = jest.fn(() => new Promise(() => {})) as jest.Mock
@@ -78,6 +77,31 @@ describe("Dashboard do Recepcionista - Resume", () => {
 
         await waitFor(() => {
             expect(screen.getByText(/Nenhuma consulta para hoje/i)).toBeInTheDocument()
+        })
+    })
+
+    // Testes de interação com o botão Atualizar
+    it("deve chamar a função fetchAppointments ao clicar no botão 'Atualizar'", async () => {
+        const fetchMock = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve([])
+            })
+        )
+
+        global.fetch = fetchMock as jest.Mock
+
+        render(<Resume />)
+
+        const button = await screen.findByRole("button", { name: /atualizar/i })
+
+        // Reseta a contagem para focar apenas no clique
+        fetchMock.mockClear()
+
+        button.click()
+
+        await waitFor(() => {
+            expect(fetchMock).toHaveBeenCalledTimes(1)
         })
     })
 })
