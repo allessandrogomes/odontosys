@@ -98,9 +98,10 @@ describe("Dashboard do Recepcionista - Resume", () => {
         // Reseta a contagem para focar apenas no clique
         fetchMock.mockClear()
 
-        button.click()
+        
 
         await waitFor(() => {
+            button.click()
             expect(fetchMock).toHaveBeenCalledTimes(1)
         })
     })
