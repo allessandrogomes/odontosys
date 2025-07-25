@@ -65,4 +65,19 @@ describe("Dashboard do Recepcionista - Resume", () => {
             expect(screen.getByText(/Não foi possível encontrar os dados das Consultas/i)).toBeInTheDocument()
         })
     })
+
+    it("deve exibir 'Nenhuma consulta para hoje' quando todaysAppointments for um array vazio", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve([])
+            })
+        ) as jest.Mock
+
+        render(<Resume />)
+
+        await waitFor(() => {
+            expect(screen.getByText(/Nenhuma consulta para hoje/i)).toBeInTheDocument()
+        })
+    })
 })
