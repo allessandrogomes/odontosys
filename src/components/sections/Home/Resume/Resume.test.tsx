@@ -35,4 +35,19 @@ describe("Dashboard do Recepcionista - Resume", () => {
         expect(screen.getByText(/Carregando/i)).toBeInTheDocument()
         expect(screen.getByTestId("spinner")).toBeInTheDocument()
     })
+
+    it("deve mostrar a mensagem de erro quando error estiver presente", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve({ error: "Erro ao buscar dados" })
+            })
+        ) as jest.Mock
+
+        render(<Resume />)
+
+        await waitFor(() => {
+            expect(screen.getByText(/Erro: Erro ao buscar dados/i)).toBeInTheDocument()
+        })
+    })
 })
