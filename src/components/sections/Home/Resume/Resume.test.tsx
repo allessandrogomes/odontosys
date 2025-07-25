@@ -24,4 +24,15 @@ describe("Dashboard do Recepcionista - Resume", () => {
             expect(screen.getByRole("button", { name: /atualizar/i })).toBeInTheDocument()
         })
     })
+
+    // Testes de Estados Iniciais
+    it("deve mostrar o texto 'Carregando' e o spinner enquanto isLoading for true", async () => {
+        // Simula fetch pendente para manter o isLoading
+        global.fetch = jest.fn(() => new Promise(() => {})) as jest.Mock
+
+        render(<Resume />)
+
+        expect(screen.getByText(/Carregando/i)).toBeInTheDocument()
+        expect(screen.getByTestId("spinner")).toBeInTheDocument()
+    })
 })
