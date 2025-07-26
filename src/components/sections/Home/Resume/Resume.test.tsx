@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor, within } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import Resume from "."
 
@@ -184,5 +184,23 @@ describe("Dashboard do Recepcionista - Resume", () => {
                 ).toHaveLength(2)
             }
         }
+    })
+
+    it("deve aplicar a prop isLast corretamente para o último AppointmentCard de cada lista", async () => {
+        render(<Resume />)
+
+        const timelines = await screen.findAllByTestId("timeline")
+
+        timelines.forEach((timeline) => {
+            const cards = within(timeline).getAllByTestId("appointment-card")
+            const lastCard = cards[cards.length -1]
+
+            expect(lastCard.className).toMatch(/lastCard/)
+
+            // Garante que os outros não tem a classe
+            for (let i = 0; i < cards.length - 1; i++) {
+                expect(cards[i]).not.toHaveClass("lastCard")
+            }
+        })
     })
 })

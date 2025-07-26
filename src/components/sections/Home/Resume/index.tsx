@@ -136,7 +136,7 @@ export default function Resume() {
                             : (
                                 todaysAppointments.length === 0 ? <p className={styles.noAppointments}>Nenhuma consulta para hoje</p> : (
                                     todaysAppointments.map(item => (
-                                        <div key={item.id} className={styles.timeline}>
+                                        <div key={item.id} className={styles.timeline} data-testid="timeline">
                                             <DentistCard dentistName={item.name} />
                                             {item.appointments.map((appointment, index, array) =>
                                                 <AppointmentCard
