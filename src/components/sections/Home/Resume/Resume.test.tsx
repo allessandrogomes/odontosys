@@ -194,7 +194,7 @@ describe("Dashboard do Recepcionista - Resume", () => {
 
         timelines.forEach((timeline) => {
             const cards = within(timeline).getAllByTestId("appointment-card")
-            const lastCard = cards[cards.length -1]
+            const lastCard = cards[cards.length - 1]
 
             expect(lastCard.className).toMatch(/lastCard/)
 
@@ -216,6 +216,22 @@ describe("Dashboard do Recepcionista - Resume", () => {
         // Verifica se o modal apareceu com os dados corretos
         expect(await screen.findByRole("dialog")).toBeInTheDocument()
         expect(screen.getByText("Deseja Finalizar essa consulta?")).toBeInTheDocument()
+        expect(screen.getByText(/Paciente:/i)).toHaveTextContent("Ana")
+        expect(screen.getByText(/Procedimento:/i)).toHaveTextContent("Limpeza")
+    })
+
+    it("abre o modal com type = CANCEL e dados da consulta ao clicar no botão 'Cancelar'", async () => {
+        render(<Resume />)
+
+        // Espera os botões "Cancelar" carregarem
+        const cancelButtons = await screen.findAllByTitle("Cancelar consulta")
+        await userEvent.click(cancelButtons[0]) // Clica no primeiro botão "Cancelar"
+
+        // Verifica se o modal foi aberto corretamente
+        expect(await screen.findByRole("dialog")).toBeInTheDocument()
+        expect(screen.getByText("Deseja Cancelar essa consulta?")).toBeInTheDocument()
+
+        // Verifica se os dados da consulta estão corretos
         expect(screen.getByText(/Paciente:/i)).toHaveTextContent("Ana")
         expect(screen.getByText(/Procedimento:/i)).toHaveTextContent("Limpeza")
     })
