@@ -13,6 +13,35 @@ beforeAll(() => {
     ) as jest.Mock
 })
 
+const mockData = [
+    {
+        id: 1,
+        name: "João",
+        appointments: [
+            {
+                id: 101,
+                scheduledAt: "08:00",
+                endsAt: "08:30",
+                procedure: "Limpeza",
+                patient: { name: "Ana" }
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: "Maria",
+        appointments: [
+            {
+                id: 102,
+                scheduledAt: "09:00",
+                endsAt: "09:30",
+                procedure: "Canal",
+                patient: { name: "Bruno" }
+            }
+        ]
+    }
+]
+
 describe("Dashboard do Recepcionista - Resume", () => {
     // Testes de renderização
     it("deve exibir os títulos 'Dentista' e 'Consultas' e o botão 'Atualizar'", async () => {
@@ -27,7 +56,7 @@ describe("Dashboard do Recepcionista - Resume", () => {
 
     it("deve mostrar o texto 'Carregando' e o spinner enquanto isLoading for true", async () => {
         // Simula fetch pendente para manter o isLoading
-        global.fetch = jest.fn(() => new Promise(() => {})) as jest.Mock
+        global.fetch = jest.fn(() => new Promise(() => { })) as jest.Mock
 
         render(<Resume />)
 
@@ -98,11 +127,28 @@ describe("Dashboard do Recepcionista - Resume", () => {
         // Reseta a contagem para focar apenas no clique
         fetchMock.mockClear()
 
-        
+
 
         await waitFor(() => {
             button.click()
             expect(fetchMock).toHaveBeenCalledTimes(1)
         })
+    })
+
+    // Testes com dados de consultas
+    it("deve renderizar um DentistCard para cada dentista no array de consultas", async () => {
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockData)
+            })
+        ) as jest.Mock
+
+        render(<Resume />)
+
+        for (const dentist of mockData) {
+            expect(await screen.findByText(`Dr. ${dentist.name}`)).toBeInTheDocument()
+        }
     })
 })
