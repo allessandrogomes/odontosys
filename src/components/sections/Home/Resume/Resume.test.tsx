@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import Resume from "."
+import userEvent from "@testing-library/user-event"
 
 // Mock global.fetch para evitar chamadas reais no useEffect
 
@@ -202,5 +203,20 @@ describe("Dashboard do Recepcionista - Resume", () => {
                 expect(cards[i]).not.toHaveClass("lastCard")
             }
         })
+    })
+
+    // Testes do modal de confirmação
+    it("abre o modal com type = FINISH e dados da consulta ao clicar no botão finalizar", async () => {
+        render(<Resume />)
+
+        // Aguarda renderização do botão
+        const finishButton = await screen.findAllByTitle("Confirmar conclusão da consulta")
+        await userEvent.click(finishButton[0]) // Clica no primeiro botão "Finalizar"
+
+        // Verifica se o modal apareceu com os dados corretos
+        expect(await screen.findByRole("dialog")).toBeInTheDocument()
+        expect(screen.getByText("Deseja Finalizar essa consulta?")).toBeInTheDocument()
+        expect(screen.getByText(/Paciente:/i)).toHaveTextContent("Ana")
+        expect(screen.getByText(/Procedimento:/i)).toHaveTextContent("Limpeza")
     })
 })
