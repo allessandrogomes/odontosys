@@ -235,4 +235,36 @@ describe("Dashboard do Recepcionista - Resume", () => {
         expect(screen.getByText(/Paciente:/i)).toHaveTextContent("Ana")
         expect(screen.getByText(/Procedimento:/i)).toHaveTextContent("Limpeza")
     })
+
+    it("ao clicar em 'Voltar' no modal, ele deve fechar sem chamar a API", async () => {
+        const fetchSpy = jest.spyOn(global, "fetch")
+
+        render(<Resume />)
+
+        // Espera os botões de cancelar consulta
+        const cancelButtons = await screen.findAllByTitle("Cancelar consulta")
+        await userEvent.click(cancelButtons[0])
+
+        // Modal deve estar visível
+        const modal = await screen.findByRole("dialog")
+        expect(modal).toBeInTheDocument()
+
+        // Simula clique em "Voltar"
+        const backButton = screen.getByRole("button", { name: /voltar/i })
+        await userEvent.click(backButton)
+
+        // Verifica se o modal foi fechado
+        await waitFor(() => {
+            expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+        })
+
+        // Conta quantas chamadas de fetch existiam ANTES do clique em "Voltar"
+        const initialCalls = fetchSpy.mock.calls.length
+
+        // Espera um tempo curto para ver se alguma nova chamada ocorre após "Voltar"
+        await new Promise(resolve => setTimeout(resolve, 200))
+
+        // Verifica que nenhuma nova chamada foi feita
+        expect(fetchSpy).toHaveBeenCalledTimes(initialCalls)
+    })
 })
