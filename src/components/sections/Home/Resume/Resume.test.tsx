@@ -20,8 +20,8 @@ const mockData = [
         appointments: [
             {
                 id: 101,
-                scheduledAt: "08:00",
-                endsAt: "08:30",
+                scheduledAt: "2025-05-05T14:00:00.000Z",
+                endsAt: "2025-05-05T15:00:00.000Z",
                 procedure: "Limpeza",
                 patient: { name: "Ana" }
             }
@@ -33,8 +33,8 @@ const mockData = [
         appointments: [
             {
                 id: 102,
-                scheduledAt: "09:00",
-                endsAt: "09:30",
+                scheduledAt: "2025-05-05T14:00:00.000Z",
+                endsAt: "2025-05-05T15:00:00.000Z",
                 procedure: "Canal",
                 patient: { name: "Bruno" }
             }
@@ -149,6 +149,40 @@ describe("Dashboard do Recepcionista - Resume", () => {
 
         for (const dentist of mockData) {
             expect(await screen.findByText(`Dr. ${dentist.name}`)).toBeInTheDocument()
+        }
+    })
+
+    it("deve renderizar um AppointmentCard para cada consulta com os dados corretos", async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockData)
+            })
+        ) as jest.Mock
+
+        render(<Resume />)
+
+        for (const { appointments } of mockData) {
+            for (const appointment of appointments) {
+                expect(
+                    await screen.findByText((content, element) =>
+                        element?.tagName.toLowerCase() === "h4" &&
+                        content.includes(appointment.patient.name)
+                    )
+                ).toBeInTheDocument()
+                expect(
+                    screen.getByText((content, element) =>
+                        element?.tagName.toLowerCase() === "h4" &&
+                        content.includes(appointment.procedure)
+                    )
+                ).toBeInTheDocument()
+                expect(
+                    screen.getAllByText((content, element) =>
+                        element?.tagName.toLowerCase() === "h4" &&
+                        content.includes("11:00 - 12:00")
+                    )
+                ).toHaveLength(2)
+            }
         }
     })
 })
