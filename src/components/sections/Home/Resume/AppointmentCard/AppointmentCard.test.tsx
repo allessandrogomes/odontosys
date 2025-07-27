@@ -22,4 +22,19 @@ describe("AppointmentCard", () => {
         // Garante que "da Silva" não aparece
         expect(screen.queryByText(/da Silva/i)).not.toBeInTheDocument()
     })
+
+    it("exibe corretamente o nome do procedimento", () => {
+        render(
+            <AppointmentCard 
+                patientName="João da Silva Costa"
+                procedure="Limpeza"
+                start="2025-07-26T14:00:00.000Z"
+                end="2025-07-26T15:00:00.000Z"
+                onClickFinish={jest.fn()}
+                onClickCancel={jest.fn()}      
+            />
+        )
+
+        expect(screen.getByText(/Limpeza/i)).toBeInTheDocument()
+    })
 })
