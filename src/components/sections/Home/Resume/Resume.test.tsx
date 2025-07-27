@@ -12,6 +12,21 @@ beforeAll(() => {
             json: () => Promise.resolve([]) // Retorna um array vazio de appointments
         })
     ) as jest.Mock
+
+    // Mock do matchMedia
+    Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: jest.fn().mockImplementation(query => ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: jest.fn(),    // deprecated
+            removeListener: jest.fn(), // deprecated
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+            dispatchEvent: jest.fn()
+        }))
+    })
 })
 
 const mockData = [
@@ -266,5 +281,47 @@ describe("Dashboard do Recepcionista - Resume", () => {
 
         // Verifica que nenhuma nova chamada foi feita
         expect(fetchSpy).toHaveBeenCalledTimes(initialCalls)
+    })
+
+    it("deve chamar a API de completed-appointment ao confirmar FINISH no modal", async () => {
+        render(<Resume />)
+
+        // Abre o modal de FINISH
+        const finishButtons = await screen.findAllByTitle("Confirmar conclusão da consulta")
+        await userEvent.click(finishButtons[0])
+
+        // Confirma no modal
+        const confirmButton = await screen.findByRole("button", { name: /finalizar/i })
+        await userEvent.click(confirmButton)
+
+        await waitFor(() => {
+            expect(global.fetch).toHaveBeenCalledWith("/api/completed-appointment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: 101 })
+            })
+        })
+    })
+
+    it("deve chamar a API de cancelled-appointment ao confirmar CANCEL no modal", async () => {
+        render(<Resume />)
+
+        // Abre o modal de CANCEL
+        const cancellButtons = await screen.findAllByTitle("Cancelar consulta")
+        await userEvent.click(cancellButtons[0])
+
+        // Confirma no modal
+        const modal = await screen.findByRole("dialog")
+        const confirmButton = within(modal).getByRole("button", { name: /cancelar/i, hidden: true })
+
+        await userEvent.click(confirmButton)
+
+        await waitFor(() => {
+            expect(global.fetch).toHaveBeenCalledWith("/api/cancelled-appointment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: 101 })
+            })
+        })
     })
 })
