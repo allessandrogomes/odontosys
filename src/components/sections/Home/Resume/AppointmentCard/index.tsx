@@ -27,7 +27,7 @@ function getFirstAndSecondName(fullName: string): string {
 
 export default function AppointmentCard({ patientName, procedure, start, end, onClickFinish, onClickCancel, isLast }: IAppointmentCardProps) {
     return (
-        <div className={`${styles.box} ${isLast ? styles.lastCard : ""}`}>
+        <div className={`${styles.box} ${isLast ? styles.lastCard : ""}`} data-testid="appointment-card">
             <div className={styles.connection}></div>
             <div className={styles.card}>
                 <h4>{getFirstAndSecondName(patientName)} <br></br> {procedure} <br></br> {formatHour(start)} - {formatHour(end)}</h4>
