@@ -324,4 +324,33 @@ describe("Dashboard do Recepcionista - Resume", () => {
             })
         })
     })
+
+    // Cobertura geral
+    it("deve chamar fetchAppointments apenas uma vez ao montar o componente", async () => {
+        const fetchMock = jest.fn((url) => {
+            if (url === "/api/todays-appointments") {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockData)
+                }) as Promise<Response>
+            }
+            return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({})
+            }) as Promise<Response>
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        global.fetch = fetchMock as any
+
+        render(<Resume />)
+
+        await waitFor(() => {
+            expect(fetchMock).toHaveBeenCalledWith("/api/todays-appointments", { method: "GET" })
+        })
+
+        // Verifica que só houve uma chamada ao endpoint de appointments
+        const getCalls = fetchMock.mock.calls.filter(([url]) => url === "/api/todays-appointments")
+        expect(getCalls).toHaveLength(1)
+    })
 })
