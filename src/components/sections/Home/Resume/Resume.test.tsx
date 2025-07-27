@@ -353,4 +353,41 @@ describe("Dashboard do Recepcionista - Resume", () => {
         const getCalls = fetchMock.mock.calls.filter(([url]) => url === "/api/todays-appointments")
         expect(getCalls).toHaveLength(1)
     })
+
+    it("deve exibir corretamente o spinner, mensagem de erro e conteúdo conforme o estado", async () => {
+        const fetchMock = jest.fn()
+            // Primeiro retorno: loading + sucesso
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => mockData
+            })
+            // Segundo retorno: erro
+            .mockResolvedValueOnce({
+                ok: false
+            })
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        global.fetch = fetchMock as any
+
+        const { unmount } = render(<Resume />)
+
+        // 1. Loading -> Spinner visível
+        expect(screen.getByTestId("spinner")).toBeInTheDocument()
+
+        // 2. Após sucesso -> Spinner some, conteúdo aparece
+        await waitFor(() => {
+            expect(screen.queryByTestId("spinner")).not.toBeInTheDocument()
+            expect(screen.getAllByTestId("appointment-card")).toHaveLength(2)
+        })
+
+        // 3. Simular erro -> desmontar e renderizar denovo
+        unmount()
+        render(<Resume />)
+
+        await waitFor(() => {
+            expect(screen.queryByTestId("spinner")).not.toBeInTheDocument()
+            expect(screen.queryAllByTestId("appointment-card")).toHaveLength(0)
+            expect(screen.getByTestId("error-message")).toBeInTheDocument()
+        })
+    })
 })

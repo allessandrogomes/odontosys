@@ -131,7 +131,7 @@ export default function Resume() {
             {/* Consultas de hoje */}
             <div className={styles.container}>
                 {isLoading ? <p className={styles.loading}><Spinner /> Carregando</p>
-                    : error ? <p className={styles.error}>Erro: {error}</p>
+                    : error ? <p className={styles.error} data-testid="error-message">Erro: {error}</p>
                         : !todaysAppointments ? <p className={styles.notFound}>Não foi possível encontrar os dados das Consultas</p>
                             : (
                                 todaysAppointments.length === 0 ? <p className={styles.noAppointments}>Nenhuma consulta para hoje</p> : (
