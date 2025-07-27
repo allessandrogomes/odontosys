@@ -21,8 +21,10 @@ interface IAppointmentCardProps extends IAppointmentCard, IOnClick {
 }
 
 function getFirstAndSecondName(fullName: string): string {
-    const parts = fullName.trim().split(" ")
-    return parts.slice(0, 2).join(" ")
+    const parts = fullName.trim().split(/\s+/)
+    if (parts.length === 0) return ""
+    if (parts.length === 1) return parts[0]
+    return `${parts[0]} ${parts[parts.length -1]}`
 }
 
 export default function AppointmentCard({ patientName, procedure, start, end, onClickFinish, onClickCancel, isLast }: IAppointmentCardProps) {

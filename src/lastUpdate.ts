@@ -1,2 +1,2 @@
 // Gerado automaticamente
-export const lastUpdate = '2025-07-23T01:28:57.017Z'
+export const lastUpdate = '2025-07-27T00:53:36.587Z'
