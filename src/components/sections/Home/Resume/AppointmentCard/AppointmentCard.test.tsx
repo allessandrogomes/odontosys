@@ -70,4 +70,24 @@ describe("AppointmentCard", () => {
 
         expect(card?.className).toMatch(/lastCard/)
     })
+
+    it("chama onClickFinish ao clicar no botão de check", async () => {
+        const onClickFinish = jest.fn()
+
+        render(
+            <AppointmentCard
+                patientName="Carlos Lima"
+                procedure="Avaliação"
+                start="2025-07-26T08:00:00.000Z"
+                end="2025-07-26T09:00:00.000Z"
+                onClickFinish={onClickFinish}
+                onClickCancel={jest.fn()}
+            />
+        )
+
+        const checkButton = screen.getByTitle(/conclusão da consulta/i)
+        await userEvent.click(checkButton)
+
+        expect(onClickFinish).toHaveBeenCalledTimes(1)
+    })
 })
