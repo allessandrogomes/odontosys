@@ -54,6 +54,7 @@ describe("ModalConfirmation", () => {
         expect(screen.getByText("11:00 - 12:00")).toBeInTheDocument() // assumindo UTC-3
     })
 
+    // Testes de interação
     it("chama onConfirm('FINISH') ao clicar no botão 'Finalizar'", async () => {
         const onConfirm = jest.fn()
         const user = userEvent.setup()
@@ -86,5 +87,22 @@ describe("ModalConfirmation", () => {
 
         await user.click(screen.getByRole("button", { name: /cancelar/i }))
         expect(onConfirm).toHaveBeenCalledWith("CANCEL")
+    })
+
+    it("chama onCancel ao clicar no botão 'Voltar'", async () => {
+        const onCancel = jest.fn()
+        const user = userEvent.setup()
+
+        render(
+            <ModalConfirmation
+                type="FINISH"
+                appointment={mockAppointment}
+                onCancel={onCancel}
+                onConfirm={jest.fn()}
+            />
+        )
+
+        await user.click(screen.getByRole("button", { name: /voltar/i }))
+        expect(onCancel).toHaveBeenCalled()
     })
 })
