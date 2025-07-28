@@ -52,4 +52,22 @@ describe("AppointmentCard", () => {
 
         expect(screen.getByText(/11:00 - 12:00/i)).toBeInTheDocument()
     })
+
+    it("aplica a classe 'lastCard' quando isLast é true", () => {
+        const { container } = render(
+            <AppointmentCard
+                patientName="Ana Souza"
+                procedure="Consulta"
+                start="2025-07-26T10:00:00.000Z"
+                end="2025-07-26T11:00:00.000Z"
+                onClickFinish={jest.fn()}
+                onClickCancel={jest.fn()}
+                isLast={true}
+            />
+        )
+
+        const card = container.querySelector("[data-testid='appointment-card']")
+
+        expect(card?.className).toMatch(/lastCard/)
+    })
 })
