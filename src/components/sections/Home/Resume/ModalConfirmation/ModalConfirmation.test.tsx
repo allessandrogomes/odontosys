@@ -37,4 +37,19 @@ describe("ModalConfirmation", () => {
 
         expect(screen.getByRole("heading", { name: /Deseja Cancelar essa consulta\?/i })).toBeInTheDocument()
     })
+
+    it("renderiza nome do paciente, procedimento e horário formatado", () => {
+        render(
+            <ModalConfirmation 
+                type="FINISH"
+                appointment={mockAppointment}
+                onCancel={jest.fn()}
+                onConfirm={jest.fn()}
+            />
+        )
+
+        expect(screen.getByText(/João da Silva/i)).toBeInTheDocument()
+        expect(screen.getByText(/Limpeza/i)).toBeInTheDocument()
+        expect(screen.getByText("11:00 - 12:00")).toBeInTheDocument() // assumindo UTC-3
+    })
 })
