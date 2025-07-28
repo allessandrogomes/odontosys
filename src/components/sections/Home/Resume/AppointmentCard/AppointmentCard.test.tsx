@@ -53,6 +53,7 @@ describe("AppointmentCard", () => {
         expect(screen.getByText(/11:00 - 12:00/i)).toBeInTheDocument()
     })
 
+    // Testes visuais/estilização condicional
     it("aplica a classe 'lastCard' quando isLast é true", () => {
         const { container } = render(
             <AppointmentCard
@@ -71,6 +72,7 @@ describe("AppointmentCard", () => {
         expect(card?.className).toMatch(/lastCard/)
     })
 
+    // Testes de interações
     it("chama onClickFinish ao clicar no botão de check", async () => {
         const onClickFinish = jest.fn()
 
@@ -89,5 +91,25 @@ describe("AppointmentCard", () => {
         await userEvent.click(checkButton)
 
         expect(onClickFinish).toHaveBeenCalledTimes(1)
+    })
+
+    it("chama onClickCancel ao clicar no botão de cancelar", async () => {
+        const onClickCancel = jest.fn()
+
+        render(
+            <AppointmentCard
+                patientName="Carlos Lima"
+                procedure="Avaliação"
+                start="2025-07-26T08:00:00.000Z"
+                end="2025-07-26T09:00:00.000Z"
+                onClickFinish={jest.fn()}
+                onClickCancel={onClickCancel}
+            />
+        )
+
+        const cancelButton = screen.getByTitle(/cancelar consulta/i)
+        await userEvent.click(cancelButton)
+
+        expect(onClickCancel).toHaveBeenCalledTimes(1)
     })
 })
