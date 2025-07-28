@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import ModalConfirmation from "."
+import userEvent from "@testing-library/user-event"
 
 const mockAppointment = {
     id: 1,
@@ -14,7 +15,7 @@ describe("ModalConfirmation", () => {
     // Testes de renderização
     it("renderiza corretamente o título quando type é 'FINISH'", () => {
         render(
-            <ModalConfirmation 
+            <ModalConfirmation
                 type="FINISH"
                 appointment={mockAppointment}
                 onCancel={jest.fn()}
@@ -27,7 +28,7 @@ describe("ModalConfirmation", () => {
 
     it("renderiza corretamente o título quando type é 'CANCEL'", () => {
         render(
-            <ModalConfirmation 
+            <ModalConfirmation
                 type="CANCEL"
                 appointment={mockAppointment}
                 onCancel={jest.fn()}
@@ -40,7 +41,7 @@ describe("ModalConfirmation", () => {
 
     it("renderiza nome do paciente, procedimento e horário formatado", () => {
         render(
-            <ModalConfirmation 
+            <ModalConfirmation
                 type="FINISH"
                 appointment={mockAppointment}
                 onCancel={jest.fn()}
@@ -51,5 +52,39 @@ describe("ModalConfirmation", () => {
         expect(screen.getByText(/João da Silva/i)).toBeInTheDocument()
         expect(screen.getByText(/Limpeza/i)).toBeInTheDocument()
         expect(screen.getByText("11:00 - 12:00")).toBeInTheDocument() // assumindo UTC-3
+    })
+
+    it("chama onConfirm('FINISH') ao clicar no botão 'Finalizar'", async () => {
+        const onConfirm = jest.fn()
+        const user = userEvent.setup()
+
+        render(
+            <ModalConfirmation
+                type="FINISH"
+                appointment={mockAppointment}
+                onCancel={jest.fn()}
+                onConfirm={onConfirm}
+            />
+        )
+
+        await user.click(screen.getByRole("button", { name: /finalizar/i }))
+        expect(onConfirm).toHaveBeenCalledWith("FINISH")
+    })
+
+    it("chama onConfirm('CANCEL') ao clicar no botão 'Cancelar'", async () => {
+        const onConfirm = jest.fn()
+        const user = userEvent.setup()
+
+        render(
+            <ModalConfirmation
+                type="CANCEL"
+                appointment={mockAppointment}
+                onCancel={jest.fn()}
+                onConfirm={onConfirm}
+            />
+        )
+
+        await user.click(screen.getByRole("button", { name: /cancelar/i }))
+        expect(onConfirm).toHaveBeenCalledWith("CANCEL")
     })
 })
