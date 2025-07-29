@@ -153,4 +153,29 @@ describe("SearchAppointment", () => {
         // AppointmentsFound deve voltar
         expect(screen.getByTestId("appointments-found")).toBeInTheDocument()
     })
+
+    it("deve mostrar SearchField e AppointmentsFound apenas quando selectedAppointment for null", async () => {
+        render(<SearchAppointment />)
+
+        // Passo 1: estado inicial (selectedAppointment = null)
+        expect(screen.getByTestId("search-field")).toBeInTheDocument()
+
+        await act(async () => {
+            await userEvent.click(screen.getByTestId("search-field"))
+        })
+
+        expect(screen.getByTestId("appointments-found")).toBeInTheDocument()
+
+        // Passo 2: seleciona uma consulta (selectedAppointment != null)
+        await act(async () => {
+            await userEvent.click(screen.getByTestId("appointments-found"))
+        })
+
+        // SearchField e AppointmentsFound devem desaparecer
+        expect(screen.queryByTestId("search-field")).not.toBeInTheDocument()
+        expect(screen.queryByTestId("appointments-found")).not.toBeInTheDocument()
+
+        // AppointmentCard deve estar visível
+        expect(screen.getByTestId("appointment-card")).toBeInTheDocument()
+    })
 })
