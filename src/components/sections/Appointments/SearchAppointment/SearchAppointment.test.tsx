@@ -6,7 +6,8 @@ import userEvent from "@testing-library/user-event"
 // Mock do componente SearchField
 jest.mock("@/components/sections/Appointments/SearchAppointment/SearchField", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MockSearchField = (props: { appointmentsFound: (a: any[]) => void }) => {
+    const MockSearchField = (props: { appointmentsFound: (a: any[]) => void, visible: boolean }) => {
+        if (!props.visible) return null
         return (
             <button
                 data-testid="search-field"
@@ -22,8 +23,24 @@ jest.mock("@/components/sections/Appointments/SearchAppointment/SearchField", ()
 
 // Mock do AppointmentsFound
 jest.mock("@/components/sections/Appointments/SearchAppointment/AppointmentsFound", () => {
-    return function MockAppointmentsFound() {
-        return <div data-testid="appointments-found">AppointmentsFound</div>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function MockAppointmentsFound(props: { selectedAppointment: (a: any) => void, visible: boolean }) {
+        if (!props.visible) return null
+        return (
+            <div
+                data-testid="appointments-found"
+                onClick={() => props.selectedAppointment({ id: 1, patientName: "Teste" })}
+            >
+                AppointmentsFound
+            </div>
+        )
+    }
+})
+
+// Mock necessário para não quebrar renderização
+jest.mock("@/components/cards/AppointmentCard", () => {
+    return function MockAppointmentCard() {
+        return <div data-testid="appointment-card">AppointmentCard</div>
     }
 })
 
@@ -54,5 +71,26 @@ describe("SearchAppointment", () => {
         // Verifica se o AppointmentFound aparece
         const appointmentsFound = screen.getByTestId("appointments-found")
         expect(appointmentsFound).toBeInTheDocument()
+    })
+
+    it("deve ocultar SearchField ao selecionar uma consulta", async () => {
+        render(<SearchAppointment />)
+
+        // Clica no SearchField para simular retorno de resultados
+        const searchField = screen.getByTestId("search-field")
+        await act(async () => {
+            await userEvent.click(searchField)
+        })
+
+        // AppointmentsFound deve aparecer
+        const appointmentsList = screen.getByTestId("appointments-found")
+        expect(appointmentsList).toBeInTheDocument()
+
+        // Clica em uma consulta para selecionar
+        await act(async () => {
+            await userEvent.click(appointmentsList)
+        })
+
+        expect(screen.queryByTestId("search-field")).not.toBeInTheDocument()
     })
 })
