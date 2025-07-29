@@ -178,4 +178,26 @@ describe("SearchAppointment", () => {
         // AppointmentCard deve estar visível
         expect(screen.getByTestId("appointment-card")).toBeInTheDocument()
     })
+
+    it("deve exibir AppointmentCard e BackBtn apenas quando selectedAppointment estiver definido", async () => {
+        render(<SearchAppointment />)
+
+        // Antes de selecionar qualquer consulta
+        expect(screen.queryByTestId("appointment-card")).not.toBeInTheDocument()
+        expect(screen.queryByTestId("back-btn")).not.toBeInTheDocument()
+
+        // Clica em SearchField e simula retorno de consultas
+        await act(async () => {
+            await userEvent.click(screen.getByTestId("search-field"))
+        })
+
+        // Clica em uma consulta
+        await act(async () => {
+            await userEvent.click(screen.getByTestId("appointments-found"))
+        })
+
+        // Agora ambos devem estar visíveis
+        expect(screen.getByTestId("appointment-card")).toBeInTheDocument()
+        expect(screen.getByTestId("back-btn")).toBeInTheDocument()
+    })
 })
