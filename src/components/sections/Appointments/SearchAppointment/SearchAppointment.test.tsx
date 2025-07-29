@@ -44,6 +44,13 @@ jest.mock("@/components/cards/AppointmentCard", () => {
     }
 })
 
+// Mock do BackBtn
+jest.mock("@/components/ui/BackBtn", () => {
+    return function MockBackBtn() {
+        return <button data-testid="back-btn">Voltar</button>
+    }
+})
+
 describe("SearchAppointment", () => {
     // Testes de renderização
     it("deve exibir o título 'Buscar Consulta'", () => {
@@ -92,5 +99,29 @@ describe("SearchAppointment", () => {
         })
 
         expect(screen.queryByTestId("search-field")).not.toBeInTheDocument()
+    })
+
+    it("deve exibir AppointmentCard e BackBtn ao selecionar uma consulta", async () => {
+        render(<SearchAppointment />)
+
+        // Simula retorno de resultados
+        const searchTrigger = screen.getByTestId("search-field")
+        await act(async () => {
+            await userEvent.click(searchTrigger)
+        })
+
+        // Simula seleção de uma consulta
+        const appointmentsFound = screen.getByTestId("appointments-found")
+        await act(async () => {
+            await userEvent.click(appointmentsFound)
+        })
+
+        // Verifica se AppointmentCard está visível
+        const card = screen.getByTestId("appointment-card")
+        expect(card).toBeInTheDocument()
+
+        // Verifica se o BackBtn está visível
+        const backBtn = screen.getByTestId("back-btn")
+        expect(backBtn).toBeInTheDocument()
     })
 })
