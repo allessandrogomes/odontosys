@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import AppointmentsFound from "."
 
@@ -73,5 +73,18 @@ describe("AppointmentsFound", () => {
 
         const rootDiv = container.firstChild as HTMLElement
         expect(rootDiv.className).not.toMatch(/visible/)
+    })
+
+    it("exibe o nome do paciente corretamente", () => {
+      render(
+        <AppointmentsFound 
+          appointments={mockAppointments}
+          selectedAppointment={jest.fn()}
+          visible={true}
+        />
+      )
+
+      const name = mockAppointments[0].patient.name
+      expect(screen.getByText(name)).toBeInTheDocument()
     })
 })
