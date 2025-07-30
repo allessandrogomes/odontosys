@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import AppointmentsFound from "."
 
@@ -86,5 +86,25 @@ describe("AppointmentsFound", () => {
 
       const name = mockAppointments[0].patient.name
       expect(screen.getByText(name)).toBeInTheDocument()
+    })
+
+    // Testes de interação
+    it("chama selectedAppointment ao clicar em um agendamento", () => {
+      const handleSelect = jest.fn()
+
+      render(
+        <AppointmentsFound 
+          appointments={mockAppointments}
+          selectedAppointment={handleSelect}
+          visible={true}
+        />
+      )
+
+      const item = screen.getByText("EXTRAÇÃO")
+
+      fireEvent.click(item)
+
+      expect(handleSelect).toHaveBeenCalledTimes(1)
+      expect(handleSelect).toHaveBeenCalledWith(mockAppointments[0])
     })
 })
