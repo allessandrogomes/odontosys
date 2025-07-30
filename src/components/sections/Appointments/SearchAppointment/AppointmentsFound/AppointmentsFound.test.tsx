@@ -120,4 +120,16 @@ describe("AppointmentsFound", () => {
       const patientName = screen.queryByText(/Paciente:/i)
       expect(patientName).not.toBeInTheDocument()
     })
+
+    it("renderiza sem lançar erro ao receber appointments vazio", () => {
+      expect(() => {
+        render(
+          <AppointmentsFound 
+            appointments={[]}
+            selectedAppointment={jest.fn()}
+            visible={true}
+          />
+        )
+      }).not.toThrow()
+    })
 })
