@@ -10,7 +10,7 @@ interface IDentist {
     role: string,
     birthDate: string,
     croNumber: string,
-    specialty: string,
+    specialty: string[],
     appointments: IAppointment[],
     prescriptions: IPrescription[],
     completedAppointments: ICompletedAppointment[],

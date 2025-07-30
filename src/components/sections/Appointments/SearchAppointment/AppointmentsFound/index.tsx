@@ -9,9 +9,11 @@ interface IAppointmentsFound {
 
 export default function AppointmentsFound({ appointments, selectedAppointment, visible }: IAppointmentsFound) {
     return (
-        <div className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
-            <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
-            <AppointmentList appointments={appointments} selectedAppointment={appointment => selectedAppointment(appointment)}/>
-        </div>
+        appointments.length > 0 ? (
+            <div className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
+                <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
+                <AppointmentList appointments={appointments} selectedAppointment={appointment => selectedAppointment(appointment)} />
+            </div>
+        ) : null
     )
 }
