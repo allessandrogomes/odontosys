@@ -1,5 +1,4 @@
 import { render } from "@testing-library/react"
-import { EAppointmentStatus } from "@/types/EAppointmentStatus"
 import "@testing-library/jest-dom"
 import AppointmentsFound from "."
 
@@ -12,7 +11,7 @@ const mockAppointments: IAppointment[] = [
     endsAt: "2025-05-05T19:00:00.000Z",
     durationMinutes: 60,
     procedure: "EXTRAÇÃO",
-    status: EAppointmentStatus.AGENDADA,
+    status: "AGENDADA" as EAppointmentStatus,
     createdAt: "2025-05-03T23:13:38.698Z",
     patient: {
       id: 1,
