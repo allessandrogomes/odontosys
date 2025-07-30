@@ -107,4 +107,17 @@ describe("AppointmentsFound", () => {
       expect(handleSelect).toHaveBeenCalledTimes(1)
       expect(handleSelect).toHaveBeenCalledWith(mockAppointments[0])
     })
+
+    it("não renderiza nome do paciente quando a lista está vazia", () => {
+      render(
+        <AppointmentsFound 
+          appointments={[]}
+          selectedAppointment={jest.fn()}
+          visible={true}
+        />
+      )
+
+      const patientName = screen.queryByText(/Paciente:/i)
+      expect(patientName).not.toBeInTheDocument()
+    })
 })
