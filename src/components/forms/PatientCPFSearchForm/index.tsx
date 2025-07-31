@@ -17,6 +17,7 @@ export default function PatientCPFSearchForm({ cpf, isLoading, flexRow = false, 
         <form onSubmit={onSubmit} className={`${styles.form} ${flexRow && styles.flexRow}`}>
             <Label text="CPF do Paciente:" />
             <IMaskInput
+                aria-label="CPF"
                 className="imask-input"
                 mask="000.000.000-00"
                 value={cpf}

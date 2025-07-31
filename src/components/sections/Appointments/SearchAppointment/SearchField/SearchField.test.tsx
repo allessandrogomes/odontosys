@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import SearchField from "."
+import userEvent from "@testing-library/user-event"
 
 describe("SearchField", () => {
     const mockAppointmentsFound = jest.fn()
@@ -42,5 +43,20 @@ describe("SearchField", () => {
         )
 
         expect(container.firstChild).toHaveClass("visible")
+    })
+
+    it("atualiza o campo CPF corretamente ao digitar", async () => {
+        render(
+            <SearchField 
+                appointmentsFound={mockAppointmentsFound}
+                visible={true}
+            />
+        )
+
+        const input = screen.getByLabelText("CPF")
+
+        await userEvent.type(input, "12345678900")
+
+        expect(input).toHaveValue("123.456.789-00")
     })
 })
