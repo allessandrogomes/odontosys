@@ -122,4 +122,27 @@ describe("SearchField", () => {
             expect(getAppointments.getAppointmentsByCPF).toHaveBeenCalledTimes(1)
         })
     })
+
+    // Testes de estados de carregamento e mensagens
+    it("deve exibir o spinner durante a busca e remover após a conclusão", async () => {
+        // Configura o mock para simular um atraso na resposta da API
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockImplementation(() =>
+            new Promise((resolve) => setTimeout(() => resolve([]), 100))
+        )
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        // Preenche e submete o formulário
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        // Verifica se o spinner está visível durante a busca
+        expect(screen.getByTestId("spinner")).toBeInTheDocument()
+
+        // Aguarda a conclusão da busca e verifica se o spinner foi removido
+        await waitFor(() => {
+            expect(screen.queryByTestId("spinner")).not.toBeInTheDocument()
+        })
+    })
 })
