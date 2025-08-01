@@ -61,7 +61,7 @@ export default function SearchField({ appointmentsFound, visible }: ISearchField
                 flexRow
             />
             {isLoading && <Spinner className={styles.spinner}/>}
-            {message && <FeedbackMessage className={styles.message} icon={message === INITIAL_MESSAGE ? <Info data-testid="info-icon"/> : <SearchX />} message={message} />}
+            {message && <FeedbackMessage className={styles.message} icon={message === INITIAL_MESSAGE ? <Info data-testid="info-icon"/> : <SearchX data-testid="error-icon"/>} message={message} />}
         </div>
     )
 }
