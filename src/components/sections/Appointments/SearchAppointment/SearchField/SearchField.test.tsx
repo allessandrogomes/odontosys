@@ -4,14 +4,22 @@ import SearchField from "."
 import userEvent from "@testing-library/user-event"
 import * as getAppointments from "@/services/appointments/getAppointmentsByCPF"
 
-jest.mock("@/services/appointments/getAppointmentsByCPF")
+jest.mock("@/services/appointments/getAppointmentsByCPF", () => ({
+    getAppointmentsByCPF: jest.fn()
+}))
+
+const mockAppointmentsFound = jest.fn()
 
 describe("SearchField", () => {
-    const mockAppointmentsFound = jest.fn()
+    beforeEach(() => {
+        jest.clearAllMocks();
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockResolvedValue([])
+    })
+
     // Testes de renderização
     it("renderiza a mensagem inicial corretamente", () => {
         render(
-            <SearchField 
+            <SearchField
                 appointmentsFound={mockAppointmentsFound}
                 visible={false}
             />
@@ -28,7 +36,7 @@ describe("SearchField", () => {
 
     it("não aplica a classe visible quando visible é false", () => {
         const { container } = render(
-            <SearchField 
+            <SearchField
                 appointmentsFound={mockAppointmentsFound}
                 visible={false}
             />
@@ -39,7 +47,7 @@ describe("SearchField", () => {
 
     it("aplica a classe visible quando visible é true", () => {
         const { container } = render(
-            <SearchField 
+            <SearchField
                 appointmentsFound={mockAppointmentsFound}
                 visible={true}
             />
@@ -51,7 +59,7 @@ describe("SearchField", () => {
     // Testes de interação
     it("atualiza o campo CPF corretamente ao digitar", async () => {
         render(
-            <SearchField 
+            <SearchField
                 appointmentsFound={mockAppointmentsFound}
                 visible={true}
             />
@@ -69,7 +77,7 @@ describe("SearchField", () => {
         mockGetAppointments.mockResolvedValue([])
 
         render(
-            <SearchField 
+            <SearchField
                 appointmentsFound={mockAppointmentsFound}
                 visible={true}
             />
@@ -85,6 +93,33 @@ describe("SearchField", () => {
         await waitFor(() => {
             expect(mockGetAppointments).toHaveBeenCalledWith("123.456.789-00")
             expect(mockAppointmentsFound).toHaveBeenCalledWith([]) // chamado no início da função
+        })
+    })
+
+    it("não chama a API quando o mesmo CPF é submetido consecutivamente", async () => {
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        // Localiza os elementos
+        const cpfInput = screen.getByLabelText("CPF do Paciente:")
+        const submitButton = screen.getByRole("button", { name: /buscar/i })
+
+        // Preenche o campo CPF e clica no botão
+        await user.type(cpfInput, "12345678900")
+        await user.click(submitButton)
+
+        // Aguarda a chamada da API
+        await waitFor(() => {
+            expect(getAppointments.getAppointmentsByCPF).toHaveBeenCalledTimes(1)
+            expect(getAppointments.getAppointmentsByCPF).toHaveBeenCalledWith("123.456.789-00")
+        })
+
+        // Submete novamente o mesmo CPF
+        await user.click(submitButton)
+
+        // Verifica que a API não foi chamada novamente
+        await waitFor(() => {
+            expect(getAppointments.getAppointmentsByCPF).toHaveBeenCalledTimes(1)
         })
     })
 })
