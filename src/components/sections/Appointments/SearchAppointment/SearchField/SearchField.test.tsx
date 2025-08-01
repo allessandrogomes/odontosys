@@ -145,4 +145,26 @@ describe("SearchField", () => {
             expect(screen.queryByTestId("spinner")).not.toBeInTheDocument()
         })
     })
+
+    it("deve chamar appointmentsFound com os dados retornados da API quando houver resultados", async () => {
+        const mockData = [
+            { id: 1, patientName: "João Silva", date: "2023-10-01" },
+            { id: 2, patientName: "Leticia Ferreira", date: "2023-10-02" }
+        ];
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockResolvedValue(mockData)
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        // Preenche o campo CPF e clica no botão
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        // Verifica se a função appointmentsFound foi chamada com os dados corretos
+        await waitFor(() => {
+            expect(mockAppointmentsFound).toHaveBeenCalledWith(mockData)
+            expect(screen.queryByText("Nenhuma consulta encontrada")).not.toBeInTheDocument()
+            expect(screen.queryByTestId("info-icon")).not.toBeInTheDocument()
+        })
+    })
 })
