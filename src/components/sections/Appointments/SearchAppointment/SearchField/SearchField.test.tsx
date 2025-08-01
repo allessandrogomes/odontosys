@@ -231,4 +231,25 @@ describe("SearchField", () => {
             expect(calls[1]).toEqual([mockData]) // Depois chamado com os dados
         })
     })
+
+    it("deve chamar appointmentsFound([]) mesmo quando a busca falhar", async () => {
+        const errorMessage = "Erro ao buscar consultas";
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockRejectedValue(new Error(errorMessage))
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        // Verifica se appointmentsFound foi chamado com array vazio imediantamente após o submit
+        expect(mockAppointmentsFound).toHaveBeenCalledWith([])
+
+        // Aguarda o tratamento do erro
+        await waitFor(() => {
+            // Verifica que não houve outra chamada além do reset inicial
+            expect(mockAppointmentsFound).toHaveBeenCalledTimes(1)
+            expect(mockAppointmentsFound).toHaveBeenCalledWith([])
+        })
+    })
 })
