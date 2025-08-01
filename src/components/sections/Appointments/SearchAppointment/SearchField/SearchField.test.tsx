@@ -182,4 +182,21 @@ describe("SearchField", () => {
             expect(screen.getByTestId("error-icon")).toBeInTheDocument()
         })
     })
+
+    it("deve exibir mensagem de erro quando a API falhar", async () => {
+        const errorMessage = "Erro ao buscar consultas";
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockRejectedValue(new Error(errorMessage))
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        await waitFor(() => {
+            expect(screen.getByText(errorMessage)).toBeInTheDocument()
+            expect(screen.getByTestId("error-icon")).toBeInTheDocument()
+            expect(mockAppointmentsFound).toHaveBeenCalledWith([])
+        })
+    })
 })
