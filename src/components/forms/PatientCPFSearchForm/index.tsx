@@ -15,8 +15,9 @@ interface IPatientCPFSearchForm {
 export default function PatientCPFSearchForm({ cpf, isLoading, flexRow = false, onSubmit, onCpfChange }: IPatientCPFSearchForm) {
     return (
         <form onSubmit={onSubmit} className={`${styles.form} ${flexRow && styles.flexRow}`}>
-            <Label text="CPF do Paciente:" />
+            <Label text="CPF do Paciente:" htmlFor="cpf-input"/>
             <IMaskInput
+                aria-label="CPF"
                 className="imask-input"
                 mask="000.000.000-00"
                 value={cpf}
@@ -24,6 +25,7 @@ export default function PatientCPFSearchForm({ cpf, isLoading, flexRow = false, 
                 overwrite
                 minLength={14}
                 required
+                id="cpf-input"
             />
             <Button type="submit" iconStart={<Search />} text="Buscar" disabled={isLoading} />
         </form>
