@@ -167,4 +167,19 @@ describe("SearchField", () => {
             expect(screen.queryByTestId("info-icon")).not.toBeInTheDocument()
         })
     })
+
+    it("deve exibir 'Nenhuma consulta encontrada' quando a API retornar uma lista vazia", async () => {
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockResolvedValue([])
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        await waitFor(() => {
+            expect(screen.getByText("Nenhuma consulta encontrada")).toBeInTheDocument()
+            expect(screen.getByTestId("error-icon")).toBeInTheDocument()
+        })
+    })
 })
