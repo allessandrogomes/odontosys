@@ -199,4 +199,36 @@ describe("SearchField", () => {
             expect(mockAppointmentsFound).toHaveBeenCalledWith([])
         })
     })
+
+    it("deve chamar appointmentsFound([]) antes de iniciar a busca e com os dados corretos após", async () => {
+        const mockData = [
+            { id: 1, patientName: "João Silva", date: "2023-10-01" },
+            { id: 2, patientName: "Leticia Ferreira", date: "2023-10-02" }
+        ];
+
+        // Configura o mock para demorar um pouco antes de retornar os dados
+        (getAppointments.getAppointmentsByCPF as jest.Mock).mockImplementation(() =>
+            new Promise((resolve) => setTimeout(() => resolve(mockData), 100))
+        )
+
+        const user = userEvent.setup()
+        render(<SearchField appointmentsFound={mockAppointmentsFound} visible={true} />)
+
+        // Preenche o campo CPF e clica no botão
+        await user.type(screen.getByLabelText("CPF do Paciente:"), "12345678900")
+        await user.click(screen.getByRole("button", { name: /buscar/i }))
+
+        // Verifica se appointmentsFound foi chamado com array vazio imediatamente após o submit
+        expect(mockAppointmentsFound).toHaveBeenCalledWith([])
+
+        // Aguarda a conclusão da busca e verifica os dados
+        await waitFor(() => {
+            expect(mockAppointmentsFound).toHaveBeenCalledWith(mockData)
+
+            // Verifica a ordem das chamadas
+            const calls = mockAppointmentsFound.mock.calls
+            expect(calls[0]).toEqual([[]]) // Primeiro chamado com array vazio
+            expect(calls[1]).toEqual([mockData]) // Depois chamado com os dados
+        })
+    })
 })
