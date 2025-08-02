@@ -7,28 +7,16 @@ exports[`NewAppointmentForm deve renderizar a tela inicial corretamente (snapsho
       data-testid="PatientCPFView"
     >
       PatientCPFView
-    </div>
-    <div
-      data-testid="ProcedureView"
-    >
-      ProcedureView
-    </div>
-    <div
-      data-testid="DentistView"
-    >
-      DentistView
-    </div>
-    <div
-      data-testid="ScheduledView"
-    >
-      ScheduledView
+      <button>
+        Buscar paciente
+      </button>
     </div>
     <div
       class="confirmAppointmentView false"
     >
       <div>
         <div>
-          Label
+          Informações do Agendamento
         </div>
         <p>
           Paciente: 
