@@ -159,6 +159,7 @@ jest.mock("./ScheduledView", () => {
                         }}>
                             Selecionar Horário
                         </button>
+                        <button onClick={onBack}>Voltar</button>
                     </>
                 ) : (
                     <>
@@ -166,7 +167,6 @@ jest.mock("./ScheduledView", () => {
                         <button onClick={onNext}>Próximo</button>
                     </>
                 )}
-                <button onClick={onBack}>Voltar</button>
             </div>
         )
     }
@@ -234,6 +234,49 @@ describe("NewAppointmentForm", () => {
 
         // Verifica se a mensagem de sucesso é exibida
         expect(screen.getByText("Agendamento realizado com sucesso!")).toBeInTheDocument()
+    })
+
+    it("deve navegar corretamente para trás usando os botões de voltar", async () => {
+        const user = userEvent.setup()
+        render(<NewAppointmentForm />)
+
+        // -> PatientCPFView
+        await user.click(screen.getByText("Buscar paciente"))
+        await user.click(screen.getByText("Próximo"))
+
+        // -> ProcedureView
+        await screen.findByTestId("ProcedureView")
+        await user.click(screen.getByText("Selecionar procedimento"))
+        await user.click(screen.getByText("Avançar"))
+
+        // -> DentistView
+        await screen.findByTestId("DentistView")
+        await user.click(screen.getByText("Selecionar Dentista"))
+        await user.click(screen.getByText("Confirmar Dentista"))
+
+        // -> ScheduledView
+        await screen.findByTestId("ScheduledView")
+        await user.click(screen.getByText("Selecionar Horário"))
+        await user.click(screen.getByText("Próximo"))
+
+        // -> ConfirmAppointmentView
+        expect(screen.getByText("Informações do Agendamento")).toBeInTheDocument()
+
+        // <- Voltar para ScheduledView
+        await user.click(screen.getByText("Voltar"))
+        expect(screen.getByTestId("ScheduledView")).toBeInTheDocument()
+
+        // <- Voltar para DentistView
+        await user.click(screen.getByText("Voltar"))
+        expect(screen.getByTestId("DentistView")).toBeInTheDocument()
+
+        // <- Voltar para ProcedureView
+        await user.click(screen.getByText("Voltar"))
+        expect(screen.getByTestId("ProcedureView")).toBeInTheDocument()
+
+        // <- Voltar para PatientCPFView
+        await user.click(screen.getByText("Voltar"))
+        expect(screen.getByTestId("PatientCPFView")).toBeInTheDocument()
     })
 })
 
