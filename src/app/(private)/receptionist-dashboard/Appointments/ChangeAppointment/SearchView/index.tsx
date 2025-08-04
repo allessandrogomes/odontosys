@@ -4,7 +4,7 @@ import { useState } from "react"
 import { SearchX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import Spinner from "@/components/ui/Spinner"
-import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import PatientCPFSearchForm from "@/components/forms/PatientSearchByCPF"
 
 interface ISearchView {
     appointmentsFound: (appointmentsFound: IAppointment[]) => void

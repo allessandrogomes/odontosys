@@ -3,7 +3,7 @@ import styles from "./styles.module.scss"
 import { useState } from "react"
 import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import PatientCPFSearchForm from "@/components/forms/PatientSearchByCPF"
 import Spinner from "@/components/ui/Spinner"
 
 interface ISearchForm {

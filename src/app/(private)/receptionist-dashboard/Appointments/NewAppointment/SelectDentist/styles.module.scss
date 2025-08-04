@@ -1,7 +1,7 @@
 .box {
+    display: flex;
     width: 500px;
     height: 300px;
-    display: none;
 
     .selectView {
         width: 100%;
@@ -85,8 +85,4 @@
             }
         }
     }
-}
-
-.box.visible {
-    display: block;
 }

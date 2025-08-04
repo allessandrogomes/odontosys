@@ -4,14 +4,26 @@ import { z } from "zod"
 import bcrypt from "bcrypt"
 
 // GET /api/dentist
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        // Busca todos os dentistas
-        const dentists = await prisma.dentist.findMany()
-        
-        // Se não houver dentistas, retorna um array vazio
-        if (dentists.length === 0) {
-            return NextResponse.json([], { status: 200 })
+        const { searchParams } = new URL(request.url)
+        const procedureName = searchParams.get("procedure")
+
+
+        let dentists
+
+        // Se um procedimento for especificado, filtra os dentistas por especialidade
+        // Caso contrário, busca todos os dentistas
+        if (procedureName) {
+            dentists = await prisma.dentist.findMany({
+                where: {
+                    specialty: {
+                        has: procedureName
+                    }
+                },
+            })
+        } else {
+            dentists = await prisma.dentist.findMany()
         }
 
         // Retorna os dentistas

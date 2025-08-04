@@ -4,7 +4,7 @@ import styles from "./styles.module.scss"
 import Spinner from "@/components/ui/Spinner"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import { getAppointmentsByCPF } from "@/services/appointments/getAppointmentsByCPF"
-import PatientCPFSearchForm from "@/components/forms/PatientCPFSearchForm"
+import PatientCPFSearchForm from "@/components/forms/PatientSearchByCPF"
 import { Info, SearchX } from "lucide-react"
 
 interface ISearchField {
