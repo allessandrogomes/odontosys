@@ -38,12 +38,12 @@ export default function SelectProcedure() {
 
     // Função para voltar para a etapa anterior
     function handleBack() {
-        dispatch({ type: "SET_STEP", payload: state.step - 1 })
+        dispatch({ type: "SET_STEP", payload: 2 })
     }
 
     // Função para avançar para a próxima etapa
     function handleNext() {
-        dispatch({ type: "SET_STEP", payload: state.step + 1 })
+        dispatch({ type: "SET_STEP", payload: 4 })
     }
 
     return (

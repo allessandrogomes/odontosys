@@ -3,7 +3,7 @@ import styles from "./styles.module.scss"
 import { useState } from "react"
 import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import PatientCPFSearchForm from "@/components/forms/PatientSearchByCPF"
+import PatientCPFSearchForm from "@/components/forms/PatientDetailsForm"
 import Spinner from "@/components/ui/Spinner"
 
 interface ISearchForm {
@@ -39,7 +39,7 @@ export default function SearchForm({ visible, patient }: ISearchForm) {
 
     return (
         <div className={`${visible && styles.visible} ${styles.searchForm}`}>
-            <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} />
+            {/* <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} /> */}
             {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
             {isLoading && <Spinner className={styles.spinner}/>}
         </div>

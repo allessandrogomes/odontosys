@@ -8,7 +8,7 @@ export default function ConfirmPatient() {
         // Volta para a etapa de busca de paciente
         dispatch({
             type: "SET_STEP",
-            payload: state.step - 1
+            payload: 1
         })
 
         // Reseta o paciente selecionado
@@ -25,7 +25,7 @@ export default function ConfirmPatient() {
         // Avança para a próxima etapa
         dispatch({
             type: "SET_STEP",
-            payload: state.step + 1
+            payload: 3
         })
     }
 

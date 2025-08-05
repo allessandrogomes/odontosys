@@ -1,7 +1,7 @@
 .box {
+    display: flex;
     width: 500px;
     height: 300px;
-    display: none;
 
     .scheduled {
         width: 100%;
@@ -67,8 +67,4 @@
             }
         }
     }
-}
-
-.box.active {
-    display: block;
 }

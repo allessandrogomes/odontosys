@@ -20,12 +20,12 @@ export default function SelectDentist() {
     }
 
     function handleBack() {
-        dispatch({ type: "SET_STEP", payload: state.step - 1 })
+        dispatch({ type: "SET_STEP", payload: 3 })
         dispatch({ type: "SET_DENTIST", payload: { id: null, name: null } }) // Reseta dentista selecionado
     }
 
     function handleNext() {
-        dispatch({ type: "SET_STEP", payload: state.step + 1 })
+        dispatch({ type: "SET_STEP", payload: 5 })
     }
 
     return (

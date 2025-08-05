@@ -1,40 +1,43 @@
-import PatientSearchByCPF from "@/components/forms/PatientSearchByCPF"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import { useState } from "react"
 import { useAppointmentContext } from "@/contexts/AppointmentContext"
 import { Info } from "lucide-react"
+import PatientDetailsForm from "@/components/forms/PatientDetailsForm"
+
+type PatientResult =
+    | { type: "patient"; patient: IPatient }
+    | { type: "appointments"; appointments: IAppointment[] }
+    | { type: "message"; message: string }
 
 export default function SearchPatient() {
     const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
-    const { state, dispatch } = useAppointmentContext()
+    const { dispatch } = useAppointmentContext()
 
-    function handleResult(result: { patient?: IPatient; message?: string }) {
-        // Se o resultado contiver um paciente, atualiza o estado do contexto
-        if (result.patient) {
-            dispatch({
-                type: "SET_PATIENT",
-                payload: {
-                    id: result.patient.id,
-                    name: result.patient.name
-                }
-            })
-            setFeedbackMessage(null)
+    // Função para lidar com o resultado da busca do paciente
+    // Atualiza o estado do contexto com os dados do paciente ou exibe uma mensagem de feedback
+    function handleResult(result: PatientResult) {
+        switch (result.type) {
+            case "patient":
+                dispatch({ type: "SET_PATIENT", payload: { id: result.patient.id, name: result.patient.name } })
+                setFeedbackMessage(null)
 
-            // Avança para a próxima etapa
-            dispatch({
-                type: "SET_STEP",
-                payload: state.step + 1
-            })
-        } else (
-            setFeedbackMessage(result.message || "Erro desconhecido ao buscar paciente")
-        )
+                dispatch({ type: "SET_STEP", payload: 2 })
+                break
+            
+            case "message":
+                setFeedbackMessage(result.message || "Erro ao buscar paciente")
+                break
+
+            // Não deveria ocorrer, mas garante que o tipo está coberto
+            default:
+                setFeedbackMessage("Erro inesperado")
+                break
+        }
     }
 
     return (
         <div>
-            <PatientSearchByCPF
-                onResult={handleResult}
-            />
+            <PatientDetailsForm onResult={handleResult} callType="patient" />
             {feedbackMessage && <FeedbackMessage icon={<Info />} message={feedbackMessage} />}
         </div>
     )
