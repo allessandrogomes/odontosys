@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styles from "./styles.module.scss"
 import Label from "@/components/ui/Label"
 import Button from "@/components/ui/Button"
-import { ArrowLeft, ArrowRight, TimerOff } from "lucide-react"
+import { ArrowLeft, ArrowRight, Info, Search, TimerOff } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
 import ScheduleList from "@/components/lists/ScheduleList"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
@@ -77,26 +77,29 @@ export default function SelectScheduled() {
     }
 
     return (
-        <div className={styles.box}>
-            <div className={styles.scheduled}>
-                <form onSubmit={getAvailableTimes}>
-                    <Label text="Escolha o dia e horário" />
-                    <input onChange={e => setDay(e.target.value)} type="date" value={day} required />
-                    <button type="submit">Ok</button>
-                </form>
+        <div className={styles.container}>
+            {/* Formulário para buscar horários disponíveis de acordo com a data selecionda */}
+            <form onSubmit={getAvailableTimes}>
+                <Label text="Escolha o dia e horário" />
+                <input onChange={e => setDay(e.target.value)} type="date" value={day} required />
+                <Button text="Buscar horários" iconEnd={<Search />} type="submit" disabled={isLoading} />
+            </form>
 
-                {/* Renderiza a lista de horários disponíveis ou mensagens de feedback */}
+            {/* Renderiza a lista de horários disponíveis ou mensagens de feedback */}
+            <div className={styles.scheduled}>
                 {isLoading ? <Spinner className={styles.spinner} />
                     : error ? <FeedbackMessage message={error} />
                         : availableTimes && availableTimes.length > 0 ? <ScheduleList availableTimes={availableTimes} onSelectSchedule={schedule => handleSelectSchedule(schedule)} />
                             : availableTimes && availableTimes.length === 0 ? <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />} />
-                                : <></>
+                                : !availableTimes ? <FeedbackMessage icon={<Info />} message="Busque por horários disponíveis..." />
+                                    : <></> 
                 }
+            </div>
 
-                <div className={styles.boxBtns}>
-                    <Button text="Voltar" iconStart={<ArrowLeft />} onClick={handleBack}/>
-                    <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!state.scheduledAt} />
-                </div>
+            {/* Botões de Voltar e Próximo */}
+            <div className={styles.boxBtns}>
+                <Button text="Voltar" iconStart={<ArrowLeft />} onClick={handleBack} />
+                <Button text="Próximo" iconEnd={<ArrowRight />} onClick={handleNext} disabled={!state.scheduledAt} />
             </div>
         </div>
     )
