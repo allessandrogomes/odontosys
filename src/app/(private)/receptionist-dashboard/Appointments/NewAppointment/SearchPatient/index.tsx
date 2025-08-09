@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useAppointmentContext } from "@/contexts/AppointmentContext"
 import { Info } from "lucide-react"
 import PatientDetailsForm from "@/components/forms/PatientDetailsForm"
+import styles from "./styles.module.scss"
 
 type PatientResult =
     | { type: "patient"; patient: IPatient }
@@ -36,9 +37,9 @@ export default function SearchPatient() {
     }
 
     return (
-        <div>
+        <div className={styles.container}>
             <PatientDetailsForm onResult={handleResult} callType="patient" />
-            {feedbackMessage && <FeedbackMessage icon={<Info />} message={feedbackMessage} />}
+            {feedbackMessage && <FeedbackMessage className={styles.feedbackMsg} icon={<Info />} message={feedbackMessage} />}
         </div>
     )
 }
