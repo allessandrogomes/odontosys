@@ -4,7 +4,7 @@ import styles from "./styles.module.scss"
 import { useAppointmentContext } from "@/contexts/AppointmentContext"
 import { formatDateISO } from "@/utils/formatDateISO"
 import { formatHour } from "@/utils/formatHour"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, CalendarCheck, CircleX, Signpost } from "lucide-react"
 import { useState } from "react"
 import Spinner from "@/components/ui/Spinner"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
@@ -80,34 +80,40 @@ export default function ConfirmAppointment() {
 
     return (
         <Card width="500px" height="300px">
-            {isLoading ? <p>Realizando Agendamento <Spinner /></p> :
+            {isLoading ? (
+                <div className={styles.isLoading}>
+                    <Spinner />
+                    <FeedbackMessage message="Realizando Agendamento..."/>
+                </div>
+            ) :
                 error ? (
-                    <div>
-                        <FeedbackMessage message={error!} />
-                        <button onClick={handleBack}>Voltar</button>
+                    <div className={styles.error}>
+                        <FeedbackMessage icon={<CircleX />} message={error!} />
+                        <Button text="Voltar" iconStart={<ArrowLeft />} onClick={handleBack} />
                     </div>
                 ) :
                     isSuccess ? (
-                        <div>
+                        <div className={styles.success}>
                             <FeedbackMessage message="Consulta agendada com sucesso!" />
-                            <button onClick={handleReset}>Voltar ao Início</button>
+                            <Button iconStart={<Signpost />} text="Voltar ao Início" onClick={handleReset} />
                         </div>
                     ) :
                         (
-                            <div>
+                            <div className={styles.confirmAppointment}>
                                 <h2>Confirmação da Consulta</h2>
-                                <p>Por favor, revise as informações da consulta abaixo:</p>
-                                <br></br>
-                                <p>Paciente: <strong>{state.patientName}</strong></p>
-                                <p>Procedimento: <strong>{state.procedure}</strong></p>
-                                <p>Dentista: <strong>Dr. {state.dentistName}</strong></p>
-                                <p>Data: <strong>{formatDateISO(state.scheduledAt!)}</strong></p>
-                                <p>Horário: <strong>{formatHour(state.scheduledAt!)} - {formatHour(state.endsAt!)}</strong></p>
-                                <p>Duração: <strong>{state.durationMinutes} minutos</strong></p>
+                                <h3>Por favor, revise as informações da consulta abaixo:</h3>
+                                <div className={styles.info}>
+                                    <p>Paciente: <strong>{state.patientName}</strong></p>
+                                    <p>Procedimento: <strong>{state.procedure}</strong></p>
+                                    <p>Dentista: <strong>Dr. {state.dentistName}</strong></p>
+                                    <p>Data: <strong>{formatDateISO(state.scheduledAt!)}</strong></p>
+                                    <p>Horário: <strong>{formatHour(state.scheduledAt!)} - {formatHour(state.endsAt!)}</strong></p>
+                                    <p>Duração: <strong>{state.durationMinutes} minutos</strong></p>
+                                </div>
 
                                 <div className={styles.boxBtns}>
                                     <Button text="Voltar" iconStart={<ArrowLeft />} onClick={handleBack} />
-                                    <Button text="Agendar" iconEnd={<ArrowRight />} onClick={handleToSchedule} disabled={!state.scheduledAt} />
+                                    <Button text="Agendar" iconEnd={<CalendarCheck />} onClick={handleToSchedule} disabled={!state.scheduledAt} />
                                 </div>
                             </div>
                         )
