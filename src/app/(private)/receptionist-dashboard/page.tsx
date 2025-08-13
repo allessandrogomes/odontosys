@@ -4,17 +4,18 @@ import styles from "./styles.module.scss"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import SideBar from "@/components/layout/SideBar"
-import NewAppointmentForm from "@/components/sections/Appointments/NewAppointmentForm"
-import Resume from "@/components/sections/Home/Resume"
-import RescheduleAppointment from "@/components/sections/Appointments/ChangeAppointment"
-import SearchAppointment from "@/components/sections/Appointments/SearchAppointment"
-import RegisterPatient from "@/components/sections/Patients/Register"
-import Search from "@/components/sections/Patients/Search"
-import EditInformations from "@/components/sections/Patients/EditInformations"
+import NewAppointmentForm from "@/app/(private)/receptionist-dashboard/Appointments/NewAppointment"
+import Resume from "@/app/(private)/receptionist-dashboard/Home/Resume"
+import RescheduleAppointment from "@/app/(private)/receptionist-dashboard/Appointments/ChangeAppointment"
+import SearchAppointment from "@/app/(private)/receptionist-dashboard/Appointments/SearchAppointment"
+import RegisterPatient from "@/app/(private)/receptionist-dashboard/Patients/Register"
+import Search from "@/app/(private)/receptionist-dashboard/Patients/Search"
+import EditInformations from "@/app/(private)/receptionist-dashboard/Patients/EditInformations"
 import MainLayout from "@/components/layout/MainLayout"
 import Header from "@/components/layout/Header"
 import Spinner from "@/components/ui/Spinner"
 import useSWR from "swr"
+import { AppointmentProvider } from "@/contexts/AppointmentContext"
 
 type DashboardComponent =
     | "Resumo"
@@ -106,7 +107,9 @@ export default function ReceptionistDashboard() {
                     receptionist={user.name || "Nome do recepcionsta não encontrado"}
                 />
                 <MainLayout>
-                    <CurrentComponent />
+                    <AppointmentProvider>
+                        <CurrentComponent />
+                    </AppointmentProvider>
                 </MainLayout>
             </div>
         </div>

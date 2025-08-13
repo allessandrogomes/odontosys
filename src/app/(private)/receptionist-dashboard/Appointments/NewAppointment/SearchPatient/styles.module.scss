@@ -1,0 +1,12 @@
+.container {
+    width: 500px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    .feedbackMsg {
+        position: absolute;
+        bottom: 50px;
+    }
+}

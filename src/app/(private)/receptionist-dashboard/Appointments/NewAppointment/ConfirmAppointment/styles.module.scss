@@ -1,0 +1,77 @@
+.confirmAppointment {
+    position: relative;
+    height: 100%;
+
+    h3 {
+        margin: 20px 0;
+        font-weight: 600;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .boxBtns {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+
+        button {
+            width: 120px;
+        }
+    }
+}
+
+.isLoading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.error {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    button {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-weight: initial;
+        font-size: initial;
+        width: 120px;
+    }
+}
+
+.success {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 1.25rem;
+    font-weight: 600;
+    gap: 20px;
+
+    button {
+        padding: 0 20px;
+        font-size: initial;
+        font-weight: 600;
+    }
+}

@@ -1,0 +1,24 @@
+.container {
+    width: 500px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+
+    p {
+        font-size: 1.25rem;
+    }
+
+    .boxBtns {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+        button {
+            width: 120px;
+        }
+    }
+}
