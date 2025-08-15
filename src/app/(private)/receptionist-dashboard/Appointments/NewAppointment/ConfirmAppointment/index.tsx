@@ -1,7 +1,7 @@
 import Button from "@/components/ui/Button"
 import Card from "@/components/ui/Card"
 import styles from "./styles.module.scss"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import { formatDateISO } from "@/utils/formatDateISO"
 import { formatHour } from "@/utils/formatHour"
 import { ArrowLeft, CalendarCheck, CircleX, Signpost } from "lucide-react"

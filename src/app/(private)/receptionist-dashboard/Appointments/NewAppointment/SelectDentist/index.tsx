@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, OctagonX } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
 import useSWR from "swr"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import fetcher from "@/services/dentist/getDentistByProcedure"
 
 export default function SelectDentist() {

@@ -1,6 +1,6 @@
 import { formatHour } from "@/utils/formatHour"
 import styles from "./styles.module.scss"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 interface ISchedule {
     start: string | null

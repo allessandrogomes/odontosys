@@ -1,5 +1,5 @@
 import SearchPatient from "@/app/(private)/receptionist-dashboard/Appointments/NewAppointment/SearchPatient"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import ConfirmPatient from "./ConfirmPatient"
 import SelectProcedure from "./SelectProcedure"
 import SelectDentist from "./SelectDentist"

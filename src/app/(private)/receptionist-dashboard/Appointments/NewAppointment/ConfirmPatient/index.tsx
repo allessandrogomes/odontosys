@@ -1,4 +1,4 @@
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import styles from "./styles.module.scss"
 import Button from "@/components/ui/Button"

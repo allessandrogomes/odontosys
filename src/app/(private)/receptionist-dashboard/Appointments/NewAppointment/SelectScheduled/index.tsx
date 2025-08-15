@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Info, Search, TimerOff } from "lucide-react"
 import Spinner from "@/components/ui/Spinner"
 import ScheduleList from "@/components/lists/ScheduleList"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 interface ISchedule {
     start: string | null

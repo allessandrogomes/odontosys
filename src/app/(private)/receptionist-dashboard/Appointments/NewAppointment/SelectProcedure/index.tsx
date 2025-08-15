@@ -6,7 +6,7 @@ import Spinner from "@/components/ui/Spinner"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import useSWR from "swr"
 import fetcher from "@/services/fetcher"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 interface IProcedure {
     id: number | null

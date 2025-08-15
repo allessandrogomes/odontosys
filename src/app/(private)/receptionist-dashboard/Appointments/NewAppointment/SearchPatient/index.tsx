@@ -1,6 +1,6 @@
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
 import { useState } from "react"
-import { useAppointmentContext } from "@/contexts/AppointmentContext"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import { Info } from "lucide-react"
 import PatientDetailsForm from "@/components/forms/PatientDetailsForm"
 import styles from "./styles.module.scss"

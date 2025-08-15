@@ -15,7 +15,7 @@ import MainLayout from "@/components/layout/MainLayout"
 import Header from "@/components/layout/Header"
 import Spinner from "@/components/ui/Spinner"
 import useSWR from "swr"
-import { AppointmentProvider } from "@/contexts/AppointmentContext"
+import { AppointmentProvider } from "@/contexts/NewAppointmentContext"
 
 type DashboardComponent =
     | "Resumo"
