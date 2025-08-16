@@ -1,10 +1,10 @@
-.appointmentsFound {
-    display: none;
+.container {
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
     width: 100%;
-    max-width: 500px;
+    max-width: 700px;
     flex-grow: 1;
     overflow: hidden;
     margin-top: 20px;
@@ -18,8 +18,4 @@
             font-weight: 500;
         }
     }
-}
-
-.appointmentsFound.visible {
-    display: flex;
 }

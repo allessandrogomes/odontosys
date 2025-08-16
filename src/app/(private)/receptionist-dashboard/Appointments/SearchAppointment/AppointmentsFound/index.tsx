@@ -1,18 +1,23 @@
+import { useSearchAppointmentContext } from "@/contexts/SearchAppointmentContext"
 import styles from "./styles.module.scss"
 import AppointmentList from "@/components/lists/AppointmentList"
+import BackBtn from "@/components/ui/BackBtn"
 
-interface IAppointmentsFound {
-    appointments: IAppointment[] | []
-    selectedAppointment: (appointment: IAppointment) => void
-    visible: boolean
-}
+export default function AppointmentsFound() {
+    const { dispatch, state } = useSearchAppointmentContext()
+    const appointments: IAppointment[] | [] | null = state.appointments
 
-export default function AppointmentsFound({ appointments, selectedAppointment, visible }: IAppointmentsFound) {
+    function handleBack() {
+        dispatch({ type: "SET_APPOINTMENTS", payload: null })
+        dispatch({ type: "SET_STEP", payload: 1 })
+    }
+
     return (
-        appointments.length > 0 ? (
-            <div className={`${styles.appointmentsFound} ${visible && styles.visible}`}>
+        appointments && appointments.length > 0 ? (
+            <div className={styles.container}>
                 <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
-                <AppointmentList appointments={appointments} selectedAppointment={appointment => selectedAppointment(appointment)} />
+                <AppointmentList />
+                <BackBtn onClick={handleBack}/>
             </div>
         ) : null
     )

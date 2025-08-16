@@ -1,22 +1,9 @@
-.searchField {
-    display: none;
+.container {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     position: relative;
     width: 550px;
-
-    .message {
-        position: absolute;
-        bottom: -40px;
-    }
-
-    .spinner {
-        position: absolute;
-        bottom: -50px;
-    }
-
-    &.visible {
-        display: flex;
-    }
 }
