@@ -2,18 +2,22 @@ import { formatDateISO } from "@/utils/formatDateISO"
 import styles from "./styles.module.scss"
 import { formatHour } from "@/utils/formatHour"
 import { Dot } from "lucide-react"
+import { useSearchAppointmentContext } from "@/contexts/SearchAppointmentContext"
 
-interface IAppointmentList {
-    appointments: IAppointment[]
-    selectedAppointment: (appointment: IAppointment) => void
-}
+export default function AppointmentList() {
+    const { dispatch, state } = useSearchAppointmentContext()
+    const appointments: IAppointment[] | [] | null = state.appointments
 
-export default function AppointmentList({ appointments, selectedAppointment }: IAppointmentList) {
+    function handleSelectedAppointment(appointment: IAppointment) {
+        dispatch({ type: "SET_SELECTED_APPOINTMENT", payload: appointment })
+        dispatch({ type: "SET_STEP", payload: 3 })
+    }
+
     return (
         <ul className={styles.appointmentList}>
-            {appointments.map(appointment => (
+            {appointments && appointments.length > 0 && appointments.map(appointment => (
                 <li key={appointment.id}>
-                    <button onClick={() => selectedAppointment(appointment)}>
+                    <button onClick={() => handleSelectedAppointment(appointment)}>
                         <p>{appointment.procedure}</p>
                         <Dot className={styles.separatorIcon} />
                         <p>{formatDateISO(appointment.scheduledAt)}</p>
