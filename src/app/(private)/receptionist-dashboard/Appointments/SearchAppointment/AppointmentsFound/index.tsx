@@ -7,6 +7,11 @@ export default function AppointmentsFound() {
     const { dispatch, state } = useSearchAppointmentContext()
     const appointments: IAppointment[] | [] | null = state.appointments
 
+    function handleSelectAppointemnt(appointment: IAppointment) {
+        dispatch({ type: "SET_SELECTED_APPOINTMENT", payload: appointment })
+        dispatch({ type: "SET_STEP", payload: 3 })
+    }
+
     function handleBack() {
         dispatch({ type: "SET_APPOINTMENTS", payload: null })
         dispatch({ type: "SET_STEP", payload: 1 })
@@ -16,7 +21,7 @@ export default function AppointmentsFound() {
         appointments && appointments.length > 0 ? (
             <div className={styles.container}>
                 <p className={styles.patientName}>Paciente: <span>{appointments[0].patient.name}</span></p>
-                <AppointmentList />
+                <AppointmentList appointments={appointments} selectedAppointment={appointment => handleSelectAppointemnt(appointment)}/>
                 <BackBtn onClick={handleBack}/>
             </div>
         ) : null
