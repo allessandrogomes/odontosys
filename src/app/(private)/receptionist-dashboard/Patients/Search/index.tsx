@@ -1,56 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import styles from "./styles.module.scss"
 import { UserX } from "lucide-react"
 import FeedbackMessage from "@/components/ui/FeedbackMessage"
-import Spinner from "@/components/ui/Spinner"
-import PatientCPFSearchForm from "@/components/forms/PatientDetailsForm"
 import PatientCard from "@/components/cards/PatientCard"
 import SectionWrapper from "@/components/layout/SectionWrapper"
 import BackBtn from "@/components/ui/BackBtn"
+import PatientDetailsForm from "@/components/forms/PatientDetailsForm"
+
+type PatientDetailsResult =
+    | { type: "patient"; patient: IPatient }
+    | { type: "appointments"; appointments: IAppointment[] }
+    | { type: "message"; message: string }
 
 export default function Search() {
-    const [cpf, setCpf] = useState<string>("")
-    const [patientInfo, setPatientInfo] = useState<IPatient | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [message, setMessage] = useState<string | null>(null)
+    const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+    const [patient, setPatient] = useState<IPatient | null>(null)
 
-    async function handleSearchPatient(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        setMessage(null)
-        setPatientInfo(null)
-        setIsLoading(true)
+    function handleResult(result: PatientDetailsResult) {
+        switch (result.type) {
+            case "patient":
+                setPatient(result.patient)
+                setFeedbackMessage(null)
+                break
 
-        try {
-            const response = await fetch(`/api/patient/cpf/${cpf}`)
-            const data = await response.json()
-
-            if (!response.ok) throw new Error(data.error || "Erro ao buscar os dados")
-
-            // Caso não encontre nenhum Paciente com esse CPF 
-            if (!data) return setMessage("Nenhum Paciente encontrado")
-
-            setPatientInfo(data)
-        } catch (error: any) {
-            setMessage(error.message)
-        } finally {
-            setIsLoading(false)
+            case "message":
+                setFeedbackMessage(result.message)
+                break
+            
+            // Não deveria ocorrer, mas garante que o tipo está coberto
+            default:
+                setFeedbackMessage("Erro inesperado")
+                break
         }
     }
 
     return (
         <SectionWrapper title="Pesquisar Paciente">
             <>
-                {!patientInfo ? (
+                {!patient ? (
                     <div className={styles.search}>
-                        {/* <PatientCPFSearchForm cpf={cpf} isLoading={isLoading} onCpfChange={setCpf} onSubmit={handleSearchPatient} /> */}
-                        {message && <FeedbackMessage className={styles.message} message={message} icon={<UserX />} />}
-                        {isLoading && <Spinner className={styles.spinner} />}
+                        <PatientDetailsForm onResult={handleResult} callType="patient" />
+                        {feedbackMessage && <FeedbackMessage className={styles.message} message={feedbackMessage} icon={<UserX />} />}
                     </div>
                 ) : (
                     <>
-                        <PatientCard patient={patientInfo} />
-                        <BackBtn onClick={() => setPatientInfo(null)}/>
+                        <PatientCard patient={patient} />
+                        <BackBtn onClick={() => setPatient(null)} />
                     </>
                 )}
             </>
