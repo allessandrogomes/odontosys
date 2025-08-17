@@ -1,6 +1,5 @@
 import { formatHour } from "@/utils/formatHour"
 import styles from "./styles.module.scss"
-import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 interface ISchedule {
     start: string | null
@@ -8,19 +7,18 @@ interface ISchedule {
 }
 
 interface IScheduleList {
-    availableTimes: ISchedule[]
+    schedules: ISchedule[]
+    selectedSchedule: ISchedule | null
     onSelectSchedule: (schedule: ISchedule) => void
 }
 
-export default function ScheduleList({ availableTimes, onSelectSchedule }: IScheduleList) {
-    const { state } = useAppointmentContext()
-    
+export default function ScheduleList({ schedules, selectedSchedule, onSelectSchedule }: IScheduleList) {
     return (
         <div className={styles.schedules}>
-            {Array.isArray(availableTimes) && availableTimes.map((schedule, index) =>
+            {Array.isArray(schedules) && schedules.length > 0 && schedules.map((schedule, index) =>
                 <button
                     type="button"
-                    className={`${state?.scheduledAt === schedule.start && styles.selected}`}
+                    className={`${selectedSchedule?.start === schedule.start && styles.selected}`}
                     onClick={() => onSelectSchedule(schedule)}
                     key={index}
                 >

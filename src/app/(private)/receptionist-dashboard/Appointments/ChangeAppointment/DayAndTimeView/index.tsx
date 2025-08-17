@@ -7,9 +7,9 @@ import BackBtn from "@/components/ui/BackBtn"
 import Button from "@/components/ui/Button"
 import toast, { Toaster } from "react-hot-toast"
 
-interface ITime {
-    start: string,
-    end: string
+interface ISchedule {
+    start: string | null
+    end: string | null
 }
 
 interface IDayAndTimeView {
@@ -20,8 +20,8 @@ interface IDayAndTimeView {
 
 export default function DayAndTimeView({ appointment, onUpdate, onBack }: IDayAndTimeView) {
     const [day, setDay] = useState<string>("")
-    const [times, setTimes] = useState<ITime[] | []>([])
-    const [selectedTime, setSelectedTime] = useState<ITime | null>(null)
+    const [times, setTimes] = useState<ISchedule[] | []>([])
+    const [selectedTime, setSelectedTime] = useState<ISchedule | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isSubmiting, setIsSubmiting] = useState<boolean>(false)
 

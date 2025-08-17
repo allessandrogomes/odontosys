@@ -17,9 +17,10 @@ export default function SelectScheduled() {
     const [day, setDay] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
-    const [availableTimes, setAvailableTimes] = useState<ISchedule[] | [] | null>(null)
+    const [availableTimes, setAvailableTimes] = useState<ISchedule[] | null>(null)
 
     const { state, dispatch } = useAppointmentContext()
+    const selectedSchedule: ISchedule = { start: state.scheduledAt, end: state.endsAt }
 
     // Função para buscar horários disponíveis
     async function getAvailableTimes(event: React.FormEvent<HTMLFormElement>) {
@@ -89,7 +90,7 @@ export default function SelectScheduled() {
             <div className={styles.scheduled}>
                 {isLoading ? <Spinner className={styles.spinner} />
                     : error ? <FeedbackMessage message={error} />
-                        : availableTimes && availableTimes.length > 0 ? <ScheduleList availableTimes={availableTimes} onSelectSchedule={schedule => handleSelectSchedule(schedule)} />
+                        : availableTimes && availableTimes.length > 0 ? <ScheduleList schedules={availableTimes} onSelectSchedule={schedule => handleSelectSchedule(schedule)} selectedSchedule={selectedSchedule}/>
                             : availableTimes && availableTimes.length === 0 ? <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />} />
                                 : !availableTimes ? <FeedbackMessage icon={<Info />} message="Busque por horários disponíveis..." />
                                     : <></> 
