@@ -1,6 +1,7 @@
 import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext"
 import Search from "./Search"
 import SectionWrapper from "@/components/layout/SectionWrapper"
+import Select from "./Select"
 
 export default function ChangeAppointment() {
     const { state } = useChangeAppointmentContext()
@@ -12,18 +13,12 @@ export default function ChangeAppointment() {
                 {/* Componente responsável pela busca das consultas por meio do CPF */}
                 {/* Podendo retornar as consultas, ou uma mensagem de feedback em caso de erros ou não encontrar */}
                 {state.step === 1 && <Search />}
-
-                {/* Tela para escolher a consulta a editar */}
-                {/* <SelectAppointmentView
-                    appointmentsFound={appointmentsFound}
-                    onSelectAppointment={value => {
-                        setSelectedAppointment(value)
-                        handleNextView()
-                    }}
-                    onBack={handleBackView}
-                    visible={viewToShow === SELECT_APPOINTMENT_VIEW}
-                /> */}
-
+                
+                {/* STEP 2 */}
+                {/* Componente responsável por mostrar as consultas encontradas */}
+                {/* O usuário deverá clicar em qual consulta deseja alterar */}
+                {state.step === 2 && <Select />}
+                
                 {/* Tela para escolher qual informação alterar */}
                 {/* <SelectChangeView
                     onSelectChange={value => setViewToShow(value)}
