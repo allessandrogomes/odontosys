@@ -1,21 +1,12 @@
 .form {
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
 
-    .spinner {
-        position: absolute;
-        bottom: 60px;
-    }
-
     .message {
         position: absolute;
-        bottom: 70px;
+        bottom: 80px;
     }
-}
-
-.form.visible {
-    display: flex;
 }
