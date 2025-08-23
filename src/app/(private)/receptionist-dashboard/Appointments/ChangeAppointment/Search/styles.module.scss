@@ -1,12 +1,12 @@
 .form {
+    width: 500px;
+    height: 300px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 10px;
+    position: relative;
 
     .message {
         position: absolute;
-        bottom: 80px;
+        bottom: 50px;
     }
 }
