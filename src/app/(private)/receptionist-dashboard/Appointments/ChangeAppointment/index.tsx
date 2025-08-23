@@ -2,6 +2,7 @@ import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext
 import SearchAppointments from "./SearchAppointments"
 import SectionWrapper from "@/components/layout/SectionWrapper"
 import SelectAppointment from "./SelectAppointment"
+import SelectProcedure from "./SelectProcedure"
 
 export default function ChangeAppointment() {
     const { state } = useChangeAppointmentContext()
@@ -19,38 +20,12 @@ export default function ChangeAppointment() {
                 {/* O usuário deverá clicar em qual consulta deseja alterar */}
                 {state.step === 2 && <SelectAppointment />}
                 
-                {/* Tela para escolher qual informação alterar */}
-                {/* <SelectChangeView
-                    onSelectChange={value => setViewToShow(value)}
-                    onBack={handleBackView}
-                    visible={viewToShow === SELECT_CHANGE_VIEW}
-                /> */}
+                {/* STEP 3 */}
+                {/* Componente responsável pela seleção do procedimento */}
+                {state.step === 3 && <SelectProcedure />}
 
-                {/* Tela para alterar o Procedimento e Dentista */}
-                {/* {viewToShow === PROCEDURE_AND_DENTIST && (
-                    <ChangeProcedureAndDentistView
-                        appointment={appointmentSelected!}
-                        onUpdate={appointmentUpdated => {
-                            setSelectedAppointment(appointmentUpdated)
-                            updateFoundAppointments()
-                        }}
-                        onBack={handleBackView}
-                    />
-                )} */}
+                
 
-                {/* Tela para alterar o Dia e Horário */}
-                {/* {viewToShow === TIME_AND_DAY && (
-                    <DayAndTimeView
-                        appointment={appointmentSelected!}
-                        onUpdate={appointment => {
-                            setSelectedAppointment(appointment)
-                            handleBackView()
-                            toast.success("Informações alteradas com sucesso!")
-                            updateFoundAppointments()
-                        }}
-                        onBack={handleBackView}
-                    />
-                )} */}
             </>
         </SectionWrapper>
     )
