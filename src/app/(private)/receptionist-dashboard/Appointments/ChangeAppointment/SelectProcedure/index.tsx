@@ -30,32 +30,23 @@ export default function SelectProcedure() {
             )
 
             // Caso o procedimento selecionado exista, atualiza o state do contexto alterando apenas o 'procedure' e 'durationMinutes'
-            // Se 'selectedAppointment' não existir, retorna o valor atual da consulta (não altera)
+            // Se 'selectedProcedure' não existir, retorna o valor atual da consulta (não altera)
             if (selectedProcedure?.procedure && selectedProcedure.durationMinutes) {
+                // Caso haja alguma modificação de procedimento
+                // é necessário resetar o dentista para evitar
+                // manter um dentista com um procedimento que ele não atende
                 dispatch({
                     type: "SET_SELECTED_APPOINTMENT",
                     payload: state.selectedAppointment
                         ? {
                             ...state.selectedAppointment,
-                            procedure: selectedProcedure?.procedure,
-                            durationMinutes: selectedProcedure?.durationMinutes
+                            procedure: selectedProcedure.procedure,
+                            durationMinutes: selectedProcedure.durationMinutes,
+                            dentist: null,
+                            dentistId: null
                         }
                         : null
                 })
-
-                // Caso haja alguma modificação de procedimento
-                // é necessário resetar o dentista para evitar
-                // manter um dentista com um procedimento que ele não atende
-                dispatch({ 
-                    type: "SET_SELECTED_APPOINTMENT",
-                    payload: state.selectedAppointment
-                    ? {
-                        ...state.selectedAppointment,
-                        dentist: null,
-                        dentistId: null
-                    }
-                    : null
-                 })
             }
         }
     }
