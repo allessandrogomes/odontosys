@@ -1,0 +1,88 @@
+.box {
+    display: flex;
+    width: 500px;
+    height: 300px;
+
+    .selectView {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: 10px;
+
+        .containerDentists {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+
+            .dentist {
+                background-color: var(--secondary-color);
+                color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+                width: max-content;
+                padding: 0 20px;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: 0.25s;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: var(--secondary-color);
+                    animation: ease-in-out;
+                }
+            }
+
+            .dentist.selected {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+            }
+        }
+
+        .boxBtns {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+
+            button {
+                width: 120px;
+            }
+        }
+    }
+
+    .showSelectedView {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        p {
+            margin: 0;
+            text-align: center;
+            font-size: 1.25rem;
+
+            span {
+                font-weight: 600;
+            }
+        }
+
+        .boxBtns {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+
+            button {
+                width: 120px;
+            }
+        }
+    }
+}
