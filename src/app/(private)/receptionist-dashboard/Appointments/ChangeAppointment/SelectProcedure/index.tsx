@@ -42,6 +42,20 @@ export default function SelectProcedure() {
                         }
                         : null
                 })
+
+                // Caso haja alguma modificação de procedimento
+                // é necessário resetar o dentista para evitar
+                // manter um dentista com um procedimento que ele não atende
+                dispatch({ 
+                    type: "SET_SELECTED_APPOINTMENT",
+                    payload: state.selectedAppointment
+                    ? {
+                        ...state.selectedAppointment,
+                        dentist: null,
+                        dentistId: null
+                    }
+                    : null
+                 })
             }
         }
     }
