@@ -1,5 +1,5 @@
 import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext"
-import Search from "./Search"
+import SearchAppointments from "./SearchAppointments"
 import SectionWrapper from "@/components/layout/SectionWrapper"
 import Select from "./Select"
 
@@ -12,7 +12,7 @@ export default function ChangeAppointment() {
                 {/* STEP 1 */}
                 {/* Componente responsável pela busca das consultas por meio do CPF */}
                 {/* Podendo retornar as consultas, ou uma mensagem de feedback em caso de erros ou não encontrar */}
-                {state.step === 1 && <Search />}
+                {state.step === 1 && <SearchAppointments />}
                 
                 {/* STEP 2 */}
                 {/* Componente responsável por mostrar as consultas encontradas */}
