@@ -3,7 +3,7 @@ import styles from "./styles.module.scss"
 import AppointmentList from "@/components/lists/AppointmentList"
 import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext"
 
-export default function Select() {
+export default function SelectAppointment() {
     const { state, dispatch } = useChangeAppointmentContext()
     const appointments = state.appointments
 

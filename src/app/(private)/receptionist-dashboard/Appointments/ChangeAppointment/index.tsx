@@ -1,7 +1,7 @@
 import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext"
 import SearchAppointments from "./SearchAppointments"
 import SectionWrapper from "@/components/layout/SectionWrapper"
-import Select from "./Select"
+import SelectAppointment from "./SelectAppointment"
 
 export default function ChangeAppointment() {
     const { state } = useChangeAppointmentContext()
@@ -17,7 +17,7 @@ export default function ChangeAppointment() {
                 {/* STEP 2 */}
                 {/* Componente responsável por mostrar as consultas encontradas */}
                 {/* O usuário deverá clicar em qual consulta deseja alterar */}
-                {state.step === 2 && <Select />}
+                {state.step === 2 && <SelectAppointment />}
                 
                 {/* Tela para escolher qual informação alterar */}
                 {/* <SelectChangeView
