@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 interface BusySchedule {
     dentistId: number
-    start: string,
-    end: string,
+    start: string
+    end: string
+    appointmentId?: number // adiciona opcional
 }
 
 function generateSlots(date: string, startHour: number, endHour: number, durationMinutes: number): { start: Date; end: Date }[] {
@@ -42,7 +43,7 @@ function overlaps(
 
 export async function POST(request: NextRequest) {
     try {
-        const { date, durationMinutes, dentistId } = await request.json()
+        const { date, durationMinutes, dentistId, appointmentId } = await request.json()
 
         // 1. Buscar todos os horários ocupados
         const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : process.env.NEXT_PUBLIC_API_BASE_URL!
@@ -51,9 +52,11 @@ export async function POST(request: NextRequest) {
         const allBusy: BusySchedule[] = await resp.json()
 
         // 2. Filtrar apenas do dentista e da data informada
+        // Se patientId existir, ignoramos os horários dele
         const busyOnDate = allBusy
             .filter(s => s.dentistId === dentistId)
             .filter(s => s.start.slice(0, 10) === date)
+            .filter(s => !appointmentId || s.appointmentId !== appointmentId) // <-- chave aqui
 
         // 3. Gerar todos os slots nos dois períodos
         const morningSlots = generateSlots(date, 11, 15, durationMinutes)
