@@ -4,6 +4,7 @@ import SectionWrapper from "@/components/layout/SectionWrapper"
 import SelectAppointment from "./SelectAppointment"
 import SelectProcedure from "./SelectProcedure"
 import SelectDentist from "./SelectDentist"
+import SelectScheduled from "./SelectScheduled"
 
 export default function ChangeAppointment() {
     const { state } = useChangeAppointmentContext()
@@ -29,6 +30,9 @@ export default function ChangeAppointment() {
                 {/* Componente responsável pela seleção do dentista */}
                 {state.step === 4 && <SelectDentist />}
 
+                {/* STEP 5 */}
+                {/* Componente responsável pela seleção do dia e horário */}
+                {state.step === 5 && <SelectScheduled />}
             </>
         </SectionWrapper>
     )
