@@ -32,6 +32,11 @@ export default function SelectProcedure() {
             // Caso o procedimento selecionado exista, atualiza o state do contexto alterando apenas o 'procedure' e 'durationMinutes'
             // Se 'selectedProcedure' não existir, retorna o valor atual da consulta (não altera)
             if (selectedProcedure?.procedure && selectedProcedure.durationMinutes) {
+                const currentAppointment = state.selectedAppointment
+
+                // Verifica se a duração mudou
+                const durationChanged = currentAppointment?.durationMinutes !== selectedProcedure.durationMinutes
+
                 // Caso haja alguma modificação de procedimento
                 // é necessário resetar o dentista para evitar
                 // manter um dentista com um procedimento que ele não atende
@@ -43,7 +48,11 @@ export default function SelectProcedure() {
                             procedure: selectedProcedure.procedure,
                             durationMinutes: selectedProcedure.durationMinutes,
                             dentist: null,
-                            dentistId: null
+                            dentistId: null,
+                            // Se a duração mudou, zera os horários para evitar conflitos
+                            // Ex: não deve manter um horário de 14:00 - 14:30 ao selecionar um procedimento com duração de 1 hora.
+                            scheduledAt: durationChanged ? null : currentAppointment.scheduledAt,
+                            endsAt: durationChanged ? null : currentAppointment.endsAt
                         }
                         : null
                 })
