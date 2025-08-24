@@ -19,7 +19,9 @@ export default function SelectDentist() {
             ? {
                 ...state.selectedAppointment,
                 dentist: dentist,
-                dentistId: dentist.id
+                dentistId: dentist.id,
+                scheduledAt: null,
+                endsAt: null
             }
             : null
          })
