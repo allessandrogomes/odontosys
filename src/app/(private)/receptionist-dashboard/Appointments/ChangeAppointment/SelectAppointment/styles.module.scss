@@ -1,7 +1,7 @@
 .selectAppointment {
     width: 500px;
     height: 100%;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -11,7 +11,7 @@
     .patientName {
         margin: 0;
         position: absolute;
-        top: 60px;
+        top: 50px;
 
         span {
             font-weight: 600;
@@ -21,8 +21,4 @@
     h2 {
         margin: 0;
     }
-}
-
-.selectAppointment.visible {
-    display: flex;
 }

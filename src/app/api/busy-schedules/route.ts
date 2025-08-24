@@ -14,6 +14,7 @@ export async function GET() {
         // Extrai os horários ocupados e bloqueados
         const busySchedules = appointments.map(item => ({
             dentistId: item.dentistId,
+            appointmentId: item.id,
             start: item.scheduledAt,
             end: item.endsAt
         }))

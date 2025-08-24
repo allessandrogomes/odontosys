@@ -17,6 +17,7 @@ import Spinner from "@/components/ui/Spinner"
 import useSWR from "swr"
 import { AppointmentProvider } from "@/contexts/NewAppointmentContext"
 import { SearchAppointmentProvider } from "@/contexts/SearchAppointmentContext"
+import { ChangeAppointmentProvider } from "@/contexts/ChangeAppointmentContext"
 
 type DashboardComponent =
     | "Resumo"
@@ -110,7 +111,9 @@ export default function ReceptionistDashboard() {
                 <MainLayout>
                     <AppointmentProvider>
                         <SearchAppointmentProvider>
-                            <CurrentComponent />
+                            <ChangeAppointmentProvider>
+                                <CurrentComponent />
+                            </ChangeAppointmentProvider>
                         </SearchAppointmentProvider>
                     </AppointmentProvider>
                 </MainLayout>

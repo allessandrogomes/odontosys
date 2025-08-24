@@ -1,0 +1,12 @@
+.form {
+    width: 500px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    .message {
+        position: absolute;
+        bottom: 50px;
+    }
+}

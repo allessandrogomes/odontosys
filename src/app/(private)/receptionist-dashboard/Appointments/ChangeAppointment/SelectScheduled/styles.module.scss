@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 10px;
+    width: 500px;
+    height: 300px;
+    padding: 20px;
+    box-sizing: border-box;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+
+        input {
+            width: 150px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            outline: none;
+            background-color: var(--secondary-color);
+            padding: 5px;
+            color: var(--primary-color);
+            border-radius: 50px;
+        }
+
+        button {
+            width: 200px;
+        }
+    }
+
+    .scheduled {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+    }
+
+    .boxBtns {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+
+        button {
+            width: 120px;
+        }
+    }
+}

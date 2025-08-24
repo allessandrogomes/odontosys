@@ -1,112 +1,43 @@
-
-import { useState } from "react"
-import SearchView from "./SearchView"
-import SelectAppointmentView from "./SelectAppointment"
-import SelectChangeView from "./SelectChangeView"
-import ChangeProcedureAndDentistView from "./ChangeProcedureAndDentistView"
-import DayAndTimeView from "./DayAndTimeView"
-import toast, { Toaster } from "react-hot-toast"
+import { useChangeAppointmentContext } from "@/contexts/ChangeAppointmentContext"
+import SearchAppointments from "./SearchAppointments"
 import SectionWrapper from "@/components/layout/SectionWrapper"
-
-const SEARCH_VIEW = "SEARCH_VIEW"
-const SELECT_APPOINTMENT_VIEW = "SELECT_APPOINTMENT_VIEW"
-const SELECT_CHANGE_VIEW = "SELECT_CHANGE_VIEW"
-const PROCEDURE_AND_DENTIST = "PROCEDURE_AND_DENTIST"
-const TIME_AND_DAY = "TIME_AND_DAY"
+import SelectAppointment from "./SelectAppointment"
+import SelectProcedure from "./SelectProcedure"
+import SelectDentist from "./SelectDentist"
+import SelectScheduled from "./SelectScheduled"
+import ConfirmChange from "./ConfirmChange"
 
 export default function ChangeAppointment() {
-    const [viewToShow, setViewToShow] = useState<string>(SEARCH_VIEW)
-    const [appointmentsFound, setAppointmentsFound] = useState<IAppointment[] | []>([])
-    const [appointmentSelected, setSelectedAppointment] = useState<IAppointment | null>(null)
-
-    function handleNextView() {
-        if (viewToShow === SEARCH_VIEW) {
-            setViewToShow(SELECT_APPOINTMENT_VIEW)
-        } else if (viewToShow === SELECT_APPOINTMENT_VIEW) {
-            setViewToShow(SELECT_CHANGE_VIEW)
-        }
-    }
-
-    function handleBackView() {
-        if (viewToShow === SELECT_APPOINTMENT_VIEW) {
-            setViewToShow(SEARCH_VIEW)
-        } else if (viewToShow === SELECT_CHANGE_VIEW) {
-            setViewToShow(SELECT_APPOINTMENT_VIEW)
-        } else if (viewToShow === PROCEDURE_AND_DENTIST || viewToShow === TIME_AND_DAY) {
-            setViewToShow(SELECT_CHANGE_VIEW)
-        }
-    }
-
-    async function updateFoundAppointments() {
-        try {
-            const response = await fetch(`/api/appointment/cpf/${appointmentSelected?.patient.cpf}`, { credentials: "include" })
-            const data = await response.json()
-
-            if (!response.ok) throw new Error(data.error || "Erro ao buscar as consultas")
-
-            setAppointmentsFound(data)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message)
-        }
-    }
+    const { state } = useChangeAppointmentContext()
 
     return (
         <SectionWrapper title="Alterar Consulta">
             <>
-                {/* Tela de busca das consultas por meio do CPF do Paciente */}
-                <SearchView
-                    appointmentsFound={value => {
-                        setAppointmentsFound(value)
-                        if (value.length > 0) handleNextView()
-                    }}
-                    visible={viewToShow === SEARCH_VIEW}
-                />
+                {/* STEP 1 */}
+                {/* Componente responsável pela busca das consultas por meio do CPF */}
+                {/* Podendo retornar as consultas, ou uma mensagem de feedback em caso de erros ou não encontrar */}
+                {state.step === 1 && <SearchAppointments />}
+                
+                {/* STEP 2 */}
+                {/* Componente responsável por mostrar as consultas encontradas */}
+                {/* O usuário deverá clicar em qual consulta deseja alterar */}
+                {state.step === 2 && <SelectAppointment />}
+                
+                {/* STEP 3 */}
+                {/* Componente responsável pela seleção do procedimento */}
+                {state.step === 3 && <SelectProcedure />}
 
-                {/* Tela para escolher a consulta a editar */}
-                <SelectAppointmentView
-                    appointmentsFound={appointmentsFound}
-                    onSelectAppointment={value => {
-                        setSelectedAppointment(value)
-                        handleNextView()
-                    }}
-                    onBack={handleBackView}
-                    visible={viewToShow === SELECT_APPOINTMENT_VIEW}
-                />
+                {/* STEP 4 */}
+                {/* Componente responsável pela seleção do dentista */}
+                {state.step === 4 && <SelectDentist />}
 
-                {/* Tela para escolher qual informação alterar */}
-                <SelectChangeView
-                    onSelectChange={value => setViewToShow(value)}
-                    onBack={handleBackView}
-                    visible={viewToShow === SELECT_CHANGE_VIEW}
-                />
+                {/* STEP 5 */}
+                {/* Componente responsável pela seleção do dia e horário */}
+                {state.step === 5 && <SelectScheduled />}
 
-                {/* Tela para alterar o Procedimento e Dentista */}
-                {viewToShow === PROCEDURE_AND_DENTIST && (
-                    <ChangeProcedureAndDentistView
-                        appointment={appointmentSelected!}
-                        onUpdate={appointmentUpdated => {
-                            setSelectedAppointment(appointmentUpdated)
-                            updateFoundAppointments()
-                        }}
-                        onBack={handleBackView}
-                    />
-                )}
-
-                {/* Tela para alterar o Dia e Horário */}
-                {viewToShow === TIME_AND_DAY && (
-                    <DayAndTimeView
-                        appointment={appointmentSelected!}
-                        onUpdate={appointment => {
-                            setSelectedAppointment(appointment)
-                            handleBackView()
-                            toast.success("Informações alteradas com sucesso!")
-                            updateFoundAppointments()
-                        }}
-                        onBack={handleBackView}
-                    />
-                )}
-                <Toaster />
+                {/* STEP 6 */}
+                {/* Componente responsável pela confirmação da atualização da consulta */}
+                {state.step === 6 && <ConfirmChange />}
             </>
         </SectionWrapper>
     )
