@@ -5,6 +5,7 @@ import SelectAppointment from "./SelectAppointment"
 import SelectProcedure from "./SelectProcedure"
 import SelectDentist from "./SelectDentist"
 import SelectScheduled from "./SelectScheduled"
+import ConfirmChange from "./ConfirmChange"
 
 export default function ChangeAppointment() {
     const { state } = useChangeAppointmentContext()
@@ -33,6 +34,10 @@ export default function ChangeAppointment() {
                 {/* STEP 5 */}
                 {/* Componente responsável pela seleção do dia e horário */}
                 {state.step === 5 && <SelectScheduled />}
+
+                {/* STEP 6 */}
+                {/* Componente responsável pela confirmação da atualização da consulta */}
+                {state.step === 6 && <ConfirmChange />}
             </>
         </SectionWrapper>
     )
