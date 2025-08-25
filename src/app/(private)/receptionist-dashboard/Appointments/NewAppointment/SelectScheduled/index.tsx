@@ -57,6 +57,18 @@ export default function SelectScheduled() {
         }
     }
 
+    // Lida com a alteração da data
+    // Sempre que alterar a data, é preciso limpar os valores atuais para evitar conflitos
+    // Evita enviar data que não corresponde ao horário selecionado atualmente
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setDay(event.target.value)
+        setAvailableTimes(null)
+        dispatch({
+            type: "SET_SCHEDULE",
+            payload: { scheduledAt: null, endsAt: null }
+        })
+    }
+
     // Função para lidar com a seleção de horário
     function handleSelectSchedule(schedule: ISchedule) {
         dispatch({
@@ -82,7 +94,7 @@ export default function SelectScheduled() {
             {/* Formulário para buscar horários disponíveis de acordo com a data selecionda */}
             <form onSubmit={getAvailableTimes}>
                 <Label text="Escolha o dia e horário" />
-                <input onChange={e => setDay(e.target.value)} type="date" value={day} required />
+                <input onChange={handleChange} type="date" value={day} required />
                 <Button text="Buscar horários" iconEnd={<Search />} type="submit" disabled={isLoading} />
             </form>
 
@@ -90,10 +102,10 @@ export default function SelectScheduled() {
             <div className={styles.scheduled}>
                 {isLoading ? <Spinner className={styles.spinner} />
                     : error ? <FeedbackMessage message={error} />
-                        : availableTimes && availableTimes.length > 0 ? <ScheduleList schedules={availableTimes} onSelectSchedule={schedule => handleSelectSchedule(schedule)} selectedSchedule={selectedSchedule}/>
+                        : availableTimes && availableTimes.length > 0 ? <ScheduleList schedules={availableTimes} onSelectSchedule={schedule => handleSelectSchedule(schedule)} selectedSchedule={selectedSchedule} />
                             : availableTimes && availableTimes.length === 0 ? <FeedbackMessage message="Nenhum horário disponível" icon={<TimerOff />} />
                                 : !availableTimes ? <FeedbackMessage icon={<Info />} message="Busque por horários disponíveis..." />
-                                    : <></> 
+                                    : <></>
                 }
             </div>
 
