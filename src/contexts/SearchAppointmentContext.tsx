@@ -12,7 +12,6 @@ type Action =
     | { type: "SET_APPOINTMENTS"; payload: IAppointment[] | [] | null }
     | { type: "SET_SELECTED_APPOINTMENT"; payload: IAppointment | null }
     | { type: "SET_STEP"; payload: number }
-    | { type: "RESET_APPOINTMENT" }
 
 const initialState: State = {
     appointments: null,
@@ -37,8 +36,6 @@ function reducer(state: State, action: Action): State {
                 ...state,
                 step: action.payload
             }
-        case "RESET_APPOINTMENT":
-            return initialState
         default:
             return state
     }
