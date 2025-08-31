@@ -77,4 +77,20 @@ describe("SelectProcedure", () => {
         const spinner = screen.getByTestId("spinner")
         expect(spinner).toBeInTheDocument()
     })
+
+    it("deve exibir FeedbackMessage quando houver erro", () => {
+        const errorMessage = "Erro ao buscar procedimentos"
+
+        // Mock específico para este teste
+        ;(useSWR as jest.Mock).mockReturnValue({
+            data: null,
+            error: errorMessage,
+            isLoading: false
+        })
+        
+        render(<SelectProcedure />)
+
+        const feedback = screen.getByText(errorMessage)
+        expect(feedback).toBeInTheDocument()
+    })
 })
