@@ -81,16 +81,59 @@ describe("SelectProcedure", () => {
     it("deve exibir FeedbackMessage quando houver erro", () => {
         const errorMessage = "Erro ao buscar procedimentos"
 
-        // Mock específico para este teste
-        ;(useSWR as jest.Mock).mockReturnValue({
-            data: null,
-            error: errorMessage,
-            isLoading: false
-        })
-        
+            // Mock específico para este teste
+            ; (useSWR as jest.Mock).mockReturnValue({
+                data: null,
+                error: errorMessage,
+                isLoading: false
+            })
+
         render(<SelectProcedure />)
 
         const feedback = screen.getByText(errorMessage)
         expect(feedback).toBeInTheDocument()
+    })
+
+    it("deve habilitar o botão Próximo ao selecionar procedimento e disparar dispatch ao clicar", () => {
+        const proceduresMock = [
+            { id: 1, procedure: "Limpeza", durationMinutes: 30 },
+            { id: 2, procedure: "Restauração", durationMinutes: 60 }
+        ]
+
+            // Mock do useSWR para retornar os procedimentos
+            ; (useSWR as jest.Mock).mockReturnValue({
+                data: proceduresMock,
+                error: null,
+                isLoading: false
+            })
+
+        const dispatchMock = jest.fn()
+
+            // Mock inicial do contexto
+            ; (useAppointmentContext as jest.Mock).mockReturnValue({
+                state: { procedure: "" },
+                dispatch: dispatchMock
+            })
+
+        const { rerender } = render(<SelectProcedure />)
+
+        // Seleciona o procedimento "Restauração"
+        const select = screen.getByLabelText("Escolha o Procedimento") as HTMLSelectElement
+        fireEvent.change(select, { target: { value: "Restauração" } })
+
+            // Atualiza o mock do contexto com o procedimento selecionado
+            ; (useAppointmentContext as jest.Mock).mockReturnValue({
+                state: { procedure: "Restauração" },
+                dispatch: dispatchMock
+            })
+
+        // Rerenderiza para refletir o novo estado
+        rerender(<SelectProcedure />)
+
+        const nextButton = screen.getByText("Próximo") as HTMLButtonElement
+        expect(nextButton).not.toBeDisabled()
+
+        fireEvent.click(nextButton)
+        expect(dispatchMock).toHaveBeenCalledWith({ type: "SET_STEP", payload: 4 })
     })
 })
