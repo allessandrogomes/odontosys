@@ -64,4 +64,17 @@ describe("SelectProcedure", () => {
             payload: { procedure: "Restauração", durationMinutes: 60 }
         })
     })
+
+    it("deve exibir o Spinner quando isLoading for true", () => {
+        // Mock específico para este teste
+        (useSWR as jest.Mock).mockReturnValueOnce({
+            data: null,
+            error: null,
+            isLoading: true
+        })
+
+        render(<SelectProcedure />)
+        const spinner = screen.getByTestId("spinner")
+        expect(spinner).toBeInTheDocument()
+    })
 })
