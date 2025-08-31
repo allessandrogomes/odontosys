@@ -1,7 +1,7 @@
 import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 import useSWR from "swr"
 import SelectProcedure from "."
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 
 // Mock do contexto
 jest.mock("@/contexts/NewAppointmentContext", () => ({
@@ -43,5 +43,13 @@ describe("SelectProcedure", () => {
         expect(screen.getByText("Restauração")).toBeInTheDocument()
 
         expect(container).toMatchSnapshot()
+    })
+
+    it("deve disparar dispatch correto ao clicar em 'Voltar'", () => {
+        render(<SelectProcedure />)
+        const backButton = screen.getByText("Voltar")
+        fireEvent.click(backButton)
+
+        expect(dispatchMock).toHaveBeenCalledWith({ type: "SET_STEP", payload: 2 })
     })
 })
