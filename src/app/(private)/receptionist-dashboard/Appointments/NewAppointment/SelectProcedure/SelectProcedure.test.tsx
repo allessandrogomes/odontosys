@@ -52,4 +52,16 @@ describe("SelectProcedure", () => {
 
         expect(dispatchMock).toHaveBeenCalledWith({ type: "SET_STEP", payload: 2 })
     })
+
+    it("deve disparar dispatch correto ao selecionar um procedimento", () => {
+        render(<SelectProcedure />)
+
+        const select = screen.getByLabelText("Escolha o Procedimento") as HTMLSelectElement
+        fireEvent.change(select, { target: { value: "Restauração" } })
+
+        expect(dispatchMock).toHaveBeenCalledWith({
+            type: "SET_PROCEDURE",
+            payload: { procedure: "Restauração", durationMinutes: 60 }
+        })
+    })
 })
