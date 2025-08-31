@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SearchPatient - Renderização deve renderizar corretamente quando há feedbackMessage 1`] = `
+<div>
+  <div
+    class="container"
+  >
+    <div>
+      Mocked PatientDetailsForm
+    </div>
+    <div>
+      Mocked FeedbackMessage: 
+      Mensagem de teste
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SearchPatient - Renderização deve renderizar corretamente sem feedbackMessage 1`] = `
+<div>
+  <div
+    class="container"
+  >
+    <div>
+      Mocked PatientDetailsForm
+    </div>
+  </div>
+</div>
+`;
