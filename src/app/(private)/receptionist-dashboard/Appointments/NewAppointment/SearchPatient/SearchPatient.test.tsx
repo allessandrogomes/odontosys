@@ -1,5 +1,5 @@
 import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import React from "react"
 import SearchPatient from "."
 
@@ -11,15 +11,19 @@ jest.mock("@/contexts/NewAppointmentContext", () => ({
 // Mock dos subcomponentes para evitar renderizaç~ões complexas
 jest.mock("@/components/forms/PatientDetailsForm", () => ({
     __esModule: true,
-    default: jest.fn(() => <div>Mocked PatientDetailsForm</div>)
+    default: jest.fn(({ onResult, callType }) => (
+        <div data-testid="patient-form">
+            callType: {callType} | onResult: {onResult ? "ok" : "null"}
+        </div>
+    ))
 }))
 
 jest.mock("@/components/ui/FeedbackMessage", () => ({
     __esModule: true,
-    default: jest.fn(({ message }) => <div>Mocked FeedbackMessage: {message}</div>)
+    default: jest.fn(({ message }) => <div data-testid="feedback-message">Mocked FeedbackMessage: {message}</div>)
 }))
 
-describe("SearchPatient - Renderização", () => {
+describe("SearchPatient", () => {
     const dispatchMock = jest.fn()
 
     beforeEach(() => {
@@ -41,6 +45,29 @@ describe("SearchPatient - Renderização", () => {
 
         const { container } = render(<SearchPatient />)
         expect(container).toMatchSnapshot()
+
+        useStateSpy.mockRestore()
+    })
+
+    it ("deve renderizar PatientDetailsForm com props corretas", () => {
+        render(<SearchPatient />)
+
+        const form = screen.getByTestId("patient-form")
+        expect(form).toBeInTheDocument()
+        expect(form.textContent).toContain("callType: patient")
+        expect(form.textContent).toContain("onResult: ok")
+    })
+
+    it ("deve renderizar FeedbackMessage somente quando feedbackMessage está definido", () => {
+        // Spy para simular feedbackMessage
+        const useStateSpy = jest.spyOn(React, "useState")
+        useStateSpy.mockImplementation(() => ["Mensagem de teste", jest.fn()])
+
+        render(<SearchPatient />)
+
+        const feedback = screen.getByTestId("feedback-message")
+        expect(feedback).toBeInTheDocument()
+        expect(feedback.textContent).toContain("Mensagem de teste")
 
         useStateSpy.mockRestore()
     })
