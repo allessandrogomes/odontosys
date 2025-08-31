@@ -7,9 +7,9 @@ import { IMaskInput } from "react-imask"
 import styles from "./styles.module.scss"
 import Image from "next/image"
 import Spinner from "@/components/ui/Spinner"
-import { lastUpdate } from "@/lastUpdate"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale/pt-BR"
+import { lastUpdate } from "../../../../last-update.json"
 
 interface IFormData {
   login: string
