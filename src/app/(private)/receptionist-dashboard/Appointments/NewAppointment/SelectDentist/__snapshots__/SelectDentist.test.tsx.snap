@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SelectDentist deve renderizar o componente inicial 1`] = `
+<div>
+  <div
+    class="box"
+  >
+    <div
+      class="selectView"
+    >
+      <label
+        class="label"
+      >
+        Escolha o Dentista
+      </label>
+      <div
+        class="containerDentists"
+      />
+      <div
+        class="boxBtns"
+      >
+        <button>
+          Voltar
+        </button>
+        <button>
+          Próximo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
