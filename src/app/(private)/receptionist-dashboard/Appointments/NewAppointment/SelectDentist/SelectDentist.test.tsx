@@ -1,6 +1,7 @@
 import useSWR from "swr"
 import SelectDentist from "."
 import { render, screen } from "@testing-library/react"
+import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 
 // Mock do contexto
@@ -20,7 +21,7 @@ jest.mock("swr", () => ({
 // Mock de subcomponentes complexos
 jest.mock("@/components/ui/Button", () => ({
     __esModule: true,
-    default: jest.fn(({ text }) => <button>{text}</button>)
+    default: jest.fn(({ text, ...props }) => <button {...props}>{text}</button>)
 }))
 jest.mock("@/components/ui/Spinner", () => ({
     __esModule: true,
@@ -72,5 +73,44 @@ describe("SelectDentist", () => {
         const { getByText } = render(<SelectDentist />)
 
         expect(getByText("Erro inesperado")).toBeInTheDocument()
+    })
+
+    it("deve armazenar o dentista selecionado no state e habilitar o botão Próximo", () => {
+        const dentistMock = [
+            { id: 1, name: "João" },
+            { id: 2, name: "Maria" }
+        ]
+
+        const dispatchMock = jest.fn()
+        // Contexto inicial sem dentista selecionado
+        ;(useAppointmentContext as jest.Mock).mockReturnValue({
+            state: { procedure: "Limpeza", dentistId: null, dentistName: null },
+            dispatch: dispatchMock
+        })
+
+        ;(useSWR as jest.Mock).mockReturnValue({ data: dentistMock, error: null, isLoading: false })
+
+        const { getByLabelText, rerender, getByText } = render(<SelectDentist />)
+        
+        // Clica no dentista João
+        const selectJoao = getByLabelText("Selecionar dentista João")
+        selectJoao.click()
+
+        expect(dispatchMock).toHaveBeenCalledWith({
+            type: "SET_DENTIST",
+            payload: { id: 1, name: "João" }
+        })
+
+        // Atualiza o estado simulando que o dentista foi salvo no context
+        ;(useAppointmentContext as jest.Mock).mockReturnValue({
+            state: { procedure: "Limpeza", dentistId: 1, dentistName: "João" },
+            dispatch: dispatchMock
+        })
+
+        rerender(<SelectDentist />)
+
+        // Agora o botão Próximo deve estar habilitado
+        const nextButton = getByText("Próximo") as HTMLButtonElement
+        expect(nextButton).not.toBeDisabled()
     })
 })

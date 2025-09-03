@@ -19,10 +19,15 @@ exports[`SelectDentist deve renderizar o componente inicial 1`] = `
       <div
         class="boxBtns"
       >
-        <button>
+        <button
+          iconstart="[object Object]"
+        >
           Voltar
         </button>
-        <button>
+        <button
+          disabled=""
+          iconend="[object Object]"
+        >
           Próximo
         </button>
       </div>
