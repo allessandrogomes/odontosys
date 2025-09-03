@@ -65,4 +65,12 @@ describe("SelectDentist", () => {
 
         expect(getByText("Spinner")).toBeInTheDocument()
     })
+
+    it("deve mostrar a mensagem de erro quando error estiver presente", () => {
+        ;(useSWR as jest.Mock).mockReturnValue({ data: undefined, error: "Erro inesperado", isLoading: false })
+
+        const { getByText } = render(<SelectDentist />)
+
+        expect(getByText("Erro inesperado")).toBeInTheDocument()
+    })
 })
