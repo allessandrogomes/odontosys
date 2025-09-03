@@ -50,11 +50,19 @@ describe("SelectDentist", () => {
             { id: "2", name: "Maria" }
         ]
 
-        ;(useSWR as jest.Mock).mockReturnValue({ data: dentistMock, error: null, isLoading: false })
+            ; (useSWR as jest.Mock).mockReturnValue({ data: dentistMock, error: null, isLoading: false })
 
         render(<SelectDentist />)
 
         expect(screen.getByText("Dr. João")).toBeInTheDocument()
         expect(screen.getByText("Dr. Maria")).toBeInTheDocument()
+    })
+
+    it("deve mostrar o spinner quando isLoading for true", () => {
+        ; (useSWR as jest.Mock).mockReturnValue({ data: [], error: null, isLoading: true })
+
+        const { getByText } = render(<SelectDentist />)
+
+        expect(getByText("Spinner")).toBeInTheDocument()
     })
 })
