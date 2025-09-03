@@ -1,6 +1,6 @@
 import useSWR from "swr"
 import SelectDentist from "."
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 
 
 // Mock do contexto
@@ -42,5 +42,19 @@ describe("SelectDentist", () => {
     it("deve renderizar o componente inicial", () => {
         const { container } = render(<SelectDentist />)
         expect(container).toMatchSnapshot()
+    })
+
+    it("deve exibir os dentistas retornados pelo useSWR", () => {
+        const dentistMock = [
+            { id: "1", name: "João" },
+            { id: "2", name: "Maria" }
+        ]
+
+        ;(useSWR as jest.Mock).mockReturnValue({ data: dentistMock, error: null, isLoading: false })
+
+        render(<SelectDentist />)
+
+        expect(screen.getByText("Dr. João")).toBeInTheDocument()
+        expect(screen.getByText("Dr. Maria")).toBeInTheDocument()
     })
 })
