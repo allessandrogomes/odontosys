@@ -186,4 +186,45 @@ describe("SelectScheduled", () => {
         const enabledNextButton = screen.getByText("Próximo").closest("button")
         expect(enabledNextButton).not.toBeDisabled()
     })
+
+    it("deve executar as funcionalidades dos botões Voltar e Próximo corretamente", () => {
+        // Mock do contexto com horário selecionado (para habilitar o botão Próximo)
+        (useAppointmentContext as jest.Mock).mockReturnValue({
+            state: {
+                scheduledAt: "2025-09-10T09:00:00",
+                endsAt: "2025-09-10T09:30:00",
+                durationMinutes: 30,
+                dentistId: "1"
+            },
+            dispatch: dispatchMock
+        })
+
+        render(<SelectScheduled />)
+
+        // Testa o botão Voltar
+        const backButton = screen.getByText("Voltar").closest("button")
+        fireEvent.click(backButton!)
+
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, {
+            type: "SET_SCHEDULE",
+            payload: { scheduledAt: null, endsAt: null }
+        })
+
+        expect(dispatchMock).toHaveBeenNthCalledWith(2, {
+            type: "SET_STEP",
+            payload: 4
+        })
+
+        // Testa o botão Próximo
+        const nextButton = screen.getByText("Próximo").closest("button")
+        fireEvent.click(nextButton!)
+
+        expect(dispatchMock).toHaveBeenNthCalledWith(3, {
+            type: "SET_STEP",
+            payload: 6
+        })
+
+        // Verifica quantas vezes o dispatch foi chamado no total
+        expect(dispatchMock).toHaveBeenCalledTimes(3)
+    })
 })
