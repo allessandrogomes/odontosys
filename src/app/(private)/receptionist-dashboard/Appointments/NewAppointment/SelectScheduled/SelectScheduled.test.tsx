@@ -152,4 +152,38 @@ describe("SelectScheduled", () => {
 
         mockFetch.mockRestore()
     })
+
+    it("deve habilitar o botão Próximo apenas quando state.scheduledAt não for nulo", () => {
+        // Cenário 1: Sem horário selecionado
+        (useAppointmentContext as jest.Mock).mockReturnValue({
+            state: {
+                scheduledAt: null,
+                endsAt: null,
+                durationMinutes: 30,
+                dentistId: "1"
+            },
+            dispatch: dispatchMock
+        })
+
+        const { rerender } = render(<SelectScheduled />)
+
+        const nextButton = screen.getByText("Próximo").closest("button")
+        expect(nextButton).toBeDisabled()
+
+            // Cenário 2: Com horário selecionado
+            ; (useAppointmentContext as jest.Mock).mockReturnValue({
+                state: {
+                    scheduledAt: "2025-09-10T09:00:00",
+                    endsAt: "2025-09-10T09:30:00",
+                    durationMinutes: 30,
+                    dentistId: "1"
+                },
+                dispatch: dispatchMock
+            })
+
+        rerender(<SelectScheduled />)
+
+        const enabledNextButton = screen.getByText("Próximo").closest("button")
+        expect(enabledNextButton).not.toBeDisabled()
+    })
 })
