@@ -1,6 +1,6 @@
 import useSWR from "swr"
 import SelectDentist from "."
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
 
@@ -21,7 +21,7 @@ jest.mock("swr", () => ({
 // Mock de subcomponentes complexos
 jest.mock("@/components/ui/Button", () => ({
     __esModule: true,
-    default: jest.fn(({ text, ...props }) => <button {...props}>{text}</button>)
+    default: jest.fn(({ text, iconStart, iconEnd, ...props }) => <button {...props}>{iconStart}{text}{iconEnd}</button>)
 }))
 jest.mock("@/components/ui/Spinner", () => ({
     __esModule: true,
@@ -33,8 +33,11 @@ jest.mock("@/components/ui/FeedbackMessage", () => ({
 }))
 
 describe("SelectDentist", () => {
+    // Mock global do dispatch
+    const dispatchMock = jest.fn()
+
     beforeEach(() => {
-        jest.clearAllMocks(); // limpa antes de configurar
+        jest.clearAllMocks(); // Reseta todos os mocks antes de cada novo it
 
         // Mock do SWR
         (useSWR as jest.Mock).mockReturnValue({ data: [], error: null, isLoading: false })
@@ -81,7 +84,6 @@ describe("SelectDentist", () => {
             { id: 2, name: "Maria" }
         ]
 
-        const dispatchMock = jest.fn()
         // Contexto inicial sem dentista selecionado
         ;(useAppointmentContext as jest.Mock).mockReturnValue({
             state: { procedure: "Limpeza", dentistId: null, dentistName: null },
@@ -112,5 +114,24 @@ describe("SelectDentist", () => {
         // Agora o botão Próximo deve estar habilitado
         const nextButton = getByText("Próximo") as HTMLButtonElement
         expect(nextButton).not.toBeDisabled()
+    })
+
+    it("deve executar dispatch ao clicar em Voltar e Próximo", () => {
+        render(<SelectDentist />)
+
+        const backButton = screen.getByText("Voltar")
+        const nextButton = screen.getByText("Próximo")
+
+        // Simula o clique no botão Voltar
+        fireEvent.click(backButton)
+        expect(dispatchMock).toHaveBeenCalledWith({ type: "SET_STEP", payload: 3 })
+        expect(dispatchMock).toHaveBeenCalledWith({
+            type: "SET_DENTIST",
+            payload: { id: null, name: null }
+        })
+
+        // Simula o clique no botão Próximo
+        fireEvent.click(nextButton)
+        expect(dispatchMock).toHaveBeenCalledWith({ type: "SET_STEP", payload: 5 })
     })
 })
