@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import SelectScheduled from "."
 import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
 
@@ -10,7 +10,7 @@ jest.mock("@/contexts/NewAppointmentContext", () => ({
 // Mock de subcomponentes complexos
 jest.mock("@/components/ui/Button", () => ({
     __esModule: true,
-    default: jest.fn(({ text }) => <button>{text}</button>)
+    default: jest.fn(({ text, iconStart, iconEnd, ...props }) => <button {...props}>{iconStart}{text}{iconEnd}</button>)
 }))
 jest.mock("@/components/ui/Spinner", () => ({
     __esModule: true,
@@ -26,6 +26,7 @@ jest.mock("@/components/lists/ScheduleList", () => ({
 }))
 
 describe("SelectScheduled", () => {
+    const dispatchMock = jest.fn()
     beforeEach(() => {
         jest.clearAllMocks() // Reseta todos os mocks antes de cada novo it
 
@@ -36,12 +37,25 @@ describe("SelectScheduled", () => {
                     durationMinutes: 30,
                     dentistId: "1"
                 },
-                dispatch: jest.fn()
+                dispatch: dispatchMock
             })
     })
 
     it("deve renderizar corretamente a tela inicial (snapshot)", () => {
         const { container } = render(<SelectScheduled />)
         expect(container).toMatchSnapshot()
+    })
+
+    it("deve atualizar o valor do input e chamar dispatch ao alterar a data", () => {
+        render(<SelectScheduled />)
+
+        const input = screen.getByTestId("date-input") as HTMLInputElement
+        fireEvent.change(input, { target: { value: "2025-09-10" } })
+
+        expect(input.value).toBe("2025-09-10")
+        expect(dispatchMock).toHaveBeenCalledWith({
+            type: "SET_SCHEDULE",
+            payload: { scheduledAt: null, endsAt: null }
+        })
     })
 })
