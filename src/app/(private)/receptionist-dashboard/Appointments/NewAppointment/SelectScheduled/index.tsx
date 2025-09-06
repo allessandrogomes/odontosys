@@ -94,7 +94,7 @@ export default function SelectScheduled() {
             {/* Formulário para buscar horários disponíveis de acordo com a data selecionda */}
             <form onSubmit={getAvailableTimes}>
                 <Label text="Escolha o dia e horário" />
-                <input onChange={handleChange} type="date" value={day} required />
+                <input onChange={handleChange} type="date" value={day} required data-testid="date-input"/>
                 <Button text="Buscar horários" iconEnd={<Search />} type="submit" disabled={isLoading} />
             </form>
 
