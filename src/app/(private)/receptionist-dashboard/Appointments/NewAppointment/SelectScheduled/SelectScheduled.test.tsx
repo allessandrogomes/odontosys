@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react"
 import SelectScheduled from "."
 import { useAppointmentContext } from "@/contexts/NewAppointmentContext"
+import ScheduleList from "@/components/lists/ScheduleList"
 
 // Mock do contexto
 jest.mock("@/contexts/NewAppointmentContext", () => ({
@@ -107,6 +108,47 @@ describe("SelectScheduled", () => {
         fireEvent.submit(form)
 
         expect(await screen.findByText("ScheduleList")).toBeInTheDocument()
+
+        mockFetch.mockRestore()
+    })
+
+    it("deve executar handleSelectSchedule ao selecionar um horário", async () => {
+        // Mock do ScheduleList para simular a seleção de horário
+        (ScheduleList as jest.Mock).mockImplementation(({ onSelectSchedule }) => (
+            <div>
+                <button onClick={() => onSelectSchedule({ start: "2025-09-10T09:00:00", end: "2025-09-10T09:30:00" })}>
+                    Selecionar horário 09:00
+                </button>
+            </div>
+        ))
+
+        // Mock do fetch para retornar horários disponíveis
+        const mockFetch = jest.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+            ok: true,
+            json: async () => [{ start: "2025-09-10T09:00:00", end: "2025-09-10T09:30:00" }]
+        } as Response)
+
+        render(<SelectScheduled />)
+
+        // Preenche a data e busca horários
+        const input = screen.getByTestId("date-input")
+        fireEvent.change(input, { target: { value: "2025-09-10" } })
+
+        const form = screen.getByTestId("schedule-form")
+        fireEvent.submit(form)
+
+        // Aguarda o ScheduleList aparecer e seleciona um horário
+        const selectButton = await screen.findByText("Selecionar horário 09:00")
+        fireEvent.click(selectButton)
+
+        // Verifica se a dispatch foi chamada corretamente
+        expect(dispatchMock).toHaveBeenCalledWith({
+            type: "SET_SCHEDULE",
+            payload: {
+                scheduledAt: "2025-09-10T09:00:00",
+                endsAt: "2025-09-10T09:30:00"
+            }
+        })
 
         mockFetch.mockRestore()
     })
