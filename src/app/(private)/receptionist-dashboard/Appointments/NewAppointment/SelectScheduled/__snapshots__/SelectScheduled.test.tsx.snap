@@ -5,7 +5,9 @@ exports[`SelectScheduled deve renderizar corretamente a tela inicial (snapshot) 
   <div
     class="container"
   >
-    <form>
+    <form
+      data-testid="schedule-form"
+    >
       <label
         class="label"
       >

@@ -92,7 +92,7 @@ export default function SelectScheduled() {
     return (
         <div className={styles.container}>
             {/* Formulário para buscar horários disponíveis de acordo com a data selecionda */}
-            <form onSubmit={getAvailableTimes}>
+            <form onSubmit={getAvailableTimes} data-testid="schedule-form">
                 <Label text="Escolha o dia e horário" />
                 <input onChange={handleChange} type="date" value={day} required data-testid="date-input"/>
                 <Button text="Buscar horários" iconEnd={<Search />} type="submit" disabled={isLoading} />

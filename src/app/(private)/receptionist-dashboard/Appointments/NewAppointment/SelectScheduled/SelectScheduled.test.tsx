@@ -25,6 +25,11 @@ jest.mock("@/components/lists/ScheduleList", () => ({
     default: jest.fn(() => <div>ScheduleList</div>)
 }))
 
+beforeAll(() => {
+    // garante que fetch exista no ambiente de teste
+    globalThis.fetch = jest.fn()
+})
+
 describe("SelectScheduled", () => {
     const dispatchMock = jest.fn()
     beforeEach(() => {
@@ -57,5 +62,52 @@ describe("SelectScheduled", () => {
             type: "SET_SCHEDULE",
             payload: { scheduledAt: null, endsAt: null }
         })
+    })
+
+    it("deve lidar corretamente com o carregamento, erro e sucesso ao buscar horários disponíveis", async () => {
+        // Mock global de fetch
+        const mockFetch = jest.spyOn(globalThis, "fetch")
+
+        // 1 - Cenário de loading
+        mockFetch.mockImplementationOnce(() =>
+            new Promise(() => { }) // nunca resolve -> força loading
+        )
+
+        render(<SelectScheduled />)
+
+        // Preenche a data primeiro para evitar erro de validação
+        const input = screen.getByTestId("date-input")
+        fireEvent.change(input, { target: { value: "2025-09-10" } })
+
+        const form = screen.getByTestId("schedule-form")
+        fireEvent.submit(form)
+
+        expect(await screen.findByText("Spinner")).toBeInTheDocument()
+
+        // 2 - Cenário de erro
+        mockFetch.mockResolvedValueOnce({
+            ok: false,
+            json: async () => ({ error: "Erro ao buscar os horários disponíveis" })
+        } as Response)
+
+        fireEvent.submit(form)
+        expect(await screen.findByText("Erro ao buscar os horários disponíveis")).toBeInTheDocument()
+
+        // 3 - Cenário de sucesso
+        const schedulesMock = [
+            { start: "09:00", end: "09:30" },
+            { start: "10:00", end: "10:30" }
+        ]
+
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => schedulesMock
+        } as Response)
+
+        fireEvent.submit(form)
+
+        expect(await screen.findByText("ScheduleList")).toBeInTheDocument()
+
+        mockFetch.mockRestore()
     })
 })
